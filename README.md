@@ -6,6 +6,8 @@ We use [Github Flow](https://docs.github.com/en/get-started/quickstart/github-fl
    - Assign 2 teammates as a reviewer. Otherwise, it will be done automatically for you.
    - One of mentors will also be assigned automatically.
    - Enable automatic merge. Once your PR is satisfactory, GitHub will automatically merge it.
-   - Link the PR to the related issue. Once PR is successfully merge, the related issue will be closed automatically.
+   - Link the PR to the related issue. Once PR is successfully merged, the related issue will be closed automatically.
    - The topic branch will be automatically deleted from the origin.
 4. PROFIT!
+
+Periodically, check for PR reviewer requests. Kindly, review PRs from your teammates.
