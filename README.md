@@ -10,4 +10,4 @@ We use [Github Flow](https://docs.github.com/en/get-started/quickstart/github-fl
    - The topic branch will be automatically deleted from the origin.
 4. PROFIT!
 
-Periodically, check for PR reviewer requests. Kindly, review PRs from your teammates.
+Periodically, check for PR review requests. Kindly, review PRs from your teammates.
