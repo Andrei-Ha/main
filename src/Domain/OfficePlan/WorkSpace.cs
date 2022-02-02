@@ -4,7 +4,7 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
     public class WorkSpace : BaseModel
     {
-        public bool BookPossibility { get; set; }
+        public bool IsBookingPossible { get; set; }
         public bool IsNearTheDoor { get; set; }
         public bool IsNearTheWindow { get; set; }
         public bool IsDeskTop { get; set; }
