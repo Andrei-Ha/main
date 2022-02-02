@@ -1,8 +1,6 @@
 ﻿
 
-using Exadel.OfficeBooking.Domain.OfficePlan;
-
-namespace Exadel.OfficeBooking.Domain
+namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
     public class Office : BaseModel
     {
@@ -10,7 +8,7 @@ namespace Exadel.OfficeBooking.Domain
         public bool IsCityCenter { get; set; }
         
         public string? CityId { get; set; }
-        public ICollection<Floor> Floors { get; set; }
+        public ICollection<Floor>? Floors { get; set; }
         public ICollection<ParkingPlace>? ParkingPlaces { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿
-using Exadel.OfficeBooking.Domain.OfficePlan;
 
-namespace Exadel.OfficeBooking.Domain
+namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
     public class Country : BaseModel
     {
@@ -10,7 +9,7 @@ namespace Exadel.OfficeBooking.Domain
 
         public bool IsSea { get; set; }
 
-        public ICollection<City> Cities { get; set; }
+        public ICollection<City>? Cities { get; set; }
 
     }
 }

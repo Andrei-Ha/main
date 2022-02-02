@@ -7,6 +7,6 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public bool IsFirts { get; set; }
         public bool IsLast { get; set; }
         public string? OfficeId { get; set; }
-        public ICollection<Room> Rooms { get; set; }
+        public ICollection<Room>? Rooms { get; set; }
     }
 }

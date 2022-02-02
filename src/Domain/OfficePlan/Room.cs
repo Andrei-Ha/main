@@ -7,7 +7,7 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public string? Name { get; set; }
         public bool IsSunnySide { get; set; }
         public string? FloorId { get; set; }
-        public ICollection<WorkSpace> Workspaces { get; set; }
+        public ICollection<WorkSpace>? Workspaces { get; set; }
 
     }
 }
