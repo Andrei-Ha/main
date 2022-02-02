@@ -9,6 +9,8 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public bool IsNearTheWindow { get; set; }
         public bool IsDeskTop { get; set; }
         public bool IsLaptop { get; set; }
-        public string? RoomId { get; set; }
+        public Room room { get; set; } = new();
+        public string RoomId { get; set; }
+        
     }
 }
