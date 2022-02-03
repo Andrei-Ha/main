@@ -29,4 +29,4 @@ jobs:
       with: 
         app-name: exadelsandbox-officebooking-dev
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: '.src/_api'
+        package: './src/_api'
