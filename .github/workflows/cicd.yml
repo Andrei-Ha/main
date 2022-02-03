@@ -1,20 +1,26 @@
-name: Build and test
+name: Build, test and deploy
 
 on:
   workflow_dispatch:
-  pull_request:
+  pull_request_target:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-deploy:
 
     runs-on: ubuntu-latest
+    environment: dev
     
     defaults:
       run:
         working-directory: ./src
 
     steps:
+    - name: Verify Linked Issue
+      uses: hattan/verify-linked-issue-action@v1.1.5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
@@ -40,3 +46,13 @@ jobs:
     
     - name: Test
       run: dotnet test -c Release --no-build --verbosity normal --filter "Category!=LongRunning"
+      
+    - name: Publish
+      run: dotnet publish 'Api' -c Release --no-build -o '_api'
+      
+    - name: Deploy
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: exadelsandbox-officebooking-dev
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: './_api'
