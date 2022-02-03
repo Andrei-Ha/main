@@ -11,6 +11,6 @@ namespace Exadel.OfficeBooking.Domain.Person
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public DateOnly VacationStart { get; set; }
-        public DateTime VacationEnd { get; set; }
+        public DateOnly VacationEnd { get; set; }
     }
 }
