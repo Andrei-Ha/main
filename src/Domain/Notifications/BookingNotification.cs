@@ -14,7 +14,7 @@ namespace Exadel.OfficeBooking.Domain.Notifications
         public string ToEmail { get; set; }
         //public int TelegramId { get; set; }
         public string SubjectOfMessage { get; set; }
-        //public List<Booking> MessageBody { get; set; }
+        public string MessageBody { get; set; }
         public DateOnly SentDate { get; set; }
     }
 }

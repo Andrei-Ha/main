@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Exadel.OfficeBooking.Domain.Notifications
 
 {
-    public class AutoCancellationNotification // : IBooking
+    public class AutoCancellationNotification
     {
         [Required]
         [Display(Name = "To (Email Address)")]
