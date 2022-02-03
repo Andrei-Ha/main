@@ -1,3 +1,6 @@
+# Task board
+[Main board](https://github.com/orgs/exadelsandbox2022feb/projects/1)
+
 # How to contribute?
 We use [Github Flow](https://docs.github.com/en/get-started/quickstart/github-flow) to contribute.
 1. Create a topic branch
@@ -11,3 +14,8 @@ We use [Github Flow](https://docs.github.com/en/get-started/quickstart/github-fl
 4. PROFIT!
 
 Periodically, check for PR review requests. Kindly, review PRs from your teammates.
+
+
+# Deploy main branch to Azure
+- Manually [Deploy to Azure](https://github.com/exadelsandbox2022feb/main/actions/workflows/cd.yml)
+- Swagger [link](https://exadelsandbox-officebooking-dev.azurewebsites.net/swagger/index.html)
