@@ -19,7 +19,9 @@ jobs:
     - name: Verify Linked Issue
       uses: hattan/verify-linked-issue-action@v1.1.5
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
+      with:
+        filename: '/.github/misc/VERIFY_PR_ISSUE.md'
 
     - uses: actions/checkout@v2
       with:
