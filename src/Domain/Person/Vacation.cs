@@ -9,7 +9,7 @@ namespace Exadel.OfficeBooking.Domain.Person
     public class Vacation
     {
         public Guid Id { get; set; }
-        public Guid UserId { get; set; }
+        public User User { get; set; } = new User();
         public DateOnly VacationStart { get; set; }
         public DateOnly VacationEnd { get; set; }
     }
