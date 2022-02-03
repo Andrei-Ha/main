@@ -1,4 +1,4 @@
-name: Build, test and deploy
+name: Build and test
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-deploy:
+  build-and-test:
 
     runs-on: ubuntu-latest
     environment: dev
@@ -46,13 +46,3 @@ jobs:
     
     - name: Test
       run: dotnet test -c Release --no-build --verbosity normal --filter "Category!=LongRunning"
-      
-    - name: Publish
-      run: dotnet publish 'Api' -c Release --no-build -o '_api'
-      
-    - name: Deploy to Azure
-      uses: azure/webapps-deploy@v2
-      with: 
-        app-name: exadelsandbox-officebooking-dev
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: './src/_api'
