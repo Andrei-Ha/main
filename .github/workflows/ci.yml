@@ -1,4 +1,4 @@
-name: Build, test and deploy
+name: Build and test
 
 on:
   workflow_dispatch:
@@ -6,10 +6,10 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-deploy:
+  build-and-test:
 
     runs-on: ubuntu-latest
-    #environment: dev
+    environment: dev
     
     defaults:
       run:
