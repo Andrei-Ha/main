@@ -16,7 +16,8 @@ jobs:
 
     steps:
     - name: Verify Linked Issue
-      uses: hattan/verify-linked-issue-action@v1.1.5
+      # uses: hattan/verify-linked-issue-action@v1.1.5
+      uses: Codeinwp/verify-linked-issue-action@6da9af91d78847c7ea264083a64eab3271b4369f
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
 
