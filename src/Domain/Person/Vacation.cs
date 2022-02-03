@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Exadel.OfficeBooking.Domain.Person
 {
-    public class Vacation
+    public class Vacation : BaseModel
     {
-        public Guid Id { get; set; }
         public User User { get; set; } = new User();
         public DateOnly VacationStart { get; set; }
         public DateOnly VacationEnd { get; set; }

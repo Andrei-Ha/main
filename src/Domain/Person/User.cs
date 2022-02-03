@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Exadel.OfficeBooking.Domain.Person
 {
-    public class User
+    public class User : BaseModel
     {
-        public Guid Id { get; set; }
         public int TelegramId { get; set; }
         public string FirstName { get; set; } = String.Empty;
         public string LastName { get; set; } = String.Empty;
