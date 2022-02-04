@@ -16,6 +16,6 @@
 
         public List<Map> Maps { get; set; } = new();
 
-        public List<Parkingplace> ParkingPlaces { get; set; } = new();
+        public List<ParkingPlace> ParkingPlaces { get; set; } = new();
     }
 }

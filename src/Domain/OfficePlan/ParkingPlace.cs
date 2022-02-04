@@ -1,10 +1,12 @@
-﻿namespace Exadel.OfficeBooking.Domain.OfficePlan
-{
-    public class Parkingplace
-    {
-        public int PlaceNumber { get; set; }
+﻿using Exadel.OfficeBooking.Domain.Bookings;
 
-        public bool IsBookingPossible { get; set; }
+namespace Exadel.OfficeBooking.Domain.OfficePlan
+{
+    public class ParkingPlace
+    {
+        public bool IsBooked { get; set; }
+
+        public int PlaceNumber { get; set; }
 
         public Office Office { get; set; } = new();
 

@@ -2,8 +2,8 @@
 {
     public class Vacation : BaseModel
     {
-        public User User { get; set; } = new User();
-        public DateOnly VacationStart { get; set; }
-        public DateOnly VacationEnd { get; set; }
+        public User User { get; set; } = new();
+        public DateTime VacationStart { get; set; }
+        public DateTime VacationEnd { get; set; }
     }
 }
