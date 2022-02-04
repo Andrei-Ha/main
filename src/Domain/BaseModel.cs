@@ -1,5 +1,4 @@
-﻿
-namespace Exadel.OfficeBooking.Domain
+﻿namespace Exadel.OfficeBooking.Domain
 {
     public class BaseModel
     {
