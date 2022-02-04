@@ -1,5 +1,4 @@
-﻿
-namespace Exadel.OfficeBooking.Domain.OfficePlan
+﻿namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
     public class Map : BaseModel
     {
@@ -11,6 +10,6 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
 
         public Office Office { get; set; } = new();
 
-        public List<WorkSpace> Workspaces { get; set; } = new();
+        public List<Workplace> Workspaces { get; set; } = new();
     }
 }
