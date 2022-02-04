@@ -8,12 +8,12 @@
         public string Email { get; set; } = string.Empty;
         public UserRole Role{ get; set; }
         // The use of this property needs to be clarified!
-        //public int Position { get; set; }
+        // public int Position { get; set; }
         public DateOnly EmploymentStart { get; set; }
         public DateOnly? EmploymentEnd { get; set; }
         public List<Vacation> Vacations { get; set; } = new();
-        //public IEnumerable<Booking> BookingList { get; set; }
-        //TBD Seat ID. User can set prefferred seat
+        // public IEnumerable<Booking> BookingList { get; set; }
+        // TBD Seat ID. User can set prefferred seat
         public string PrefferedSeat { get; set; } = string.Empty;
     }
 }
