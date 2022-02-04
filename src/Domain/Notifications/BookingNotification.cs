@@ -1,20 +1,10 @@
-using System;
-using Linq;
-using Exadel.OfficeBooking.Domain;
-using System.ComponentModel.DataAnnotations;
-
-
 namespace Exadel.OfficeBooking.Domain.Notifications
-
 {
-    public class BookingNotification // : IBooking
+    public class BookingNotification
     {
-        [Required]
-        [Display(Name = "To (Email Address)")]
-        public string ToEmail { get; set; }
-        //public int TelegramId { get; set; }
-        public string SubjectOfMessage { get; set; }
-        public string MessageBody { get; set; }
-        public DateOnly SentDate { get; set; }
+        public string EmailAdress { get; set; } = string.Empty;
+        public string EmailSubject { get; set; } = string.Empty;
+        public string MessageBody { get; set; } = string.Empty;
+        public DateTime SendDate { get; set; }
     }
 }
