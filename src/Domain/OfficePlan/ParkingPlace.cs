@@ -1,7 +1,6 @@
-﻿
-namespace Exadel.OfficeBooking.Domain.OfficePlan
+﻿namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
-    public class ParkingPlace
+    public class Parkingplace
     {
         public int PlaceNumber { get; set; }
 
@@ -9,6 +8,6 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
 
         public Office Office { get; set; } = new();
 
+        public Booking Booking { get; set; } = new();
     }
 }
-
