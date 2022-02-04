@@ -1,0 +1,21 @@
+name: Auto assign issue to the project
+
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+
+jobs:
+  issue_opened_and_reopened:
+    name: issue_opened_and_reopened
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'reopened')
+    steps:
+      - name: 'Move issue to Todo'
+        uses: leonsteinhaeuser/project-beta-automations@v1.0.2
+        with:
+          gh_token: ${{ secrets.PAT_TOKEN }}
+          organization: exadelsandbox2022feb
+          project_id: 1
+          resource_node_id: ${{ github.event.issue.node_id }}
