@@ -19,7 +19,7 @@ jobs:
       #uses: hattan/verify-linked-issue-action@v1.1.5
       uses: khamza85/verify-linked-issue-action@5b59c19674c22f23232bca0ea9dbbc7196b88bf8
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}   
 
     - uses: actions/checkout@v2
       with:
