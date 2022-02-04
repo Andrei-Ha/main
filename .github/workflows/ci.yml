@@ -1,4 +1,4 @@
-name: Build and test
+name: CI
 
 on:
   workflow_dispatch:
@@ -6,8 +6,30 @@ on:
     branches: [ main ]
 
 jobs:
+  verify-linked-issue:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Verify Linked Issue
+      #uses: hattan/verify-linked-issue-action@v1.1.5
+      uses: khamza85/verify-linked-issue-action@5b59c19674c22f23232bca0ea9dbbc7196b88bf8
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
+  pr-size-label:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: codelytv/pr-size-labeler@v1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        xs_max_size: '10'
+        s_max_size: '50'
+        m_max_size: '200'
+        l_max_size: '450'
+        fail_if_xl: 'false'
+        message_if_xl: >
+            'This PR exceeds the recommended size of 450 lines.
+            Please make sure you are NOT addressing multiple issues with one PR.'
+    
   build-and-test:
-
     runs-on: ubuntu-latest
     
     defaults:
@@ -15,12 +37,6 @@ jobs:
         working-directory: ./src
 
     steps:
-    - name: Verify Linked Issue
-      #uses: hattan/verify-linked-issue-action@v1.1.5
-      uses: khamza85/verify-linked-issue-action@5b59c19674c22f23232bca0ea9dbbc7196b88bf8
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
-
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
