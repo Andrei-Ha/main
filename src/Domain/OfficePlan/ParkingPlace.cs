@@ -2,7 +2,7 @@
 
 namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
-    public class ParkingPlace
+    public class ParkingPlace : BaseModel
     {
         public bool IsBooked { get; set; }
 
@@ -10,6 +10,6 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
 
         public Office Office { get; set; } = new();
 
-        public Booking Booking { get; set; } = new();
+        public Booking? Booking { get; set; }
     }
 }

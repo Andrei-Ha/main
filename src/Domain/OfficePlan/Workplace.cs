@@ -20,6 +20,6 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
 
         public Map Map { get; set; } = new();
 
-        public List<Booking> Bookings { get; set; } = new();
+        public List<Booking>? Bookings { get; set; }
     }
 }

@@ -15,8 +15,8 @@
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
-            this.Database.EnsureDeleted();
-            this.Database.EnsureCreated();
+            Database.EnsureDeleted();
+            Database.EnsureCreated();
         }
 
         public DbSet<Booking> Bookings { get; set;} = null!;
@@ -27,10 +27,12 @@
         public DbSet<ParkingPlace> ParkingPlaces { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Vacation> Vacations { get; set; } = null!;
-        public DbSet<DailyReport> DailyReports { get; set; } = null!;
+        //public DbSet<DailyReport> DailyReports { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<BookingNotification>()
+                .HasNoKey();
 
             modelBuilder.Entity<BookingNotification>()
                 .Property(o => o.EmailAdress)
@@ -85,7 +87,7 @@
                     LastName = "Ivanov",
                     Email = "iivanov@gmail.com",
                     EmploymentStart = DateTime.Now,
-                    //Role = UserRole.CommonUser,
+                    Role = UserRole.CommonUser
                 });
         }
     }

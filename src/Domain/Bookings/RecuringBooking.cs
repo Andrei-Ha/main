@@ -1,7 +1,7 @@
 ﻿namespace Exadel.OfficeBooking.Domain.Bookings
 {
-    public class RecuringBooking
+    public class RecuringBooking : BaseModel
     {
-        public List<Booking> Bookings { get; set; } = new();
+        public List<Booking>? Bookings { get; set; }
     }
 }

@@ -12,10 +12,10 @@ namespace Exadel.OfficeBooking.Domain.Person
         public UserRole Role{ get; set; }
         public DateTime EmploymentStart { get; set; }
         public DateTime? EmploymentEnd { get; set; }
-        public List<Vacation> Vacations { get; set; } = new();
-        public List<Booking> BookingList { get; set; } = new();
+        public List<Vacation>? Vacations { get; set; }
+        public List<Booking>? BookingList { get; set; }
         public List<RecuringBooking> RecuringBookingList { get; set; } = new();
         // TBD Seat ID. User can set prefferred seat
-        public Workplace Preffered { get; set; } = new();
+        public Workplace? Preffered { get; set; }
     }
 }

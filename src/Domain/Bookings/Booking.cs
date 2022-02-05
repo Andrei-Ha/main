@@ -10,7 +10,9 @@ namespace Exadel.OfficeBooking.Domain.Bookings
         public DateTime? EndDate { get; set; }
 
         public User User { get; set; } = new();
-        public Workplace WorkSpace { get; set; } = new();
-        public ParkingPlace ParkingPlace { get; set; } = new();
+        
+        public Workplace Workplace { get; set; } = new();
+        
+        //public ParkingPlace? ParkingPlace { get; set; }
     }
 }
