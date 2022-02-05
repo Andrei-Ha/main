@@ -1,8 +1,10 @@
-﻿namespace Exadel.OfficeBooking.Domain.OfficePlan
+﻿using Exadel.OfficeBooking.Domain.Bookings;
+
+namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
     public class Workplace : BaseModel
     {
-        public bool IsBookingPossible { get; set; }
+        public bool IsBooked { get; set; }
 
         public bool IsNextToWindow { get; set; }
 
@@ -19,6 +21,5 @@
         public Map Map { get; set; } = new();
 
         public List<Booking> Bookings { get; set; } = new();
-
     }
 }
