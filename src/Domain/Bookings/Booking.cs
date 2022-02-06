@@ -13,6 +13,6 @@ namespace Exadel.OfficeBooking.Domain.Bookings
         
         public Workplace Workplace { get; set; } = new();
         
-        //public ParkingPlace? ParkingPlace { get; set; }
+        public ParkingPlace? ParkingPlace { get; set; }
     }
 }
