@@ -10,6 +10,8 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
 
         public Office Office { get; set; } = new();
 
+        public Guid? BookingForeignKey { get; set; }
+        
         public Booking? Booking { get; set; }
     }
 }

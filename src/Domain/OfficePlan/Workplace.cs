@@ -1,5 +1,6 @@
 ﻿using Exadel.OfficeBooking.Domain.Bookings;
 
+
 namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
     public class Workplace : BaseModel

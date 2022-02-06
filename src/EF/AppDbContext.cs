@@ -31,6 +31,11 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Booking>()
+            .HasOne(b => b.ParkingPlace)
+            .WithOne(i => i.Booking)
+            .HasForeignKey<ParkingPlace>(b => b.BookingForeignKey);
+
             modelBuilder.Entity<BookingNotification>()
                 .HasNoKey();
 
