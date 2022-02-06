@@ -2,9 +2,9 @@
 {
     public class AllOfficesReport
     {
-        public DateOnly FromDate { get; set; }
+        public DateTime FromDate { get; set; }
 
-        public DateOnly ToDate { get; set; }
+        public DateTime ToDate { get; set; }
 
         public List<DailyReport> AllOfficesDailyReportList { get; set; } = new();
     }

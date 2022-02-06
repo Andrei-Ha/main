@@ -4,9 +4,9 @@
     {
         public string OfficeName { get; set; } = string.Empty;
 
-        public DateOnly FromDate { get; set; }
+        public DateTime FromDate { get; set; }
 
-        public DateOnly ToDate { get; set;}
+        public DateTime ToDate { get; set;}
 
         public List<DailyReport> OfficeDailyReportList { get; set; } = new();
     }
