@@ -1,5 +1,5 @@
 ﻿using Exadel.OfficeBooking.Domain.Bookings;
-
+using System.Collections.Generic;
 
 namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
@@ -8,6 +8,8 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public bool IsBooked { get; set; }
 
         public bool IsNextToWindow { get; set; }
+
+        public bool IsVIP { get; set; }
 
         public bool HasPC { get; set; }
 

@@ -1,11 +1,20 @@
+using Exadel.OfficeBooking.Api.Services;
 using Exadel.OfficeBooking.EF;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connection));
+builder.Configuration.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
+var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddScoped<IOfficeService, OfficeService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
