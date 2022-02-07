@@ -1,12 +1,15 @@
 ## Visual Studio temporary files and folders
 
-
-# Exclude folders like .vs, bin, obj
-
 # Visual Studio cache/options directory
 .vs/
 
 # Build results
 [Bb]in/
 [Oo]bj/
+
+# User-specific files
+src/Api/appsettings.local.json
 *.user
+
+# Migrations folder
+Migrations/
