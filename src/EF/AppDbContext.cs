@@ -1,12 +1,10 @@
-﻿namespace Exadel.OfficeBooking.EF
-{
-    using Exadel.OfficeBooking.Domain.Bookings;
-    using Exadel.OfficeBooking.Domain.Notifications;
-    using Exadel.OfficeBooking.Domain.OfficePlan;
-    using Exadel.OfficeBooking.Domain.Person;
-    using Exadel.OfficeBooking.Domain.Reports;
-    using Microsoft.EntityFrameworkCore;
+﻿using Exadel.OfficeBooking.Domain.Bookings;
+using Exadel.OfficeBooking.Domain.OfficePlan;
+using Exadel.OfficeBooking.Domain.Person;
+using Microsoft.EntityFrameworkCore;
 
+namespace Exadel.OfficeBooking.EF
+{
     /// <summary>
     /// Allows the application to interact with the database through the EntityFramework.
     /// </summary>
@@ -15,41 +13,22 @@
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
-            //Database.EnsureDeleted();
-            //Database.EnsureCreated();
         }
 
         public DbSet<Booking> Bookings { get; set;} = null!;
-        public DbSet<BookingNotification> Notifications { get; set; } = null!;
         public DbSet<Office> Offices { get; set; } = null!;
         public DbSet<Map> Maps { get; set; } = null!;
         public DbSet<Workplace> Workplaces { get; set; } = null!;
         public DbSet<ParkingPlace> ParkingPlaces { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Vacation> Vacations { get; set; } = null!;
-        //public DbSet<DailyReport> DailyReports { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Booking>()
-            .HasOne(b => b.ParkingPlace)
-            .WithOne(i => i.Booking)
-            .HasForeignKey<ParkingPlace>(b => b.BookingForeignKey);
-
-            modelBuilder.Entity<BookingNotification>()
-                .HasNoKey();
-
-            modelBuilder.Entity<BookingNotification>()
-                .Property(o => o.EmailAdress)
-                .HasMaxLength(100);
-
-            modelBuilder.Entity<BookingNotification>()
-                .Property(o => o.EmailSubject)
-                .HasMaxLength(100);
-
-            modelBuilder.Entity<BookingNotification>()
-                .Property(o => o.MessageBody)
-                .HasMaxLength(500);
+            modelBuilder.Entity<ParkingPlace>()
+                .HasOne(p => p.Booking)
+                .WithOne(b => b.ParkingPlace)
+                .HasForeignKey<Booking>(b => b.ParkingPlaceId);
 
             modelBuilder.Entity<Office>()
                 .Property(o => o.Country)

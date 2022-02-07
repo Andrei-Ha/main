@@ -9,6 +9,8 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
 
         public bool IsNextToWindow { get; set; }
 
+        public bool IsVIP { get; set; }
+
         public bool HasPC { get; set; }
 
         public bool HasMonitor { get; set; }
