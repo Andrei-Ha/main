@@ -8,7 +8,7 @@
 [Oo]bj/
 
 # User-specific files
-src/Api/appsettings.json
+src/Api/appsettings.local.json
 *.user
 
 # Migrations folder
