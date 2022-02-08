@@ -25,27 +25,67 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IResult> Get(Guid id)
         {
-            return "value";
+            User? user = await db.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+            {
+                return Results.NotFound(new {message = "The requested user was not found"});
+            }
+
+            return Results.Json(user);
         }
 
         // POST api/<UsersController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IResult> Post(User user)
         {
+            if (user == null)
+            {
+                return Results.BadRequest();
+            }
+
+            db.Users.Add(user);
+            await db.SaveChangesAsync();
+            return Results.Created($"Users/{user.Id}", user);
         }
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IResult> Put(Guid id, [FromBody] User userData)
         {
+            User? user = await db.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                return Results.NotFound(new { message = "The user was not found" });
+            }
+
+            if (userData.FirstName != string.Empty) { user.FirstName = userData.FirstName;}
+            if (userData.LastName != string.Empty) { user.LastName = userData.LastName;}
+            if (userData.Email != string.Empty) { user.Email = userData.Email;}
+
+            await db.SaveChangesAsync();
+            return Results.Json(user);
         }
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IResult> Delete(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return Results.BadRequest(new { message = "Guid is Empty" });
+            }
+
+            User? user = await db.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if(user == null)
+            {
+                return Results.NotFound(new { message = "The user not exist" });
+            }
+
+            db.Users.Remove(user);
+            await db.SaveChangesAsync();
+            return Results.Json(user);
         }
     }
 }
