@@ -1,4 +1,4 @@
-﻿namespace Exadel.OfficeBooking.Api.DTOs;
+﻿namespace Exadel.OfficeBooking.Api.DTO;
 
 public class ServiceResponse<T>
 {
