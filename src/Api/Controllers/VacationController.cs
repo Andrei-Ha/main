@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Exadel.OfficeBooking.Api.Controllers
 {
-    [Route("api/vacation")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class VacationsController : ControllerBase
+    public class VacationController : ControllerBase
     {
         private AppDbContext _db;
-        public VacationsController(AppDbContext appDbContext)
+        public VacationController(AppDbContext appDbContext)
         {
             _db = appDbContext;
         }

@@ -9,10 +9,10 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private AppDbContext _db;
-        public UsersController(AppDbContext context)
+        public UserController(AppDbContext context)
         {
             _db = context;
         }
@@ -41,7 +41,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
             User user = postUserDto.Adapt<User>();
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
-            return Results.Created($"Users/{user.Id}", user.Adapt<GetUserDto>());
+            return Results.Created($"User/{user.Id}", user.Adapt<GetUserDto>());
         }
 
         [HttpPut("{id}")]
