@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Exadel.OfficeBooking.Api.Models.Office;
-using Exadel.OfficeBooking.Api.ViewModels;
+using Exadel.OfficeBooking.Api.DTO.officeDto;
+using Exadel.OfficeBooking.Api.DTO.OfficeDto;
+using Exadel.OfficeBooking.Api.Interfaces;
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.EF;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ namespace Exadel.OfficeBooking.Api.Services
         {
             _context = context;
         }
-        public async Task<List<OfficeViewModel>> GetOffices(OfficeFilterModel filterModel)
+        public async Task<List<CreateOfficeDto>> GetOffices(OfficeFilterDto filterModel)
         {
             var offices = _context.Offices.AsQueryable();
 
@@ -41,33 +42,33 @@ namespace Exadel.OfficeBooking.Api.Services
                 offices = offices.Where(w => w.IsParkingAvailable == filterModel.IsParkingAvailable);
 
 
-            return await offices.Select<Office, OfficeViewModel>(s => s).ToListAsync();
+            return await offices.Select<Office, CreateOfficeDto>(s => s).AsNoTracking().ToListAsync();
 
         }
 
-        
-        public async Task<OfficeViewModel> GetOfficeById(Guid id)
+
+        public async Task<CreateOfficeDto> GetOfficeById(Guid id)
         {
-            return await _context.Offices.FirstOrDefaultAsync(f => f.Id == id);
+            return await _context.Offices.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
 
         }
-            
 
-        public  async void DeleteOffice(Guid id)
+
+        public async void DeleteOffice(Guid id)
         {
-            var result =  _context.Offices.FirstOrDefault(f => f.Id == id);
+            var result = _context.Offices.FirstOrDefault(f => f.Id == id);
 
             if (result != null)
             {
-                 _context.Offices.Remove(result);
+                _context.Offices.Remove(result);
 
-               await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public async Task<Guid> SaveOffice(OfficeViewModel officeVM)
+        public async Task<Guid> SaveOffice(CreateOfficeDto officeVM)
         {
-            Office office = new() 
+            Office office = new()
             {
                 Adress = officeVM.Adress,
                 City = officeVM.City,
@@ -78,10 +79,11 @@ namespace Exadel.OfficeBooking.Api.Services
             };
 
             _context.Offices.Add(office);
-           await  _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return office.Id;
         }
+
     }
 }
 

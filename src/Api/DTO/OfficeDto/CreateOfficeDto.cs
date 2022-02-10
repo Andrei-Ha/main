@@ -1,13 +1,15 @@
 ﻿
+using Exadel.OfficeBooking.Api.DTO.OfficeDto;
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Exadel.OfficeBooking.Api.ViewModels
+namespace Exadel.OfficeBooking.Api.DTO.officeDto
+
 {
-    public class OfficeViewModel : BaseViewModel
+    public class CreateOfficeDto : BaseDto
     {
         public string Country { get; set; } = string.Empty;
 
@@ -21,11 +23,11 @@ namespace Exadel.OfficeBooking.Api.ViewModels
 
         public bool IsParkingAvailable { get; set; }
 
-        public static implicit operator OfficeViewModel (Office source)
+        public static implicit operator CreateOfficeDto (Office source)
         {
             if (source == null) return null;
            
-            return new OfficeViewModel
+            return new CreateOfficeDto
             {
                 
                 Adress = source.Adress,

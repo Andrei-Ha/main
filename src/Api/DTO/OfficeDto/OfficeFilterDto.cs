@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Exadel.OfficeBooking.Api.Models.Office
+namespace Exadel.OfficeBooking.Api.DTO.OfficeDto
+
 {
-    public class OfficeFilterModel
+    public class OfficeFilterDto
     {
 
         public string Country { get; set; } = string.Empty;

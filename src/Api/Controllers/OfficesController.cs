@@ -1,6 +1,7 @@
-﻿using Exadel.OfficeBooking.Api.Models.Office;
+﻿using Exadel.OfficeBooking.Api.DTO.officeDto;
+using Exadel.OfficeBooking.Api.DTO.OfficeDto;
+using Exadel.OfficeBooking.Api.Interfaces;
 using Exadel.OfficeBooking.Api.Services;
-using Exadel.OfficeBooking.Api.ViewModels;
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.EF;
 using Microsoft.AspNetCore.Mvc;
@@ -25,18 +26,18 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
         // GET: api/<OfficesController>
         [HttpGet]
-        public async Task<List<OfficeViewModel>> GetOffices([FromQuery]OfficeFilterModel filterModel)
+        public async Task<List<CreateOfficeDto>> GetOffices([FromQuery]OfficeFilterDto filterModel)
         {
             return await _officeService.GetOffices(filterModel);
         }
 
         // GET api/<OfficesController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OfficeViewModel>> GetOfficeById(Guid id)
+        public async Task<ActionResult<CreateOfficeDto>> GetOfficeById(Guid id)
         {
             var result = await _officeService.GetOfficeById(id);
 
-            if (result == null) return new NotFoundResult();
+            if (result == null) return new NoContentResult();
 
             return result;
         }
@@ -46,7 +47,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         // POST api/<OfficesController>
         [HttpPost]
-        public async Task<Guid> Add([FromBody] OfficeViewModel office)
+        public async Task<Guid> Add([FromBody] CreateOfficeDto office)
         {
             return await _officeService.SaveOffice(office);
             
