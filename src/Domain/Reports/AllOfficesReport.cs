@@ -1,4 +1,7 @@
-﻿namespace Exadel.OfficeBooking.Domain.Reports
+﻿using System;
+using System.Collections.Generic;
+
+namespace Exadel.OfficeBooking.Domain.Reports
 {
     public class AllOfficesReport
     {
