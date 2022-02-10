@@ -10,7 +10,7 @@ namespace Exadel.OfficeBooking.Domain.Person
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public UserRole Role{ get; set; }
-        public DateTime EmploymentStart { get; set; }
+        public DateTime? EmploymentStart { get; set; }
         public DateTime? EmploymentEnd { get; set; }
         public List<Vacation>? Vacations { get; set; }
         public List<Booking>? BookingList { get; set; }
