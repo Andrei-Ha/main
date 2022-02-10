@@ -1,5 +1,6 @@
 ﻿using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.Domain.Person;
+using System;
 
 namespace Exadel.OfficeBooking.Domain.Bookings
 {

@@ -1,4 +1,6 @@
-﻿namespace Exadel.OfficeBooking.Domain.OfficePlan
+﻿using System.Collections.Generic;
+
+namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
     public class Map : BaseModel
     {

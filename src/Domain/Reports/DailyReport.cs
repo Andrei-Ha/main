@@ -1,4 +1,6 @@
-﻿namespace Exadel.OfficeBooking.Domain.Reports
+﻿using System;
+
+namespace Exadel.OfficeBooking.Domain.Reports
 {
     public class DailyReport
     {
