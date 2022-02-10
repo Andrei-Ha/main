@@ -1,4 +1,4 @@
-﻿namespace Exadel.OfficeBooking.Api.DTO
+﻿namespace Exadel.OfficeBooking.Api.DTO.WorkplaceDto
 {
     public class WorkplaceFilterDto
     {

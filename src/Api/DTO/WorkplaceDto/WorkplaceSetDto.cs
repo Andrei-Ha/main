@@ -1,9 +1,7 @@
-﻿namespace Exadel.OfficeBooking.Api.DTO
+﻿namespace Exadel.OfficeBooking.Api.DTO.WorkplaceDto
 {
-    public class WorkplaceDto
+    public class WorkplaceSetDto
     {
-        public Guid Id { get; set; }
-
         public string Number { get; set; } = string.Empty;
 
         public TypesDto Type { get; set; }
@@ -21,12 +19,5 @@
         public bool HasMouse { get; set; }
 
         public bool HasHeadset { get; set; }
-    }
-
-    public enum TypesDto
-    {
-        Regular,
-        Administrative,
-        Non_bookable
     }
 }

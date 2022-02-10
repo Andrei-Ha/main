@@ -1,16 +1,18 @@
-﻿using Exadel.OfficeBooking.Api.DTO;
+﻿using System;
+using System.Threading.Tasks;
+using Exadel.OfficeBooking.Api.DTO.WorkplaceDto;
 
 namespace Exadel.OfficeBooking.Api.Interfaces
 {
     public interface IWorkplaceService
     {
-        Task<List<WorkplaceDto>> GetWorkplaces(WorkplaceFilterDto filterModel);
+        Task<WorkplaceGetDto[]> GetWorkplaces(WorkplaceFilterDto filterModel);
 
-        Task<WorkplaceDto?> GetWorkplaceById(Guid id);
+        Task<WorkplaceGetDto?> GetWorkplaceById(Guid id);
 
-        Task<WorkplaceDto?> CreateWorkplace(WorkplaceDto workplace);
+        Task<WorkplaceGetDto?> CreateWorkplace(WorkplaceSetDto workplace);
 
-        Task<WorkplaceDto?> UpdateWorkplace(WorkplaceDto workplace);
+        Task<WorkplaceGetDto?> UpdateWorkplace(WorkplaceGetDto workplace);
 
         Task<Guid?> DeleteWorkplaceById(Guid id);
     }

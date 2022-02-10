@@ -1,9 +1,12 @@
-﻿using Exadel.OfficeBooking.Api.DTO;
+﻿using Exadel.OfficeBooking.Api.DTO.WorkplaceDto;
 using Exadel.OfficeBooking.Api.Interfaces;
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.EF;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Exadel.OfficeBooking.Api.Services
 {
@@ -16,9 +19,9 @@ namespace Exadel.OfficeBooking.Api.Services
             _context = context;
         }
 
-        public async Task<List<WorkplaceDto>> GetWorkplaces(WorkplaceFilterDto filterModel)
+        public async Task<WorkplaceGetDto[]> GetWorkplaces(WorkplaceFilterDto filterModel)
         {
-            var workplaces = _context.Workplaces.AsQueryable();
+            var workplaces = _context.Workplaces.AsNoTracking();
 
             if (!string.IsNullOrEmpty(filterModel.Number))
                 workplaces = workplaces.Where(w => w.Number.Contains(filterModel.Number));
@@ -46,22 +49,22 @@ namespace Exadel.OfficeBooking.Api.Services
             if (filterModel.HasHeadset != null)
                 workplaces = workplaces.Where(w => w.HasHeadset == filterModel.HasHeadset);
 
-            var workplacesList = await workplaces.AsNoTracking().ToListAsync();
+            var workplacesList = await workplaces.ToArrayAsync();
 
-            return workplacesList.Adapt<List<WorkplaceDto>>();
+            return workplacesList.Adapt<WorkplaceGetDto[]>();
         }
 
-        public async Task<WorkplaceDto?> GetWorkplaceById(Guid id)
+        public async Task<WorkplaceGetDto?> GetWorkplaceById(Guid id)
         {
             var workplace = await _context.Workplaces.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
 
             if (workplace == null)
                 return null;
 
-            return workplace.Adapt<WorkplaceDto>();
+            return workplace.Adapt<WorkplaceGetDto>();
         }
 
-        public async Task<WorkplaceDto?> CreateWorkplace(WorkplaceDto workplace)
+        public async Task<WorkplaceGetDto?> CreateWorkplace(WorkplaceSetDto workplace)
         {
             if (workplace == null)
                 return null;
@@ -71,12 +74,10 @@ namespace Exadel.OfficeBooking.Api.Services
             await _context.Workplaces.AddAsync(workplaceDomain);
             await _context.SaveChangesAsync();
 
-            workplace.Id = workplaceDomain.Id;
-
-            return workplace;
+            return workplaceDomain.Adapt<WorkplaceGetDto>();
         }
 
-        public async Task<WorkplaceDto?> UpdateWorkplace(WorkplaceDto workplace)
+        public async Task<WorkplaceGetDto?> UpdateWorkplace(WorkplaceGetDto workplace)
         {
             if (workplace == null)
                 return null;
