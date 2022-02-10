@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Exadel.OfficeBooking.Api.DTO.OfficeDto
+namespace Exadel.OfficeBooking.Api.DTO
 
 {
     public class OfficeFilterDto

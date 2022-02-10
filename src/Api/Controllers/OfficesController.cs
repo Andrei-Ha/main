@@ -1,5 +1,5 @@
-﻿using Exadel.OfficeBooking.Api.DTO.officeDto;
-using Exadel.OfficeBooking.Api.DTO.OfficeDto;
+﻿using Exadel.OfficeBooking.Api.DTO;
+using Exadel.OfficeBooking.Api.DTO;
 using Exadel.OfficeBooking.Api.Interfaces;
 using Exadel.OfficeBooking.Api.Services;
 using Exadel.OfficeBooking.Domain.OfficePlan;
@@ -26,20 +26,26 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
         // GET: api/<OfficesController>
         [HttpGet]
-        public async Task<List<CreateOfficeDto>> GetOffices([FromQuery]OfficeFilterDto filterModel)
+        [Produces("application/json")]
+        public async Task<ActionResult<List<OfficeDto>>> GetOffices([FromQuery]OfficeFilterDto filterModel)
         {
-            return await _officeService.GetOffices(filterModel);
+            var offices =  await _officeService.GetOffices(filterModel);
+
+            if (offices.Count == 0) return NoContent();
+
+            return Ok(offices);
         }
 
         // GET api/<OfficesController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CreateOfficeDto>> GetOfficeById(Guid id)
+        [Produces("application/json")]
+        public async Task<ActionResult<OfficeDto>> GetOfficeById(Guid id)
         {
             var result = await _officeService.GetOfficeById(id);
 
-            if (result == null) return new NoContentResult();
+            if (result == null) return NoContent();
 
-            return result;
+            return Ok(result);
         }
             
 
@@ -47,23 +53,35 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         // POST api/<OfficesController>
         [HttpPost]
-        public async Task<Guid> Add([FromBody] CreateOfficeDto office)
+        [Produces("application/json")]
+        public async Task<Guid?> Add([FromBody] OfficeDto office)
         {
             return await _officeService.SaveOffice(office);
             
         }
 
-        // PUT api/<OfficesController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        // DELETE api/<OfficesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        //PUT api/<OfficesController>/5
+        [HttpPut]
+        public async Task<ActionResult> Update([FromBody] OfficeDto office)
         {
-            _officeService.DeleteOffice(id);
+            var officeUpdated = await _officeService.UpdateOffice(office);
+
+            if (officeUpdated == null) return BadRequest();
+
+            return Ok("Updated");
+        }
+
+       // DELETE api/<OfficesController>/5
+
+
+        [HttpDelete("{id}")]
+        public  async Task<ActionResult> Delete(Guid id)
+        {
+            var result = await _officeService.DeleteOffice(id);
+
+            if (result == null) return NoContent();
+
+            return Ok(result);
         }
     }
 }
