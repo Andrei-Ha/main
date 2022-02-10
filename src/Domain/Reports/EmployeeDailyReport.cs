@@ -1,4 +1,5 @@
 ﻿using Exadel.OfficeBooking.Domain.OfficePlan;
+using System;
 
 namespace Exadel.OfficeBooking.Domain.Reports
 {

@@ -1,3 +1,5 @@
+using System;
+
 namespace Exadel.OfficeBooking.Domain.Notifications
 {
     public class BookingNotification
