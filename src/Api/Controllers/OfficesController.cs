@@ -1,5 +1,4 @@
 ﻿using Exadel.OfficeBooking.Api.DTO;
-using Exadel.OfficeBooking.Api.DTO;
 using Exadel.OfficeBooking.Api.Interfaces;
 using Exadel.OfficeBooking.Api.Services;
 using Exadel.OfficeBooking.Domain.OfficePlan;
