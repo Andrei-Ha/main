@@ -1,12 +1,12 @@
-﻿using Exadel.OfficeBooking.Domain.Bookings;
-
-namespace Exadel.OfficeBooking.Domain.OfficePlan
+﻿namespace Exadel.OfficeBooking.Api.DTO
 {
-    public class Workplace : BaseModel
+    public class WorkplaceDto
     {
+        public Guid Id { get; set; }
+
         public string Number { get; set; } = string.Empty;
 
-        public Types Type { get; set; }
+        public TypesDto Type { get; set; }
 
         public bool IsBooked { get; set; }
 
@@ -21,13 +21,9 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public bool HasMouse { get; set; }
 
         public bool HasHeadset { get; set; }
-
-        public Map Map { get; set; } = new();
-
-        public List<Booking>? Bookings { get; set; }
     }
 
-    public enum Types
+    public enum TypesDto
     {
         Regular,
         Administrative,
