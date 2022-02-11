@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace Exadel.OfficeBooking.Domain.OfficePlan
+﻿namespace Exadel.OfficeBooking.Api.DTO.OfficeDto
 {
-    public class Office : BaseModel
+    public class OfficeSetDto 
     {
         public string Country { get; set; } = string.Empty;
 
@@ -15,9 +13,5 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public bool IsCityCenter { get; set; }
 
         public bool IsParkingAvailable { get; set; }
-
-        public List<Map> Maps { get; set; } = new();
-
-        public List<ParkingPlace>? ParkingPlaces { get; set; }
     }
-}
+} 

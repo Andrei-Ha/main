@@ -1,4 +1,6 @@
-﻿namespace Exadel.OfficeBooking.Domain.Person
+﻿using System;
+
+namespace Exadel.OfficeBooking.Domain.Person
 {
     public class Vacation : BaseModel
     {
