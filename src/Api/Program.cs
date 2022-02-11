@@ -15,12 +15,14 @@ builder.Configuration.AddJsonFile("appsettings.local.json", optional: true, relo
 var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddScoped<IOfficeService, OfficeService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IOfficeService, OfficeService>();
+builder.Services.AddScoped<IWorkplaceService, WorkplaceService>();
 
 var app = builder.Build();
 

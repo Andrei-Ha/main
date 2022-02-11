@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Exadel.OfficeBooking.Api.DTO;
+using Exadel.OfficeBooking.Api.DTO.OfficeDto;
 using Exadel.OfficeBooking.Api.Interfaces;
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.EF;
@@ -19,9 +18,10 @@ namespace Exadel.OfficeBooking.Api.Services
         {
             _context = context;
         }
-        public async Task<List<OfficeDto>> GetOffices(OfficeFilterDto filterModel)
+
+        public async Task<OfficeGetDto[]> GetOffices(OfficeFilterDto filterModel)
         {
-            var offices = _context.Offices.AsQueryable();
+            var offices = _context.Offices.AsNoTracking();
 
             if (!string.IsNullOrEmpty(filterModel.Name))
                 offices = offices.Where(w => w.Name.Contains(filterModel.Name));
@@ -41,51 +41,36 @@ namespace Exadel.OfficeBooking.Api.Services
             if (filterModel.IsParkingAvailable != null)
                 offices = offices.Where(w => w.IsParkingAvailable == filterModel.IsParkingAvailable);
 
+            var result = await offices.ToArrayAsync();
 
-            var result = await offices.AsNoTracking().ToListAsync();
-
-            return result.Adapt<List<OfficeDto>>();
-
+            return result.Adapt<OfficeGetDto[]>();
         }
 
-
-        public async Task<OfficeDto?> GetOfficeById(Guid id)
+        public async Task<OfficeGetDto?> GetOfficeById(Guid id)
         {
             var office = await _context.Offices.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
 
             if (office == null) return null;
 
-            return office.Adapt<OfficeDto>();
-
+            return office.Adapt<OfficeGetDto>();
         }
 
-
-        public async Task<Guid?> DeleteOffice(Guid id)
+        public async Task<OfficeGetDto?> CreateOffice(OfficeSetDto office)
         {
-            var result = _context.Offices.FirstOrDefault(f => f.Id == id);
+            if (office == null) return null;
 
-            if (result == null) return null;
-            
-                _context.Offices.Remove(result);
-
-                await _context.SaveChangesAsync();
-
-                return id;
-            
-        }
-
-        public async Task<Guid?> SaveOffice(OfficeDto office)
-        {
             var officeDomain = office.Adapt<Office>();
 
             await _context.Offices.AddAsync(officeDomain);
             await _context.SaveChangesAsync();
 
-            return office.Id;
+            return officeDomain.Adapt<OfficeGetDto>();
         }
 
-        public async Task<OfficeDto?> UpdateOffice(OfficeDto office)
+        public async Task<OfficeGetDto?> UpdateOffice(OfficeGetDto office)
         {
+            if (office == null) return null;
+
             var officeDomain = office.Adapt<Workplace>();
 
             _context.Entry(officeDomain).State = EntityState.Modified;
@@ -94,6 +79,16 @@ namespace Exadel.OfficeBooking.Api.Services
             return office;
         }
 
+        public async Task<Guid?> DeleteOffice(Guid id)
+        {
+            var result = _context.Offices.FirstOrDefault(f => f.Id == id);
+
+            if (result == null) return null;
+
+            _context.Offices.Remove(result);
+            await _context.SaveChangesAsync();
+
+            return id;
+        }
     }
 }
-
