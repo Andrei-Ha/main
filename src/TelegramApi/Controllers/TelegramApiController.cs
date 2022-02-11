@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace TelegramApi.Controllers
+namespace Exadel.OfficeBooking.TelegramApi.Controllers
 {
     [ApiController]
     [Route(template: "api/message")]

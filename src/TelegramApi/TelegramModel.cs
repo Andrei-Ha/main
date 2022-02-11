@@ -1,4 +1,4 @@
-namespace TelegramApi
+namespace Exadel.OfficeBooking.TelegramApi
 {
     public class TelegramModel
     {
