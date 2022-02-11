@@ -20,37 +20,42 @@ namespace Exadel.OfficeBooking.Api.Controllers
         [HttpGet]
         public async Task<GetUserDto[]> Get()
         {
-            return await _db.Users.AsNoTracking().Select(o => o.Adapt<GetUserDto>()).ToArrayAsync();
+            return await _db.Users
+                .AsNoTracking()
+                .Select(o => o.Adapt<GetUserDto>())
+                .ToArrayAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<IResult> Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            User? user = await _db.Users.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+            User? user = await _db.Users
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.Id == id);
             if (user == null)
             {
-                return Results.NotFound(new {message = "The requested user was not found"});
+                return NotFound(new {message = "The requested user was not found"});
             }
 
-            return Results.Ok(user.Adapt<GetUserDto>());
+            return Ok(user.Adapt<GetUserDto>());
         }
 
         [HttpPost]
-        public async Task<IResult> Post(PostUserDto postUserDto )
+        public async Task<IActionResult> Post(PostUserDto postUserDto )
         {
             User user = postUserDto.Adapt<User>();
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
-            return Results.Created($"User/{user.Id}", user.Adapt<GetUserDto>());
+            return Created($"User/{user.Id}", user.Adapt<GetUserDto>());
         }
 
         [HttpPut("{id}")]
-        public async Task<IResult> Put(Guid id, [FromBody] PutUserDto putUserDto)
+        public async Task<IActionResult> Put(Guid id, [FromBody] PutUserDto putUserDto)
         {
             User? user = await _db.Users.SingleOrDefaultAsync(u => u.Id == id);
             if (user == null)
             {
-                return Results.NotFound(new { message = "The user was not found" });
+                return NotFound(new { message = "The user was not found" });
             }
 
             user.TelegramId = putUserDto.TelegramId;
@@ -60,21 +65,23 @@ namespace Exadel.OfficeBooking.Api.Controllers
             user.EmploymentStart = putUserDto.EmploymentStart;
             user.EmploymentEnd = putUserDto.EmploymentEnd;
             await _db.SaveChangesAsync();
-            return Results.Json(user.Adapt<GetUserDto>());
+            return Ok(user.Adapt<GetUserDto>());
         }
 
         [HttpDelete("{id}")]
-        public async Task<IResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            User? user = await _db.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id);
+            User? user = await _db.Users
+                .AsNoTracking()
+                .SingleOrDefaultAsync(u => u.Id == id);
             if(user == null)
             {
-                return Results.NotFound(new { message = "The user doesn't exist" });
+                return NotFound(new { message = "The user doesn't exist" });
             }
 
             _db.Users.Remove(user);
             await _db.SaveChangesAsync();
-            return Results.Json(user.Adapt<GetUserDto>());
+            return Ok(user.Adapt<GetUserDto>());
         }
     }
 }

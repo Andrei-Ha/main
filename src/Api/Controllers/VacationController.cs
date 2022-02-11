@@ -16,6 +16,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         {
             _db = appDbContext;
         }
+
         [HttpGet]
         public async Task<GetVacationDto[]> Get()
         {
@@ -27,27 +28,27 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IResult> Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
             Vacation? vacation = await _db.Vacations
-                .AsNoTracking()
                 .Include(o => o.User)
+                .AsNoTracking()
                 .SingleOrDefaultAsync(v => v.Id == id);
             if (vacation == null)
             {
-                return Results.NotFound(new { message = "Requested vacation doesn't exist" });
+                return NotFound(new { message = "Requested vacation doesn't exist" });
             }
                 
-            return Results.Ok(vacation.Adapt<GetVacationDto>());
+            return Ok(vacation.Adapt<GetVacationDto>());
         }
 
         [HttpPost]
-        public async Task<IResult> Post(PostVacationDto postVacationDto)
+        public async Task<IActionResult> Post(PostVacationDto postVacationDto)
         {
             User? user = await _db.Users.SingleOrDefaultAsync(x => x.Id == postVacationDto.UserId);
             if (user == null)
             {
-                return Results.NotFound(new { message = "User to add vacation not found" });
+                return NotFound(new { message = "User to add vacation not found" });
             }
             
             if (user.Vacations == null)
@@ -58,43 +59,43 @@ namespace Exadel.OfficeBooking.Api.Controllers
             Vacation vacation = postVacationDto.Adapt<Vacation>();
             user.Vacations.Add(vacation);
             await _db.SaveChangesAsync();
-            return Results.Created($"vacation/{vacation.Id}", vacation.Adapt<GetVacationDto>());
+            return Created($"vacation/{vacation.Id}", vacation.Adapt<GetVacationDto>());
         }
 
         [HttpPut("{id}")]
-        public async Task<IResult> Put(Guid id, PutVacationDto putVacationDto)
+        public async Task<IActionResult> Put(Guid id, PutVacationDto putVacationDto)
         {
             Vacation? vacation = await _db.Vacations.SingleOrDefaultAsync(v => v.Id == id);
             if (vacation == null)
             {
-                return Results.NotFound(new { message = "Requested vacation doesn’t exist" });
+                return NotFound(new { message = "Requested vacation doesn’t exist" });
             }
             
             User? user = await _db.Users.FirstOrDefaultAsync(x => x.Id==putVacationDto.UserId);
             if (user == null)
             {
-                return Results.NotFound(new { message = "The user was not found" });
+                return NotFound(new { message = "The user was not found" });
             }
 
             vacation.User = user;
             vacation.VacationStart = putVacationDto.VacationStart;
             vacation.VacationEnd = putVacationDto.VacationEnd;
             await _db.SaveChangesAsync();
-            return Results.Ok(vacation.Adapt<GetVacationDto>());
+            return Ok(vacation.Adapt<GetVacationDto>());
         }
 
         [HttpDelete("{id}")]
-        public async Task<IResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         { 
             Vacation? vacation = _db.Vacations.FirstOrDefault(x => x.Id == id);
             if (vacation == null)
             {
-                return Results.NotFound(new { message = "Requested vacation doesn’t exist" });
+                return NotFound(new { message = "Requested vacation doesn’t exist" });
             }
 
             _db.Vacations.Remove(vacation);
             await _db.SaveChangesAsync();
-            return Results.Ok();
+            return Ok();
         }
     }
 }
