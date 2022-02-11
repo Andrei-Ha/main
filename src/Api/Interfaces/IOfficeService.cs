@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Exadel.OfficeBooking.Api.DTO;
-using Microsoft.AspNetCore.Mvc;
+using Exadel.OfficeBooking.Api.DTO.OfficeDto;
 
 namespace Exadel.OfficeBooking.Api.Interfaces
-
 {
     public interface IOfficeService
     {
-        Task<List<OfficeDto>> GetOffices(OfficeFilterDto filterModel);
+        Task<OfficeGetDto[]> GetOffices(OfficeFilterDto filterModel);
 
-        Task<OfficeDto?> GetOfficeById(Guid id);
+        Task<OfficeGetDto?> GetOfficeById(Guid id);
 
-        Task<Guid?>  DeleteOffice(Guid id);
+        Task<OfficeGetDto?> CreateOffice(OfficeSetDto office);
 
-        Task<Guid?> SaveOffice(OfficeDto office);
+        Task<OfficeGetDto?> UpdateOffice(OfficeGetDto office);
 
-        Task<OfficeDto?> UpdateOffice(OfficeDto office);
+        Task<Guid?> DeleteOffice(Guid id);
     }
 }
-
