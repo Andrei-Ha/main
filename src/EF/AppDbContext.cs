@@ -2,6 +2,7 @@
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.Domain.Person;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Exadel.OfficeBooking.EF
 {

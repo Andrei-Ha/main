@@ -1,15 +1,17 @@
 ﻿using Exadel.OfficeBooking.Domain.Bookings;
-
+using System.Collections.Generic;
 
 namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
     public class Workplace : BaseModel
     {
+        public string Number { get; set; } = string.Empty;
+
+        public Types Type { get; set; }
+
         public bool IsBooked { get; set; }
 
         public bool IsNextToWindow { get; set; }
-
-        public bool IsVIP { get; set; }
 
         public bool HasPC { get; set; }
 
@@ -24,5 +26,12 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public Map Map { get; set; } = new();
 
         public List<Booking>? Bookings { get; set; }
+    }
+
+    public enum Types
+    {
+        Regular,
+        Administrative,
+        Non_bookable
     }
 }
