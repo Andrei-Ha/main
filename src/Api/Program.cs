@@ -1,5 +1,3 @@
-using Exadel.OfficeBooking.Api.Interfaces;
-using Exadel.OfficeBooking.Api.Services;
 using Exadel.OfficeBooking.EF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -20,9 +18,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<IOfficeService, OfficeService>();
-builder.Services.AddScoped<IWorkplaceService, WorkplaceService>();
 
 var app = builder.Build();
 
