@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Exadel.OfficeBooking.Api.Interfaces;
+using Exadel.OfficeBooking.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
