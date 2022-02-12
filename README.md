@@ -1,5 +1,6 @@
-# Task board
-[Main board](https://github.com/orgs/exadelsandbox2022feb/projects/1)
+# Useful links
+- [Main board](https://github.com/orgs/exadelsandbox2022feb/projects/1)
+- The bot - http://t.me/SandboxTeam3_bot
 
 # How to contribute?
 We use [Github Flow](https://docs.github.com/en/get-started/quickstart/github-flow) to contribute.
