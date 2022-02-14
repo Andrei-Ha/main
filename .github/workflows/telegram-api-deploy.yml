@@ -1,4 +1,4 @@
-name: '[Manual] Deploy telegram bot API'
+name: '🚀 Telegram API'
 
 on: workflow_dispatch
 
