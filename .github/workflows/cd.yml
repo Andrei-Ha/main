@@ -1,4 +1,4 @@
-name: '[Manual] Deploy main API'
+name: '🚀 Main API'
 
 on: workflow_dispatch
 
