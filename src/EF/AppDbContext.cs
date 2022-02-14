@@ -40,7 +40,7 @@ namespace Exadel.OfficeBooking.EF
                 .HasMaxLength(100);
 
             modelBuilder.Entity<Office>()
-                .Property(o => o.Adress)
+                .Property(o => o.Address)
                 .HasMaxLength(150);
 
             modelBuilder.Entity<Office>()
