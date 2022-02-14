@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Exadel.OfficeBooking.Api.Controllers
 {
     [ApiController]
-    [Route("api/office")]
+    [Route("api/[Controller]")]
     public class OfficesController : ControllerBase
     {
         private readonly IOfficeService _officeService;
@@ -19,10 +19,10 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOffices()
+        public async Task<OfficeGetDto[]> GetOffices()
         {
             var offices = await _officeService.GetOffices();
-            return Ok(offices);
+            return offices;
         }
 
         [HttpGet("{id}")]
