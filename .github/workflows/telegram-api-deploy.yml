@@ -1,4 +1,4 @@
-name: TelegramApi Deploy
+name: "TelegramApi Deploy"
 
 on: workflow_dispatch
 
