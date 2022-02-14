@@ -1,27 +1,33 @@
-name: "TelegramApi Deploy"
+name: TelegramApi Deployment
 
 on: workflow_dispatch
 
 jobs:
- deploy:
-  runs-on: ubuntu-latest
-  environment: dev
-  steps:
-   - uses: actions/checkout@v2
-     with:
-      fetch-depth: 0 
-      
-   - name: Setup .NET
-     uses: actions/setup-dotnet@v1
-     with: 
-      dotnet-version: 6.0.x
-        
-   - name: Publish
-     run: dotnet publish 'TelegramApi' -c Release -o '_telegramApi'
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+    
+    defaults:
+      run:
+        working-directory: ./src
+    
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
-   - name: Deploy
-     uses: azure/webapps-deploy@v2
-     with:
-      app-name: exadelsandbox-officebooking-telegramapi-dev
-      publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-      package: './src/_telegramApi'
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Publish
+      run: dotnet publish 'TelegramApi' -c Release -o '_telegramApi'
+      
+    - name: Deploy
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: exadelsandbox-officebooking-telegramapi-dev
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: './src/_telegramApi'
+        
