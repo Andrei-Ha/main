@@ -8,13 +8,11 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
 
         public string City { get; set; } = string.Empty;
 
-        public string Adress { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
 
         public string Name { get; set; } = string.Empty;
 
-        public bool IsCityCenter { get; set; }
-
-        public bool IsParkingAvailable { get; set; }
+        public bool IsFreeParkingAvailable { get; set; }
 
         public List<Map> Maps { get; set; } = new();
 

@@ -6,14 +6,14 @@ namespace Exadel.OfficeBooking.Api.Interfaces
 {
     public interface IOfficeService
     {
-        Task<OfficeGetDto[]> GetOffices(OfficeFilterDto filterModel);
+        Task<OfficeGetDto[]> GetOffices();
 
         Task<OfficeGetDto?> GetOfficeById(Guid id);
 
-        Task<OfficeGetDto?> CreateOffice(OfficeSetDto office);
+        Task<OfficeGetDto> CreateOffice(OfficeSetDto office);
 
-        Task<OfficeGetDto?> UpdateOffice(OfficeGetDto office);
+        Task<OfficeGetDto?> UpdateOffice(Guid id, OfficeGetDto office);
 
-        Task<Guid?> DeleteOffice(Guid id);
+        Task<OfficeGetDto?> DeleteOffice(Guid id);
     }
 }
