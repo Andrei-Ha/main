@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 using Telegram.Bot;
 
 namespace Exadel.OfficeBooking.TelegramApi
