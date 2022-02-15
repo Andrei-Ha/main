@@ -1,4 +1,4 @@
-name: '🚀 Main API'
+name: '🚀 Telegram API'
 
 on: workflow_dispatch
 
@@ -22,11 +22,12 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Publish
-      run: dotnet publish 'Api' -c Release -o '_api'
+      run: dotnet publish 'TelegramApi' -c Release -o '_telegramApi'
       
     - name: Deploy
       uses: azure/webapps-deploy@v2
       with: 
-        app-name: exadelsandbox-officebooking-dev
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: './src/_api'
+        app-name: exadelsandbox-officebooking-telegramapi-dev
+        publish-profile: ${{ secrets.AZURE_WEBAPP_TELEGRAM_API_PUBLISH_PROFILE }}
+        package: './src/_telegramApi'
+        
