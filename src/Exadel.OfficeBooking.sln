@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exadel.OfficeBooking.EF", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exadel.OfficeBooking.Api", "Api\Exadel.OfficeBooking.Api.csproj", "{C6E332D5-881B-431F-AA57-012911ACF428}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exadel.OfficeBooking.TelegramApi", "TelegramApi\Exadel.OfficeBooking.TelegramApi.csproj", "{932C3410-3D3A-4874-86FD-74DBE2E5A661}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exadel.OfficeBooking.TelegramApi", "TelegramApi\Exadel.OfficeBooking.TelegramApi.csproj", "{291184AA-2B06-4A3C-8C30-415605D32C6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{C6E332D5-881B-431F-AA57-012911ACF428}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6E332D5-881B-431F-AA57-012911ACF428}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6E332D5-881B-431F-AA57-012911ACF428}.Release|Any CPU.Build.0 = Release|Any CPU
-		{932C3410-3D3A-4874-86FD-74DBE2E5A661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{932C3410-3D3A-4874-86FD-74DBE2E5A661}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{932C3410-3D3A-4874-86FD-74DBE2E5A661}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{932C3410-3D3A-4874-86FD-74DBE2E5A661}.Release|Any CPU.Build.0 = Release|Any CPU
+		{291184AA-2B06-4A3C-8C30-415605D32C6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{291184AA-2B06-4A3C-8C30-415605D32C6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{291184AA-2B06-4A3C-8C30-415605D32C6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{291184AA-2B06-4A3C-8C30-415605D32C6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
