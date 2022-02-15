@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Domain\Exadel.OfficeBooking.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CheckingMyUser Name4\" />
-  </ItemGroup>
-
 </Project>
