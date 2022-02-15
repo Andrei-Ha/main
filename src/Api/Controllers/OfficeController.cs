@@ -10,10 +10,10 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class OfficesController : ControllerBase
+    public class OfficeController : ControllerBase
     {
         private readonly IOfficeService _officeService;
-        public OfficesController(IOfficeService officeService)
+        public OfficeController(IOfficeService officeService)
         {
             _officeService = officeService;
         }
