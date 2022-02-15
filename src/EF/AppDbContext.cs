@@ -2,6 +2,7 @@
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.Domain.Person;
 using Microsoft.EntityFrameworkCore;
+using Exadel.OfficeBooking.Domain.DbTestData;
 using System;
 
 namespace Exadel.OfficeBooking.EF
@@ -47,6 +48,8 @@ namespace Exadel.OfficeBooking.EF
                 .Property(o => o.Name)
                 .HasMaxLength(150);
 
+            modelBuilder.ApplyConfiguration(new OfficeTestData());
+
             modelBuilder.Entity<User>()
                 .Property(o => o.FirstName)
                 .HasMaxLength(100);
@@ -62,6 +65,8 @@ namespace Exadel.OfficeBooking.EF
             modelBuilder.Entity<User>()
                 .Property(o => o.Role)
                 .HasDefaultValue(UserRole.CommonUser);
+
+            modelBuilder.ApplyConfiguration(new UserTestData());
 
             modelBuilder.Entity<User>().HasData(
                 new User
