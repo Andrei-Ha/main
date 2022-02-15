@@ -32,9 +32,11 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
             await _telegramBotClient.SendTextMessageAsync(
                 chatId, 
                 text: "Test message.", 
-                ParseMode.MarkdownV2);
+                ParseMode.MarkdownV2,
+                disableNotification: false,
+                replyToMessageId: update.Message?.MessageId);
 
-            return Ok("Test Ok message!");
+            return Ok();
         }
     }
 }

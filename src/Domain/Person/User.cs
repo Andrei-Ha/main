@@ -15,8 +15,7 @@ namespace Exadel.OfficeBooking.Domain.Person
         public DateTime? EmploymentStart { get; set; }
         public DateTime? EmploymentEnd { get; set; }
         public List<Vacation>? Vacations { get; set; }
-        public List<Booking>? BookingList { get; set; }
-        public List<RecuringBooking>? RecuringBookingList { get; set; }
+        public List<Booking> BookingList { get; set; } = new();
         public Workplace? Preferred { get; set; }
     }
 }
