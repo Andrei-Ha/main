@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32126.315
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exadel.OfficeBooking.Domain", "Domain\Exadel.OfficeBooking.Domain.csproj", "{40C3C45D-37F5-4289-A5FC-35A235E9232E}"
 EndProject
@@ -10,8 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exadel.OfficeBooking.Api", "Api\Exadel.OfficeBooking.Api.csproj", "{C6E332D5-881B-431F-AA57-012911ACF428}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exadel.OfficeBooking.TelegramApi", "TelegramApi\Exadel.OfficeBooking.TelegramApi.csproj", "{932C3410-3D3A-4874-86FD-74DBE2E5A661}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exadel.OfficeBooking.TelegramApi", "TelegramApi\Exadel.OfficeBooking.TelegramApi.csproj", "{291184AA-2B06-4A3C-8C30-415605D32C6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
