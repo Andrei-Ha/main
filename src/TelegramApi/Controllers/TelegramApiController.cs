@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Exadel.OfficeBooking.TelegramApi.Controllers
 {
@@ -11,29 +10,31 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
     public class TelegramBotController : ControllerBase
     {
         private readonly TelegramBotClient _telegramBotClient;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public TelegramBotController(TelegramBot telegramBot)
+        public TelegramBotController(TelegramBot telegramBot, IHttpClientFactory httpClientFactory)
         {
             _telegramBotClient = telegramBot.GetBot().Result;
+            _httpClientFactory = httpClientFactory;
         }
 
         [HttpPost]
         public async Task <IActionResult> Update([FromBody]Update update)
         {
-            var chatId = update.Message.Chat.Id;
+            var chatId = update.Message?.Chat.Id;
             var chat = update.Message?.Chat;
 
             if (chat == null)
             {
-                return Ok();
+                return Ok("Chat is empty!");
             }
-                        
+
             await _telegramBotClient.SendTextMessageAsync(
-                chatId: chatId, 
-                text: "Test message", 
+                chatId, 
+                text: "Test message.", 
                 ParseMode.MarkdownV2);
 
-            return Ok();
+            return Ok("Test Ok message!");
         }
     }
 }
