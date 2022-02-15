@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Exadel.OfficeBooking.Domain.DbTestData
+namespace Exadel.OfficeBooking.EF.DbTestData
 {
     public class UserTestData : IEntityTypeConfiguration<User>
     {
