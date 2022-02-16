@@ -29,18 +29,17 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update([FromBody] object upd)
+        public async Task<IActionResult> Update([FromBody] Update update)
         {
-            var update = JsonConvert.DeserializeObject<Update>(upd.ToString());
             if (update?.Type != UpdateType.Message)
-                return NotFound();
+                return Ok();
 
             if (update.Message!.Type != MessageType.Text)
-                return NotFound(); ;
+                return Ok(); ;
 
             var chatId = update.Message.Chat.Id;
             var messageText = update.Message.Text;
-            messageText = messageText??"no text";
+            messageText = messageText ?? "no text";
             Message sentMessage = await _telegramBotClient.SendTextMessageAsync(
                 chatId: chatId,
                 text: messageText,
