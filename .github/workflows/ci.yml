@@ -27,7 +27,8 @@ jobs:
         fail_if_xl: 'true'
         message_if_xl: >
           'This PR exceeds the recommended size of 250 lines.
-          Please make sure you are NOT addressing multiple issues with one PR.'
+          Please make sure you are NOT addressing multiple issues with one PR.’
+        github_api_url: 'api.github.com'
     
   build-and-test:
     runs-on: ubuntu-latest
