@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -20,24 +22,29 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        [HttpPost]
-        public async Task <IActionResult> Update([FromBody]Update update)
+        [HttpGet]
+        public IActionResult Get()
         {
-            var chatId = update.Message?.Chat.Id;
-            var chat = update.Message?.Chat;
+            return Ok("Hello Team3!");
+        }
 
-            if (chat == null)
-            {
-                return Ok("Chat is empty!");
-            }
+        [HttpPost]
+        public async Task<IActionResult> Update([FromBody] Update update)
+        {
+            if (update?.Type != UpdateType.Message)
+                return Ok();
 
-            await _telegramBotClient.SendTextMessageAsync(
-                chatId, 
-                text: "Test message.", 
-                ParseMode.MarkdownV2,
-                disableNotification: false,
-                replyToMessageId: update.Message?.MessageId);
+            if (update.Message!.Type != MessageType.Text)
+                return Ok(); ;
 
+            var chatId = update.Message.Chat.Id;
+            var messageText = update.Message.Text;
+            messageText = messageText ?? "no text";
+            Message sentMessage = await _telegramBotClient.SendTextMessageAsync(
+                chatId: chatId,
+                text: messageText,
+                parseMode: ParseMode.Markdown
+                );
             return Ok();
         }
     }
