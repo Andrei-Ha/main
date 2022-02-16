@@ -1,5 +1,6 @@
 ﻿using Exadel.OfficeBooking.Api.DTO.OfficeDto;
 using Exadel.OfficeBooking.Api.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
+    [Authorize]
     public class OfficeController : ControllerBase
     {
         private readonly IOfficeService _officeService;
@@ -36,6 +38,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, MapEditor")]
         public async Task<IActionResult> Create([FromBody] OfficeSetDto office)
         {
             var officeCreated = await _officeService.CreateOffice(office);
@@ -45,6 +48,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin, MapEditor")]
         public async Task<ActionResult> Update(Guid id, [FromBody] OfficeGetDto office)
         {
             var officeUpdated = await _officeService.UpdateOffice(id, office);
@@ -55,6 +59,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin, MapEditor")]
         public  async Task<IActionResult> Delete(Guid id)
         {
             var result = await _officeService.DeleteOffice(id);
