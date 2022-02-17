@@ -45,9 +45,9 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(Guid id, [FromBody] OfficeGetDto office)
+        public async Task<IActionResult> Update([FromBody] OfficeGetDto office)
         {
-            var officeUpdated = await _officeService.UpdateOffice(id, office);
+            var officeUpdated = await _officeService.UpdateOffice(office);
 
             if (officeUpdated == null) return NotFound(new {message = "The office was not found"});
 

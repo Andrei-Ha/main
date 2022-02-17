@@ -18,20 +18,30 @@ namespace Exadel.OfficeBooking.Api.Controllers
             _workplaceService = workplaceService;
         }
 
-        // GET: api/<WorkplaceController>
+        // GET: api/workplace/getall
         [HttpGet]
         [Produces("application/json")]
-        public async Task<ActionResult<WorkplaceGetDto[]>> GetAll([FromQuery] WorkplaceFilterDto filterModel)
+        public async Task<ActionResult<WorkplaceGetDto[]>> GetAll()
+        {
+            var workplaces = await _workplaceService.GetWorkplaces();
+
+            return Ok(workplaces);
+        }
+
+        // GET: api/workplace/getfiltered
+        [HttpGet]
+        [Produces("application/json")]
+        public async Task<ActionResult<WorkplaceGetDto[]>> GetFiltered ([FromQuery] WorkplaceFilterDto filterModel)
         {
             var workplaces = await _workplaceService.GetWorkplaces(filterModel);
 
             return Ok(workplaces);
         }
 
-        // GET api/<WorkplaceController>/5
+        // GET api/workplace/getbyid/{guid}
         [HttpGet("{id}")]
         [Produces("application/json")]
-        public async Task<ActionResult<WorkplaceSetDto>> GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
             var workplace = await _workplaceService.GetWorkplaceById(id);
 
@@ -41,7 +51,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
             return Ok(workplace);
         }
 
-        // POST api/<WorkplaceController>
+        // POST api/workplace/create
         [HttpPost]
         [Produces("application/json")]
         public async Task<IActionResult> Create([FromBody] WorkplaceSetDto workplace)
@@ -56,8 +66,9 @@ namespace Exadel.OfficeBooking.Api.Controllers
             return Created(uri, workplaceCreated.Id);
         }
 
-        // PUT api/<WorkplaceController>
+        // PUT api/workplace/update
         [HttpPut]
+        [Produces("application/json")]
         public async Task<IActionResult> Update([FromBody] WorkplaceGetDto workplace)
         {
             var workplaceUpdated = await _workplaceService.UpdateWorkplace(workplace);
@@ -68,14 +79,14 @@ namespace Exadel.OfficeBooking.Api.Controllers
             return Ok(workplaceUpdated);
         }
 
-        // DELETE api/<WorkplaceController>/5
+        // DELETE api/workplace/delete/{guid}
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _workplaceService.DeleteWorkplaceById(id);
 
             if (result == null)
-                return NoContent();
+                return BadRequest("Input model is null");
 
             return Ok(result);
         }

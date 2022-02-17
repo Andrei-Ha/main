@@ -2,9 +2,9 @@
 {
     public class WorkplaceSetDto
     {
-        public string Number { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
-        public TypesDto Type { get; set; }
+        public WorkplaceTypesDto Type { get; set; }
 
         public bool IsBooked { get; set; }
 

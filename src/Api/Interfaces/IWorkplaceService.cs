@@ -6,6 +6,8 @@ namespace Exadel.OfficeBooking.Api.Interfaces
 {
     public interface IWorkplaceService
     {
+        Task<WorkplaceGetDto[]> GetWorkplaces();
+
         Task<WorkplaceGetDto[]> GetWorkplaces(WorkplaceFilterDto filterModel);
 
         Task<WorkplaceGetDto?> GetWorkplaceById(Guid id);
@@ -14,6 +16,6 @@ namespace Exadel.OfficeBooking.Api.Interfaces
 
         Task<WorkplaceGetDto?> UpdateWorkplace(WorkplaceGetDto workplace);
 
-        Task<Guid?> DeleteWorkplaceById(Guid id);
+        Task<WorkplaceGetDto?> DeleteWorkplaceById(Guid id);
     }
 }

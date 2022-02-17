@@ -2,16 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Exadel.OfficeBooking.EF.DbTestData
 {
     public class UserTestData : IEntityTypeConfiguration<User>
     {
-     
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasData(
@@ -80,10 +75,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Email = "SandroSherazadishvili@fake.com",
                     EmploymentStart = DateTime.Now,
                     TelegramId = 990011
-                }
-                );
-
-            
+                });
         }
     }
 }

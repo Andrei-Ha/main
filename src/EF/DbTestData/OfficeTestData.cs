@@ -2,10 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Exadel.OfficeBooking.EF.DbTestData
 {
@@ -59,8 +55,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     IsFreeParkingAvailable = false,
                     Address = "Yaroslaviv Val # 15",
                     Name = "YV15"
-                }
-                ) ; 
+                }); 
         }
     }
 }

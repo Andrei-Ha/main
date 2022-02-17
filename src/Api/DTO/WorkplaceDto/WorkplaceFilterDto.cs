@@ -4,7 +4,7 @@
     {
         public string? Number { get; set; }
 
-        public TypesDto Type { get; set; }
+        public WorkplaceTypesDto Type { get; set; }
 
         public bool? IsBooked { get; set; }
 
