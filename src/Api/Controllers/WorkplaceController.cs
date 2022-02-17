@@ -1,5 +1,6 @@
 ﻿using Exadel.OfficeBooking.Api.DTO.WorkplaceDto;
 using Exadel.OfficeBooking.Api.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class WorkplaceController : ControllerBase
     {
         private readonly IWorkplaceService _workplaceService;
@@ -54,6 +56,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         // POST api/workplace/create
         [HttpPost]
         [Produces("application/json")]
+        [Authorize(Roles ="Admin, MapEditor")]
         public async Task<IActionResult> Create([FromBody] WorkplaceSetDto workplace)
         {
             var workplaceCreated = await _workplaceService.CreateWorkplace(workplace);
@@ -81,6 +84,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         // DELETE api/workplace/delete/{guid}
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin, MapEdiros")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _workplaceService.DeleteWorkplaceById(id);

@@ -3,12 +3,14 @@ using System.Threading.Tasks;
 using Exadel.OfficeBooking.Api.DTO.BookingDto;
 using Exadel.OfficeBooking.Api.Interfaces;
 using Exadel.OfficeBooking.EF;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exadel.OfficeBooking.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class BookingController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -80,6 +82,7 @@ public class BookingController : ControllerBase
     }
 
     [HttpDelete("delete/{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteBooking(Guid id)
     {
         var response = await _bookingService.DeleteBooking(id);

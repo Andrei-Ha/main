@@ -2,6 +2,7 @@
 using Exadel.OfficeBooking.Domain.Person;
 using Exadel.OfficeBooking.EF;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,6 +14,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class VacationController : ControllerBase
     {
         private AppDbContext _db;
@@ -89,6 +91,8 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles= "Admin")]
+        
         public async Task<IActionResult> Delete(Guid id)
         { 
             Vacation? vacation = _db.Vacations.FirstOrDefault(x => x.Id == id);
