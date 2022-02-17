@@ -48,6 +48,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin, MapEditor")]
         public async Task<IActionResult> Update([FromBody] OfficeGetDto office)
         {
             var officeUpdated = await _officeService.UpdateOffice(office);

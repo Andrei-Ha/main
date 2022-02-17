@@ -72,6 +72,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         // PUT api/workplace/update
         [HttpPut]
         [Produces("application/json")]
+        [Authorize(Roles = "Admin, MapEditor")]
         public async Task<IActionResult> Update([FromBody] WorkplaceGetDto workplace)
         {
             var workplaceUpdated = await _workplaceService.UpdateWorkplace(workplace);
@@ -84,7 +85,8 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         // DELETE api/workplace/delete/{guid}
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin, MapEdiros")]
+        [Produces("application/json")]
+        [Authorize(Roles = "Admin, MapEditor")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _workplaceService.DeleteWorkplaceById(id);
