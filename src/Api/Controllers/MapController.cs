@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Exadel.OfficeBooking.Api.DTO;
+using Exadel.OfficeBooking.Api.DTO.MapDto;
 using Exadel.OfficeBooking.Api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,37 +18,46 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         // GET
         [HttpGet]
-        public async Task<MapDto[]> GetMap()
+        public async Task<MapGetDto[]> GetMap()
         {
-            var maps = await _mapService.GetMap();
+            var maps = await _mapService.GetMaps();
+
             return maps;
         }
         //
 
         // GET by ID
         [HttpGet("{id}")]
-        public async Task<ActionResult<MapDto>> GetById(Guid id)
+        public async Task<ActionResult<MapGetDto>> GetById(Guid id)
         {
-            var result = await _mapService.GetMapById(id);
-            if (result == null) return NotFound(new { message = "The requested map (floor) not found" });
-            return Ok(result);
+            var map = await _mapService.GetMapById(id);
+
+            if (map == null)
+                return NotFound(new { message = "The requested map (floor) not found" });
+
+            return Ok(map);
         }
 
         // POST
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] MapDto map)
+        public async Task<ActionResult<MapGetDto>> Create([FromBody] MapSetDto map)
         {
             var mapCreated = await _mapService.CreateMap(map);
+
             var uri = new Uri($"{Request.Path.Value}/{mapCreated.Id}".ToLower(), UriKind.Relative);
+
             return Created(uri, mapCreated);
         }
 
         // PUT
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(Guid id, [FromBody] MapDto map)
+        public async Task<ActionResult<MapGetDto>> Update(Guid id, [FromBody] MapSetDto map)
         {
             var mapUpdated = await _mapService.UpdateMap(id, map);
-            if (mapUpdated == null) return NotFound(new { message = "Map (floor) not found" });
+
+            if (mapUpdated == null)
+                return NotFound(new { message = "Requested map (floor) not found" });
+
             return Ok(mapUpdated);
         }
 
@@ -56,9 +65,12 @@ namespace Exadel.OfficeBooking.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _mapService.DeleteMap(id);
-            if (result == null) return NotFound(new { message = "Requested map (floor) not found" });
-            return Ok(result);
+            var mapDeleted = await _mapService.DeleteMap(id);
+
+            if (mapDeleted == null)
+                return NotFound(new { message = "Requested map (floor) not found" });
+
+            return NoContent();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
@@ -9,6 +10,8 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public bool IsKitchenPresent { get; set; }
 
         public bool IsMeetingRoomPresent { get; set; }
+
+        public Guid OfficeId { get; set; }
 
         public Office Office { get; set; } = new();
 

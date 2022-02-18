@@ -5,9 +5,9 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
     public class Workplace : BaseModel
     {
-        public string Number { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
-        public Types Type { get; set; }
+        public WorkplaceTypes Type { get; set; }
 
         public bool IsBooked { get; set; }
 
@@ -28,7 +28,7 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public List<Booking>? Bookings { get; set; }
     }
 
-    public enum Types
+    public enum WorkplaceTypes
     {
         Regular,
         Administrative,

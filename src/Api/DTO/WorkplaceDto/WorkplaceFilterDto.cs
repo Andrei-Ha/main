@@ -2,9 +2,9 @@
 {
     public class WorkplaceFilterDto
     {
-        public string? Number { get; set; }
+        public string? Name { get; set; }
 
-        public TypesDto Type { get; set; }
+        public WorkplaceTypesDto Type { get; set; }
 
         public bool? IsBooked { get; set; }
 
