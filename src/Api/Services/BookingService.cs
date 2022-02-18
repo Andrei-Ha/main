@@ -252,7 +252,7 @@ public class BookingService : IBookingService
         {
             if (booking.IsRecurring) {
                 List<DateTime> curRecurringDates = GetRecurringBookingDates(booking.Adapt<RecurrencePattern>());
-                if (curRecurringDates.BinarySearch(bookingDate) > 0) return false;
+                if (curRecurringDates.BinarySearch(bookingDate) >= 0) return false;
             }
             else {
                 if (bookingDate == booking.StartDate) return false;
