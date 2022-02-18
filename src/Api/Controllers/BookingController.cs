@@ -11,6 +11,7 @@ namespace Exadel.OfficeBooking.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
+[AllowAnonymous]
 public class BookingController : ControllerBase
 {
     private readonly AppDbContext _context;

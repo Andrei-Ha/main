@@ -14,6 +14,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [AllowAnonymous]
     public class UserController : ControllerBase
     {
         private AppDbContext _db;

@@ -12,6 +12,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
     [ApiController]
     [Route("api/[controller]/[action]")]
     [Authorize]
+    [AllowAnonymous]
     public class WorkplaceController : ControllerBase
     {
         private readonly IWorkplaceService _workplaceService;
