@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Exadel.OfficeBooking.Api.DTO.OfficeDto;
 using Exadel.OfficeBooking.Api.Interfaces;
@@ -27,9 +26,10 @@ namespace Exadel.OfficeBooking.Api.Services
 
         public async Task<OfficeGetDto?> GetOfficeById(Guid id)
         {
-            var office = await _context.Offices.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
+            var office = await _context.Offices.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
 
-            if (office == null) return null;
+            if (office == null)
+                return null;
 
             return office.Adapt<OfficeGetDto>();
         }
@@ -37,37 +37,41 @@ namespace Exadel.OfficeBooking.Api.Services
         public async Task<OfficeGetDto> CreateOffice(OfficeSetDto office)
         {
             var officeDomain = office.Adapt<Office>();
-            _context.Offices.Add(officeDomain);
+
+            await _context.Offices.AddAsync(officeDomain);
             await _context.SaveChangesAsync();
 
             return officeDomain.Adapt<OfficeGetDto>();
         }
 
-        public async Task<OfficeGetDto?> UpdateOffice(Guid id, OfficeGetDto officeGetDto)
+        public async Task<OfficeGetDto?> UpdateOffice(Guid id, OfficeSetDto officeDto)
         {
-            Office? office = await _context.Offices.AsNoTracking().FirstOrDefaultAsync(o =>o.Id == id);
-            if (office == null)
-            {
+            var officeFromDb = await _context.Offices.AsNoTracking().FirstOrDefaultAsync(o =>o.Id == id);
+
+            if (officeFromDb == null)
                 return null;
-            }
-            var officeUpd = officeGetDto.Adapt<Office>();
-            officeUpd.Id = id;
-            _context.Offices.Update(officeUpd);
+
+            var officeDomain = officeDto.Adapt<Office>();
+
+            officeDomain.Id = id;
+
+            _context.Offices.Update(officeDomain);
             await _context.SaveChangesAsync();
 
-            return officeUpd.Adapt<OfficeGetDto>();
+            return officeDomain.Adapt<OfficeGetDto>();
         }
 
         public async Task<OfficeGetDto?> DeleteOffice(Guid id)
         {
-            var result = _context.Offices.FirstOrDefault(f => f.Id == id);
+            var officeFromDb = await _context.Offices.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
 
-            if (result == null) return null;
+            if (officeFromDb == null)
+                return null;
 
-            _context.Offices.Remove(result);
+            _context.Offices.Remove(officeFromDb);
             await _context.SaveChangesAsync();
 
-            return result.Adapt<OfficeGetDto>();
+            return officeFromDb.Adapt<OfficeGetDto>();
         }
     }
 }

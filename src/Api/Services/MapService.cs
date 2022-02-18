@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Exadel.OfficeBooking.Api.DTO;
+using Exadel.OfficeBooking.Api.DTO.MapDto;
 using Exadel.OfficeBooking.Api.Interfaces;
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.EF;
@@ -19,55 +18,60 @@ namespace Exadel.OfficeBooking.Api.Services
             _context = context;
         }
 
-        public async Task<MapDto[]> GetMap()
+        public async Task<MapGetDto[]> GetMaps()
         {
             var maps = await _context.Maps.AsNoTracking().ToArrayAsync();
-            return maps.Adapt<MapDto[]>();
+            return maps.Adapt<MapGetDto[]>();
         }
 
-        public async Task<MapDto?> GetMapById(Guid id)
+        public async Task<MapGetDto?> GetMapById(Guid id)
         {
-            var map = await _context.Maps.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
+            var map = await _context.Maps.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
 
-            if (map == null) return null;
+            if (map == null)
+                return null;
 
-            return map.Adapt<MapDto>();
+            return map.Adapt<MapGetDto>();
         }
 
-        public async Task<MapDto> CreateMap(MapDto map)
+        public async Task<MapGetDto> CreateMap(MapSetDto map)
         {
             var mapDomain = map.Adapt<Map>();
-            _context.Maps.Add(mapDomain);
+
+            await _context.Maps.AddAsync(mapDomain);
             await _context.SaveChangesAsync();
 
-            return mapDomain.Adapt<MapDto>();
+            return mapDomain.Adapt<MapGetDto>();
         }
 
-        public async Task<MapDto?> UpdateMap(Guid id, MapDto mapDto)
+        public async Task<MapGetDto?> UpdateMap(Guid id, MapSetDto mapDto)
         {
-            Map? map = await _context.Maps.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
-            if (map == null)
-            {
+            var mapFromDb = await _context.Maps.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+
+            if (mapFromDb == null)
                 return null;
-            }
-            var mapUpd = mapDto.Adapt<Map>();
-            mapUpd.Id = id;
-            _context.Maps.Update(mapUpd);
+
+            var mapDomain = mapDto.Adapt<Map>();
+
+            mapDomain.Id = id;
+
+            _context.Maps.Update(mapDomain);
             await _context.SaveChangesAsync();
 
-            return mapUpd.Adapt<MapDto>();
+            return mapDomain.Adapt<MapGetDto>();
         }
 
-        public async Task<MapDto?> DeleteMap(Guid id)
+        public async Task<MapGetDto?> DeleteMap(Guid id)
         {
-            var result = _context.Maps.FirstOrDefault(f => f.Id == id);
+            var mapFromDb = await _context.Maps.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
 
-            if (result == null) return null;
+            if (mapFromDb == null)
+                return null;
 
-            _context.Maps.Remove(result);
+            _context.Maps.Remove(mapFromDb);
             await _context.SaveChangesAsync();
 
-            return result.Adapt<MapDto>();
+            return mapFromDb.Adapt<MapGetDto>();
         }
     }
 }
