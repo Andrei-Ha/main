@@ -2,6 +2,7 @@
 using Exadel.OfficeBooking.Domain.Person;
 using Exadel.OfficeBooking.EF;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,6 +13,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private AppDbContext _db;
@@ -44,6 +46,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> Post(PostUserDto postUserDto )
         {
             User user = postUserDto.Adapt<User>();
@@ -53,6 +56,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> Put(Guid id, [FromBody] PutUserDto putUserDto)
         {
             User? user = await _db.Users.SingleOrDefaultAsync(u => u.Id == id);
@@ -72,6 +76,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             User? user = await _db.Users
