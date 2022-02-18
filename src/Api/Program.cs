@@ -4,11 +4,14 @@ using Exadel.OfficeBooking.Api.Services;
 using Exadel.OfficeBooking.Domain.Bookings;
 using Exadel.OfficeBooking.EF;
 using Mapster;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,29 @@ builder.Configuration.AddJsonFile("appsettings.local.json", optional: true, relo
 var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            // specifies whether the issuer will be verified when validating the token
+            ValidateIssuer = true,
+            // a string representing the publisher
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            // whether the consumer of the token will be validated
+            ValidateAudience = true,
+            // setting consumer token
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            // whether lifetime will be validated
+            ValidateLifetime = true,
+            // security key setting
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+            // security key validation
+            ValidateIssuerSigningKey = true,
+        };
+    });
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -44,6 +70,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
