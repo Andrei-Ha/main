@@ -66,11 +66,11 @@ public class BookingService : IBookingService
             .FirstOrDefaultAsync(u => u.Id == bookingDto.UserId);
         
         //check if StartDate is not in the period of vacation days of user
-        if(HasOneDayBookingVacationConflict(user, bookingDto.StartDate))
+        if(HasOneDayBookingVacationConflict(user, bookingDto.Date))
             return ConflictResponse<GetOneDayBookingDto>("Cannot select date on vacation days.");
 
         //check if workplace is available at the StartDate
-        if(!IsWorkplaceAvailableForOneDayBooking(workplace, bookingDto.StartDate))
+        if(!IsWorkplaceAvailableForOneDayBooking(workplace, bookingDto.Date))
             return ConflictResponse<GetOneDayBookingDto>("The selected workplace has been booked by another user");
         
         //workplace is not booked, create newBooking
@@ -79,7 +79,7 @@ public class BookingService : IBookingService
             Id = new Guid(),
             User = user,
             Workplace = workplace,
-            StartDate = bookingDto.StartDate
+            StartDate = bookingDto.Date
         };
         
         await _context.Bookings.AddAsync(newBooking);
@@ -111,14 +111,14 @@ public class BookingService : IBookingService
             .FirstOrDefaultAsync(u => u == booking.User);
         
         //check vacation and workplace conflicts
-        if(HasOneDayBookingVacationConflict(user, bookingDto.StartDate))
+        if(HasOneDayBookingVacationConflict(user, bookingDto.Date))
             return ConflictResponse<GetOneDayBookingDto>("Cannot select date on vacation days.");
         
-        if(!IsWorkplaceAvailableForOneDayBooking(workplace, bookingDto.StartDate))
+        if(!IsWorkplaceAvailableForOneDayBooking(workplace, bookingDto.Date))
             return ConflictResponse<GetOneDayBookingDto>("The selected workplace has been booked by another user");
         
         //update properties and save changes
-        booking.StartDate = bookingDto.StartDate;
+        booking.StartDate = bookingDto.Date;
         booking.Workplace = workplace;
 
         _context.Bookings.Update(booking);
@@ -252,7 +252,7 @@ public class BookingService : IBookingService
         {
             if (booking.IsRecurring) {
                 List<DateTime> curRecurringDates = GetRecurringBookingDates(booking.Adapt<RecurrencePattern>());
-                if (curRecurringDates.BinarySearch(bookingDate) > 0) return false;
+                if (curRecurringDates.BinarySearch(bookingDate) >= 0) return false;
             }
             else {
                 if (bookingDate == booking.StartDate) return false;
@@ -281,9 +281,11 @@ public class BookingService : IBookingService
 
                 if (booking.Frequency == RecurringFrequency.Weekly)
                 {
-                    var curDayOfWeek = (int) curDate.DayOfWeek;
-                    if (booking.RecurringWeekDays[curDayOfWeek] == '1')
+                    //add date to recurringDates
+                    if(booking.RecurringWeekDays.HasFlag(GetDayOfWeek(curDate)))
                         recurringDates.Add(curDate);
+                        
+                    //go to next day of week
                     curDate = curDate.AddDays(1);
 
                     //this is for interval to skip weeks if necessary
@@ -310,7 +312,7 @@ public class BookingService : IBookingService
             var curDate = booking.StartDate;
             var initDayOfWeek = (int) curDate.DayOfWeek;
 
-            //when count is weekly we have to add count*7 days per count
+            //when count is weekly we have to add count*7 days per one count
             var countTimes = 1;
             if (booking.Frequency == RecurringFrequency.Weekly)
                 countTimes = 7;
@@ -325,9 +327,11 @@ public class BookingService : IBookingService
 
                 if (booking.Frequency == RecurringFrequency.Weekly)
                 {
-                    var curDayOfWeek = (int) curDate.DayOfWeek;
-                    if (booking.RecurringWeekDays[curDayOfWeek] == '1')
+                    //add date to recurringDates
+                    if(booking.RecurringWeekDays.HasFlag(GetDayOfWeek(curDate)))
                         recurringDates.Add(curDate);
+                        
+                    //go to next day of week
                     curDate = curDate.AddDays(1);
 
                     if (curDate.DayOfWeek == DayOfWeek.Monday && booking.Interval > 1)
@@ -351,6 +355,18 @@ public class BookingService : IBookingService
         return recurringDates;
     }
 
+    private WeekDays GetDayOfWeek(DateTime date)
+    {
+        if (date.DayOfWeek == DayOfWeek.Sunday) return WeekDays.Sunday;
+        if (date.DayOfWeek == DayOfWeek.Monday) return WeekDays.Monday;
+        if (date.DayOfWeek == DayOfWeek.Tuesday) return WeekDays.Tuesday;
+        if (date.DayOfWeek == DayOfWeek.Wednesday) return WeekDays.Wednesday;
+        if (date.DayOfWeek == DayOfWeek.Thursday) return WeekDays.Thursday;
+        if (date.DayOfWeek == DayOfWeek.Friday) return WeekDays.Friday;
+            
+        return WeekDays.Saturday;
+    }
+    
     private async Task<List<DateTime>> GetVacationDates(User user)
     {
         List<DateTime> vacationDates = new();
