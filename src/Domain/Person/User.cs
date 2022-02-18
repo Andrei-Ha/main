@@ -7,7 +7,7 @@ namespace Exadel.OfficeBooking.Domain.Person
 {
     public class User : BaseModel
     {
-        public int ChatId { get; set; }
+        public int TelegramId { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

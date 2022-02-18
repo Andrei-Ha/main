@@ -23,7 +23,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Majidov",
                     Email = "AnvarMajidov@fake.com",
                     EmploymentStart = DateTime.Now,
-                    ChatId = 112233
+                    TelegramId = 112233
 
                 },
                 new User
@@ -33,7 +33,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Davletov",
                     Email = "KhamzaDavletov@fake.com",
                     EmploymentStart = DateTime.Now,
-                    ChatId = 223344
+                    TelegramId = 223344
                 },
                 new User
                 {
@@ -42,7 +42,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Khamzaev",
                     Email = "AnvarkhonKhamzaev@fake.com",
                     EmploymentStart = DateTime.Now,
-                    ChatId = 445566
+                    TelegramId = 445566
                 },
 
                 new User
@@ -52,7 +52,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Fomchanka",
                     Email = "PalinaFomchanka@fake.com",
                     EmploymentStart = DateTime.Now,
-                    ChatId = 667788
+                    TelegramId = 667788
                 },
                 new User
                 {
@@ -61,7 +61,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Molkov",
                     Email = "VasiliMolkov@fake.com",
                     EmploymentStart = DateTime.Now,
-                    ChatId = 778899
+                    TelegramId = 778899
                 },
                 new User
                 {
@@ -70,7 +70,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Harahliad",
                     Email = "AndreiHarahliad@fake.com",
                     EmploymentStart = DateTime.Now,
-                    ChatId = 889900
+                    TelegramId = 889900
                 },
                 new User
                 {
@@ -79,7 +79,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Sherazadishvili",
                     Email = "SandroSherazadishvili@fake.com",
                     EmploymentStart = DateTime.Now,
-                    ChatId = 990011
+                    TelegramId = 990011
                 }
                 );
 
