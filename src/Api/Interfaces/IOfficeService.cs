@@ -12,7 +12,7 @@ namespace Exadel.OfficeBooking.Api.Interfaces
 
         Task<OfficeGetDto> CreateOffice(OfficeSetDto office);
 
-        Task<OfficeGetDto?> UpdateOffice(OfficeGetDto office);
+        Task<OfficeGetDto?> UpdateOffice(Guid id, OfficeSetDto office);
 
         Task<OfficeGetDto?> DeleteOffice(Guid id);
     }

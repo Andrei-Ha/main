@@ -29,8 +29,8 @@ namespace Exadel.OfficeBooking.Api.Services
         {
             var workplaces = _context.Workplaces.AsNoTracking();
 
-            if (!string.IsNullOrEmpty(filterModel.Number))
-                workplaces = workplaces.Where(w => w.Number.Contains(filterModel.Number));
+            if (!string.IsNullOrEmpty(filterModel.Name))
+                workplaces = workplaces.Where(w => w.Name.Contains(filterModel.Name));
 
             workplaces = workplaces.Where(w => w.Type.ToString() == filterModel.Type.ToString());
 
@@ -70,11 +70,8 @@ namespace Exadel.OfficeBooking.Api.Services
             return workplace.Adapt<WorkplaceGetDto>();
         }
 
-        public async Task<WorkplaceGetDto?> CreateWorkplace(WorkplaceSetDto workplace)
+        public async Task<WorkplaceGetDto> CreateWorkplace(WorkplaceSetDto workplace)
         {
-            if (workplace == null)
-                return null;
-
             var workplaceDomain = workplace.Adapt<Workplace>();
 
             await _context.Workplaces.AddAsync(workplaceDomain);
@@ -83,17 +80,16 @@ namespace Exadel.OfficeBooking.Api.Services
             return workplaceDomain.Adapt<WorkplaceGetDto>();
         }
 
-        public async Task<WorkplaceGetDto?> UpdateWorkplace(WorkplaceGetDto workplaceDto)
+        public async Task<WorkplaceGetDto?> UpdateWorkplace(Guid id, WorkplaceSetDto workplaceDto)
         {
-            if (workplaceDto == null)
-                return null;
-
-            var workplaceFromDb = await _context.Workplaces.AsNoTracking().FirstOrDefaultAsync(w => w.Id == workplaceDto.Id);
+            var workplaceFromDb = await _context.Workplaces.AsNoTracking().FirstOrDefaultAsync(w => w.Id == id);
 
             if (workplaceFromDb == null)
                 return null;
 
             var workplaceDomain = workplaceDto.Adapt<Workplace>();
+
+            workplaceDomain.Id = id;
 
             _context.Workplaces.Update(workplaceDomain);
             await _context.SaveChangesAsync();
@@ -108,7 +104,7 @@ namespace Exadel.OfficeBooking.Api.Services
             if (workplaceFromDb == null)
                 return null;
 
-            _context.Remove(workplaceFromDb);
+            _context.Workplaces.Remove(workplaceFromDb);
             await _context.SaveChangesAsync();
 
             return workplaceFromDb.Adapt<WorkplaceGetDto>();

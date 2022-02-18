@@ -14,67 +14,83 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 new User
                 {
                     Id = Guid.NewGuid(),
+                    ChatId = 112233,
                     FirstName ="Anvar",
                     LastName ="Majidov",
                     Email = "AnvarMajidov@fake.com",
-                    EmploymentStart = DateTime.Now,
-                    TelegramId = 112233
-                    
+                    Role = UserRole.CommonUser,
+                    EmploymentStart = DateTime.Now
                 },
                 new User
                 {
                     Id = Guid.NewGuid(),
+                    ChatId = 223344,
                     FirstName = "Khamza",
                     LastName = "Davletov",
                     Email = "KhamzaDavletov@fake.com",
-                    EmploymentStart = DateTime.Now,
-                    TelegramId = 223344
+                    Role = UserRole.CommonUser,
+                    EmploymentStart = DateTime.Now
                 },
                 new User
                 {
                     Id = Guid.NewGuid(),
+                    ChatId = 445566,
                     FirstName = "Anvarkhon",
                     LastName = "Khamzaev",
                     Email = "AnvarkhonKhamzaev@fake.com",
-                    EmploymentStart = DateTime.Now,
-                    TelegramId = 445566
+                    Role = UserRole.CommonUser,
+                    EmploymentStart = DateTime.Now
                 },
 
                 new User
                 {
                     Id = Guid.NewGuid(),
+                    ChatId = 667788,
                     FirstName = "Palina",
                     LastName = "Fomchanka",
                     Email = "PalinaFomchanka@fake.com",
-                    EmploymentStart = DateTime.Now,
-                    TelegramId = 667788 
+                    Role = UserRole.CommonUser,
+                    EmploymentStart = DateTime.Now
                 },
                 new User
                 {
                     Id = Guid.NewGuid(),
+                    ChatId = 778899,
                     FirstName ="Vasili",
                     LastName ="Molkov",
                     Email = "VasiliMolkov@fake.com",
-                    EmploymentStart = DateTime.Now,
-                    TelegramId = 778899
+                    Role = UserRole.CommonUser,
+                    EmploymentStart = DateTime.Now
                 },
                 new User
                 {
                     Id = Guid.NewGuid(),
+                    ChatId = 889900,
                     FirstName = "Andrei",
                     LastName ="Harahliad",
                     Email = "AndreiHarahliad@fake.com",
-                    EmploymentStart = DateTime.Now,
-                    TelegramId = 889900
+                    Role = UserRole.CommonUser,
+                    EmploymentStart = DateTime.Now
                 },
                 new User
                 {
                     Id = Guid.NewGuid(),
+                    ChatId = 990011,
                     FirstName = "Sandro",
                     LastName = "Sherazadishvili",
                     Email = "SandroSherazadishvili@fake.com",
-                    EmploymentStart = DateTime.Now,
-                    TelegramId = 990011
+                    Role = UserRole.CommonUser,
+                    EmploymentStart = DateTime.Now
+                },
+                new User
+                {
+                    Id = Guid.NewGuid(),
+                    ChatId = 123465,
+                    FirstName = "Ivan",
+                    LastName = "Ivanov",
+                    Email = "iivanov@gmail.com",
+                    Role = UserRole.CommonUser,
+                    EmploymentStart = DateTime.Now
                 });
         }
     }

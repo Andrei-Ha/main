@@ -11,7 +11,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    [Authorize]
+    //[Authorize]
     public class WorkplaceController : ControllerBase
     {
         private readonly IWorkplaceService _workplaceService;
@@ -23,7 +23,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         // GET: api/workplace/getall
         [HttpGet]
         [Produces("application/json")]
-        public async Task<ActionResult<WorkplaceGetDto[]>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
             var workplaces = await _workplaceService.GetWorkplaces();
 
@@ -33,7 +33,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         // GET: api/workplace/getfiltered
         [HttpGet]
         [Produces("application/json")]
-        public async Task<ActionResult<WorkplaceGetDto[]>> GetFiltered ([FromQuery] WorkplaceFilterDto filterModel)
+        public async Task<IActionResult> GetFiltered ([FromQuery] WorkplaceFilterDto filterModel)
         {
             var workplaces = await _workplaceService.GetWorkplaces(filterModel);
 
@@ -48,7 +48,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
             var workplace = await _workplaceService.GetWorkplaceById(id);
 
             if (workplace == null)
-                return NoContent();
+                return NotFound(new { message = "Requested workplace not found" });
 
             return Ok(workplace);
         }
@@ -56,29 +56,26 @@ namespace Exadel.OfficeBooking.Api.Controllers
         // POST api/workplace/create
         [HttpPost]
         [Produces("application/json")]
-        [Authorize(Roles ="Admin, MapEditor")]
+        //[Authorize(Roles ="Admin, MapEditor")]
         public async Task<IActionResult> Create([FromBody] WorkplaceSetDto workplace)
         {
             var workplaceCreated = await _workplaceService.CreateWorkplace(workplace);
 
-            if (workplaceCreated == null)
-                return BadRequest("Input model is null");
-
             var uri = new Uri($"{Request.Path.Value}/{workplaceCreated.Id}".ToLower(), UriKind.Relative);
 
-            return Created(uri, workplaceCreated.Id);
+            return Created(uri, workplaceCreated);
         }
 
         // PUT api/workplace/update
         [HttpPut]
         [Produces("application/json")]
-        [Authorize(Roles = "Admin, MapEditor")]
-        public async Task<IActionResult> Update([FromBody] WorkplaceGetDto workplace)
+        //[Authorize(Roles = "Admin, MapEditor")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] WorkplaceSetDto workplace)
         {
-            var workplaceUpdated = await _workplaceService.UpdateWorkplace(workplace);
+            var workplaceUpdated = await _workplaceService.UpdateWorkplace(id, workplace);
 
             if (workplaceUpdated == null)
-                return BadRequest("Input model is null");
+                return NotFound(new { message = "Requested workplace not found" });
 
             return Ok(workplaceUpdated);
         }
@@ -86,15 +83,15 @@ namespace Exadel.OfficeBooking.Api.Controllers
         // DELETE api/workplace/delete/{guid}
         [HttpDelete("{id}")]
         [Produces("application/json")]
-        [Authorize(Roles = "Admin, MapEditor")]
+        //[Authorize(Roles = "Admin, MapEditor")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _workplaceService.DeleteWorkplaceById(id);
+            var workplaceDeleted = await _workplaceService.DeleteWorkplaceById(id);
 
-            if (result == null)
-                return BadRequest("Input model is null");
+            if (workplaceDeleted == null)
+                return NotFound(new { message = "Requested workplace not found" });
 
-            return Ok(result);
+            return NoContent();
         }
     }
 }

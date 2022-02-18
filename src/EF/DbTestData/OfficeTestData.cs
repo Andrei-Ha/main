@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections.Generic;
 
 namespace Exadel.OfficeBooking.EF.DbTestData
 {
@@ -14,47 +15,73 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 new Office
                 {
                     Id = Guid.NewGuid(),
-                    City = "Tashkent",
                     Country = "Uzbekistan",
+                    City = "Tashkent",
                     Address = "Mirzo Ulugbek Avenue # 73",
-                    IsFreeParkingAvailable = true,
                     Name = "MU73",
+                    IsFreeParkingAvailable = true,
+                    //Maps = new List<Map>
+                    //{
+                    //    new Map
+                    //    {
+                    //        Id = Guid.NewGuid(),
+                    //        FloorNumber = 1,
+                    //        IsKitchenPresent = true,
+                    //        IsMeetingRoomPresent = true,
+                    //        Workspaces = new List<Workplace>
+                    //        {
+                    //            new Workplace
+                    //            {
+                    //                Name = "11",
+                    //                Type = WorkplaceTypes.Regular,
+                    //                IsBooked = true,
+                    //                IsNextToWindow = true,
+                    //                HasPC = true,
+                    //                HasMonitor = true,
+                    //                HasKeyboard = true,
+                    //                HasMouse = true,
+                    //                HasHeadset = true
+                    //            }
+                    //        }
+                            
+                    //    }
+                    //}
                 },
                 new Office
                 {
                     Id = Guid.NewGuid(),
                     Country = "Belrus",
                     City = "Minsk",
-                    IsFreeParkingAvailable = true,
                     Address = "Naturalistov str # 3",
-                    Name = "N3"
+                    Name = "N3",
+                    IsFreeParkingAvailable = true,
                 },
                 new Office
                 {
                     Id = Guid.NewGuid(),
                     Country = "Georgia",
                     City = "Tbilisi",
-                    IsFreeParkingAvailable = false,
                     Address = "Ilo Mosashvili str #24",
-                    Name = "IM24"
+                    Name = "IM24",
+                    IsFreeParkingAvailable = false,
                 },
                 new Office
                 {
                     Id = Guid.NewGuid(),
                     Country = "Lithuania",
                     City = "Klaipėda",
-                    IsFreeParkingAvailable = true,
                     Address = "Danes str # 6-401",
-                    Name = "D6-401"
+                    Name = "D6-401",
+                    IsFreeParkingAvailable = true,
                 },
                 new Office
                 {
                     Id = Guid.NewGuid(),
                     Country = "Ukraine",
                     City = "Odessa",
-                    IsFreeParkingAvailable = false,
                     Address = "Yaroslaviv Val # 15",
-                    Name = "YV15"
+                    Name = "YV15",
+                    IsFreeParkingAvailable = false,
                 }); 
         }
     }

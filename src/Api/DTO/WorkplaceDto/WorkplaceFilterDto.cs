@@ -2,7 +2,7 @@
 {
     public class WorkplaceFilterDto
     {
-        public string? Number { get; set; }
+        public string? Name { get; set; }
 
         public WorkplaceTypesDto Type { get; set; }
 

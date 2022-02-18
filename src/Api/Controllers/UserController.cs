@@ -65,7 +65,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
                 return NotFound(new { message = "The user was not found" });
             }
 
-            user.TelegramId = putUserDto.TelegramId;
+            user.ChatId = putUserDto.ChatId;
             user.FirstName = putUserDto.FirstName;
             user.LastName = putUserDto.LastName;
             user.Email = putUserDto.Email;

@@ -12,9 +12,9 @@ namespace Exadel.OfficeBooking.Api.Interfaces
 
         Task<WorkplaceGetDto?> GetWorkplaceById(Guid id);
 
-        Task<WorkplaceGetDto?> CreateWorkplace(WorkplaceSetDto workplace);
+        Task<WorkplaceGetDto> CreateWorkplace(WorkplaceSetDto workplace);
 
-        Task<WorkplaceGetDto?> UpdateWorkplace(WorkplaceGetDto workplace);
+        Task<WorkplaceGetDto?> UpdateWorkplace(Guid id, WorkplaceSetDto workplace);
 
         Task<WorkplaceGetDto?> DeleteWorkplaceById(Guid id);
     }

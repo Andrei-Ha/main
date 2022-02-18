@@ -66,18 +66,6 @@ namespace Exadel.OfficeBooking.EF
 
             modelBuilder.ApplyConfiguration(new OfficeTestData());
             modelBuilder.ApplyConfiguration(new UserTestData());
-
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = Guid.NewGuid(),
-                    TelegramId = 123465,
-                    FirstName = "Ivan",
-                    LastName = "Ivanov",
-                    Email = "iivanov@gmail.com",
-                    EmploymentStart = DateTime.Now,
-                    Role = UserRole.CommonUser
-                });
         }
     }
 }

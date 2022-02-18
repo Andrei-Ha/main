@@ -26,9 +26,10 @@ namespace Exadel.OfficeBooking.Api.Services
 
         public async Task<OfficeGetDto?> GetOfficeById(Guid id)
         {
-            var office = await _context.Offices.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
+            var office = await _context.Offices.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
 
-            if (office == null) return null;
+            if (office == null)
+                return null;
 
             return office.Adapt<OfficeGetDto>();
         }
@@ -36,23 +37,23 @@ namespace Exadel.OfficeBooking.Api.Services
         public async Task<OfficeGetDto> CreateOffice(OfficeSetDto office)
         {
             var officeDomain = office.Adapt<Office>();
-            _context.Offices.Add(officeDomain);
+
+            await _context.Offices.AddAsync(officeDomain);
             await _context.SaveChangesAsync();
 
             return officeDomain.Adapt<OfficeGetDto>();
         }
 
-        public async Task<OfficeGetDto?> UpdateOffice(OfficeGetDto officeDto)
+        public async Task<OfficeGetDto?> UpdateOffice(Guid id, OfficeSetDto officeDto)
         {
-            if (officeDto == null)
-                return null;
-
-            var officeFromDb = await _context.Offices.AsNoTracking().FirstOrDefaultAsync(o =>o.Id == officeDto.Id);
+            var officeFromDb = await _context.Offices.AsNoTracking().FirstOrDefaultAsync(o =>o.Id == id);
 
             if (officeFromDb == null)
                 return null;
 
             var officeDomain = officeDto.Adapt<Office>();
+
+            officeDomain.Id = id;
 
             _context.Offices.Update(officeDomain);
             await _context.SaveChangesAsync();
@@ -64,7 +65,8 @@ namespace Exadel.OfficeBooking.Api.Services
         {
             var officeFromDb = await _context.Offices.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
 
-            if (officeFromDb == null) return null;
+            if (officeFromDb == null)
+                return null;
 
             _context.Offices.Remove(officeFromDb);
             await _context.SaveChangesAsync();
