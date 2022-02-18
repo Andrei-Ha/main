@@ -1,5 +1,6 @@
 ﻿using Exadel.OfficeBooking.Api.DTO.WorkplaceDto;
 using Exadel.OfficeBooking.Api.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     public class WorkplaceController : ControllerBase
     {
         private readonly IWorkplaceService _workplaceService;
@@ -18,66 +20,78 @@ namespace Exadel.OfficeBooking.Api.Controllers
             _workplaceService = workplaceService;
         }
 
-        // GET: api/<WorkplaceController>
+        // GET: api/workplace/getall
         [HttpGet]
         [Produces("application/json")]
-        public async Task<ActionResult<WorkplaceGetDto[]>> GetAll([FromQuery] WorkplaceFilterDto filterModel)
+        public async Task<WorkplaceGetDto[]> GetAll()
+        {
+            var workplaces = await _workplaceService.GetWorkplaces();
+
+            return workplaces;
+        }
+
+        // GET: api/workplace/getfiltered
+        [HttpGet]
+        [Produces("application/json")]
+        public async Task<WorkplaceGetDto[]> GetFiltered ([FromQuery] WorkplaceFilterDto filterModel)
         {
             var workplaces = await _workplaceService.GetWorkplaces(filterModel);
 
-            return Ok(workplaces);
+            return workplaces;
         }
 
-        // GET api/<WorkplaceController>/5
+        // GET api/workplace/getbyid/{guid}
         [HttpGet("{id}")]
         [Produces("application/json")]
-        public async Task<ActionResult<WorkplaceSetDto>> GetById(Guid id)
+        public async Task<ActionResult<WorkplaceGetDto>> GetById(Guid id)
         {
             var workplace = await _workplaceService.GetWorkplaceById(id);
 
             if (workplace == null)
-                return NoContent();
+                return NotFound(new { message = "Requested workplace not found" });
 
             return Ok(workplace);
         }
 
-        // POST api/<WorkplaceController>
+        // POST api/workplace/create
         [HttpPost]
         [Produces("application/json")]
-        public async Task<IActionResult> Create([FromBody] WorkplaceSetDto workplace)
+        [Authorize(Roles ="Admin, MapEditor")]
+        public async Task<ActionResult<WorkplaceGetDto>> Create([FromBody] WorkplaceSetDto workplace)
         {
             var workplaceCreated = await _workplaceService.CreateWorkplace(workplace);
 
-            if (workplaceCreated == null)
-                return BadRequest("Input model is null");
-
             var uri = new Uri($"{Request.Path.Value}/{workplaceCreated.Id}".ToLower(), UriKind.Relative);
 
-            return Created(uri, workplaceCreated.Id);
+            return Created(uri, workplaceCreated);
         }
 
-        // PUT api/<WorkplaceController>
+        // PUT api/workplace/update
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] WorkplaceGetDto workplace)
+        [Produces("application/json")]
+        [Authorize(Roles = "Admin, MapEditor")]
+        public async Task<ActionResult<WorkplaceGetDto>> Update(Guid id, [FromBody] WorkplaceSetDto workplace)
         {
-            var workplaceUpdated = await _workplaceService.UpdateWorkplace(workplace);
+            var workplaceUpdated = await _workplaceService.UpdateWorkplace(id, workplace);
 
             if (workplaceUpdated == null)
-                return BadRequest("Input model is null");
+                return NotFound(new { message = "Requested workplace not found" });
 
             return Ok(workplaceUpdated);
         }
 
-        // DELETE api/<WorkplaceController>/5
+        // DELETE api/workplace/delete/{guid}
         [HttpDelete("{id}")]
+        [Produces("application/json")]
+        [Authorize(Roles = "Admin, MapEditor")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _workplaceService.DeleteWorkplaceById(id);
+            var workplaceDeleted = await _workplaceService.DeleteWorkplaceById(id);
 
-            if (result == null)
-                return NoContent();
+            if (workplaceDeleted == null)
+                return NotFound(new { message = "Requested workplace not found" });
 
-            return Ok(result);
+            return NoContent();
         }
     }
 }

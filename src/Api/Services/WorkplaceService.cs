@@ -19,12 +19,18 @@ namespace Exadel.OfficeBooking.Api.Services
             _context = context;
         }
 
+        public async Task<WorkplaceGetDto[]> GetWorkplaces()
+        {
+            var workplaces = await _context.Workplaces.AsNoTracking().ToArrayAsync();
+            return workplaces.Adapt<WorkplaceGetDto[]>();
+        }
+
         public async Task<WorkplaceGetDto[]> GetWorkplaces(WorkplaceFilterDto filterModel)
         {
             var workplaces = _context.Workplaces.AsNoTracking();
 
-            if (!string.IsNullOrEmpty(filterModel.Number))
-                workplaces = workplaces.Where(w => w.Number.Contains(filterModel.Number));
+            if (!string.IsNullOrEmpty(filterModel.Name))
+                workplaces = workplaces.Where(w => w.Name.Contains(filterModel.Name));
 
             workplaces = workplaces.Where(w => w.Type.ToString() == filterModel.Type.ToString());
 
@@ -56,7 +62,7 @@ namespace Exadel.OfficeBooking.Api.Services
 
         public async Task<WorkplaceGetDto?> GetWorkplaceById(Guid id)
         {
-            var workplace = await _context.Workplaces.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
+            var workplace = await _context.Workplaces.AsNoTracking().FirstOrDefaultAsync(w => w.Id == id);
 
             if (workplace == null)
                 return null;
@@ -64,11 +70,8 @@ namespace Exadel.OfficeBooking.Api.Services
             return workplace.Adapt<WorkplaceGetDto>();
         }
 
-        public async Task<WorkplaceGetDto?> CreateWorkplace(WorkplaceSetDto workplace)
+        public async Task<WorkplaceGetDto> CreateWorkplace(WorkplaceSetDto workplace)
         {
-            if (workplace == null)
-                return null;
-
             var workplaceDomain = workplace.Adapt<Workplace>();
 
             await _context.Workplaces.AddAsync(workplaceDomain);
@@ -77,30 +80,34 @@ namespace Exadel.OfficeBooking.Api.Services
             return workplaceDomain.Adapt<WorkplaceGetDto>();
         }
 
-        public async Task<WorkplaceGetDto?> UpdateWorkplace(WorkplaceGetDto workplace)
+        public async Task<WorkplaceGetDto?> UpdateWorkplace(Guid id, WorkplaceSetDto workplaceDto)
         {
-            if (workplace == null)
+            var workplaceFromDb = await _context.Workplaces.AsNoTracking().FirstOrDefaultAsync(w => w.Id == id);
+
+            if (workplaceFromDb == null)
                 return null;
 
-            var workplaceDomain = workplace.Adapt<Workplace>();
+            var workplaceDomain = workplaceDto.Adapt<Workplace>();
 
-            _context.Entry(workplaceDomain).State = EntityState.Modified;
+            workplaceDomain.Id = id;
+
+            _context.Workplaces.Update(workplaceDomain);
             await _context.SaveChangesAsync();
 
-            return workplace;
+            return workplaceDomain.Adapt<WorkplaceGetDto>();
         }
 
-        public async Task<Guid?> DeleteWorkplaceById(Guid id)
+        public async Task<WorkplaceGetDto?> DeleteWorkplaceById(Guid id)
         {
-            var workplaceDomain = await _context.Workplaces.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
+            var workplaceFromDb = await _context.Workplaces.AsNoTracking().FirstOrDefaultAsync(w => w.Id == id);
 
-            if (workplaceDomain == null)
+            if (workplaceFromDb == null)
                 return null;
 
-            _context.Remove(workplaceDomain);
+            _context.Workplaces.Remove(workplaceFromDb);
             await _context.SaveChangesAsync();
 
-            return id;
+            return workplaceFromDb.Adapt<WorkplaceGetDto>();
         }
     }
 }

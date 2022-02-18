@@ -1,5 +1,6 @@
 ﻿using Exadel.OfficeBooking.Api.DTO.OfficeDto;
 using Exadel.OfficeBooking.Api.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
+    [Authorize]
     public class OfficeController : ControllerBase
     {
         private readonly IOfficeService _officeService;
@@ -22,46 +24,54 @@ namespace Exadel.OfficeBooking.Api.Controllers
         public async Task<OfficeGetDto[]> GetOffices()
         {
             var offices = await _officeService.GetOffices();
+
             return offices;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<OfficeGetDto>> GetById(Guid id)
         {
-            var result = await _officeService.GetOfficeById(id);
+            var office = await _officeService.GetOfficeById(id);
 
-            if (result == null) return NotFound(new {message = "The requested office was not found"});
+            if (office == null)
+                return NotFound(new {message = "The requested office was not found"});
 
-            return Ok(result);
+            return Ok(office);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] OfficeSetDto office)
+        [Authorize(Roles = "Admin, MapEditor")]
+        public async Task<ActionResult<OfficeGetDto>> Create([FromBody] OfficeSetDto office)
         {
             var officeCreated = await _officeService.CreateOffice(office);
+
             var uri = new Uri($"{Request.Path.Value}/{officeCreated.Id}".ToLower(), UriKind.Relative);
 
             return Created(uri, officeCreated);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(Guid id, [FromBody] OfficeGetDto office)
+        [Authorize(Roles = "Admin, MapEditor")]
+        public async Task<ActionResult<OfficeGetDto>> Update(Guid id, [FromBody] OfficeSetDto office)
         {
             var officeUpdated = await _officeService.UpdateOffice(id, office);
 
-            if (officeUpdated == null) return NotFound(new {message = "The office was not found"});
+            if (officeUpdated == null)
+                return NotFound(new { message = "Requested office not found" });
 
             return Ok(officeUpdated);
         }
 
         [HttpDelete("{id}")]
-        public  async Task<IActionResult> Delete(Guid id)
+        [Authorize(Roles = "Admin, MapEditor")]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _officeService.DeleteOffice(id);
+            var officeDeleted = await _officeService.DeleteOffice(id);
 
-            if (result == null) return NotFound(new {message = "Requested office doesn't exist"});
+            if (officeDeleted == null)
+                return NotFound(new { message = "Requested office not found" });
 
-            return Ok(result);
+            return NoContent();
         }
     }
 }

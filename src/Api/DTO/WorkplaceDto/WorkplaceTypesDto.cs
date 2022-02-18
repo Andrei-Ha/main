@@ -1,6 +1,6 @@
 ﻿namespace Exadel.OfficeBooking.Api.DTO.WorkplaceDto
 {
-    public enum TypesDto
+    public enum WorkplaceTypesDto
     {
         Regular,
         Administrative,

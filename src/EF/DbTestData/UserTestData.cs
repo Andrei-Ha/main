@@ -11,7 +11,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
 {
     public class UserTestData : IEntityTypeConfiguration<User>
     {
-     
+
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasData(
@@ -19,12 +19,12 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 new User
                 {
                     Id = Guid.NewGuid(),
-                    FirstName ="Anvar",
-                    LastName ="Majidov",
+                    FirstName = "Anvar",
+                    LastName = "Majidov",
                     Email = "AnvarMajidov@fake.com",
                     EmploymentStart = DateTime.Now,
                     TelegramId = 112233
-                    
+
                 },
                 new User
                 {
@@ -52,13 +52,13 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Fomchanka",
                     Email = "PalinaFomchanka@fake.com",
                     EmploymentStart = DateTime.Now,
-                    TelegramId = 667788 
+                    TelegramId = 667788
                 },
                 new User
                 {
                     Id = Guid.NewGuid(),
-                    FirstName ="Vasili",
-                    LastName ="Molkov",
+                    FirstName = "Vasili",
+                    LastName = "Molkov",
                     Email = "VasiliMolkov@fake.com",
                     EmploymentStart = DateTime.Now,
                     TelegramId = 778899
@@ -67,7 +67,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 {
                     Id = Guid.NewGuid(),
                     FirstName = "Andrei",
-                    LastName ="Harahliad",
+                    LastName = "Harahliad",
                     Email = "AndreiHarahliad@fake.com",
                     EmploymentStart = DateTime.Now,
                     TelegramId = 889900
@@ -83,7 +83,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 }
                 );
 
-            
+
         }
     }
 }
