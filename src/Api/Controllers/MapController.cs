@@ -2,12 +2,15 @@
 using System.Threading.Tasks;
 using Exadel.OfficeBooking.Api.DTO.MapDto;
 using Exadel.OfficeBooking.Api.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Exadel.OfficeBooking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+    [AllowAnonymous]
     public class MapController : ControllerBase
     {
         private readonly IMapService _mapService;
