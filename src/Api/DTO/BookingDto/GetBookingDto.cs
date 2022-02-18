@@ -17,6 +17,6 @@ public class GetBookingDto
 
     public int? Count { get; set; }
     public int Interval { get; set; } = 1;
-    public string RecurringWeekDays { get; set; } = "0000000";
+    public WeekDays RecurringWeekDays { get; set; }
     public RecurringFrequency Frequency { get; set; }
 }
