@@ -60,7 +60,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Address = "Yaroslaviv Val # 15",
                     Name = "YV15"
                 }
-                );
+                ) ; 
         }
     }
 }
