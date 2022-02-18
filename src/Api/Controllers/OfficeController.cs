@@ -11,7 +11,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    //[Authorize]
+    [Authorize]
     public class OfficeController : ControllerBase
     {
         private readonly IOfficeService _officeService;
@@ -21,14 +21,15 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOffices()
+        public async Task<OfficeGetDto[]> GetOffices()
         {
             var offices = await _officeService.GetOffices();
-            return Ok(offices);
+
+            return offices;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<ActionResult<OfficeGetDto>> GetById(Guid id)
         {
             var office = await _officeService.GetOfficeById(id);
 
@@ -39,8 +40,8 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin, MapEditor")]
-        public async Task<IActionResult> Create([FromBody] OfficeSetDto office)
+        [Authorize(Roles = "Admin, MapEditor")]
+        public async Task<ActionResult<OfficeGetDto>> Create([FromBody] OfficeSetDto office)
         {
             var officeCreated = await _officeService.CreateOffice(office);
 
@@ -50,8 +51,8 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Admin, MapEditor")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] OfficeSetDto office)
+        [Authorize(Roles = "Admin, MapEditor")]
+        public async Task<ActionResult<OfficeGetDto>> Update(Guid id, [FromBody] OfficeSetDto office)
         {
             var officeUpdated = await _officeService.UpdateOffice(id, office);
 
@@ -62,7 +63,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin, MapEditor")]
+        [Authorize(Roles = "Admin, MapEditor")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var officeDeleted = await _officeService.DeleteOffice(id);

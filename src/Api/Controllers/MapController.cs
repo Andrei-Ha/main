@@ -18,16 +18,17 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         // GET
         [HttpGet]
-        public async Task<IActionResult> GetMap()
+        public async Task<MapGetDto[]> GetMap()
         {
             var maps = await _mapService.GetMaps();
-            return Ok(maps);
+
+            return maps;
         }
         //
 
         // GET by ID
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<ActionResult<MapGetDto>> GetById(Guid id)
         {
             var map = await _mapService.GetMapById(id);
 
@@ -39,7 +40,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         // POST
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] MapSetDto map)
+        public async Task<ActionResult<MapGetDto>> Create([FromBody] MapSetDto map)
         {
             var mapCreated = await _mapService.CreateMap(map);
 
@@ -50,7 +51,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         // PUT
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] MapSetDto map)
+        public async Task<ActionResult<MapGetDto>> Update(Guid id, [FromBody] MapSetDto map)
         {
             var mapUpdated = await _mapService.UpdateMap(id, map);
 

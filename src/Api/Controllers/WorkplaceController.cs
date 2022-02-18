@@ -11,7 +11,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    //[Authorize]
+    [Authorize]
     public class WorkplaceController : ControllerBase
     {
         private readonly IWorkplaceService _workplaceService;
@@ -23,27 +23,27 @@ namespace Exadel.OfficeBooking.Api.Controllers
         // GET: api/workplace/getall
         [HttpGet]
         [Produces("application/json")]
-        public async Task<IActionResult> GetAll()
+        public async Task<WorkplaceGetDto[]> GetAll()
         {
             var workplaces = await _workplaceService.GetWorkplaces();
 
-            return Ok(workplaces);
+            return workplaces;
         }
 
         // GET: api/workplace/getfiltered
         [HttpGet]
         [Produces("application/json")]
-        public async Task<IActionResult> GetFiltered ([FromQuery] WorkplaceFilterDto filterModel)
+        public async Task<WorkplaceGetDto[]> GetFiltered ([FromQuery] WorkplaceFilterDto filterModel)
         {
             var workplaces = await _workplaceService.GetWorkplaces(filterModel);
 
-            return Ok(workplaces);
+            return workplaces;
         }
 
         // GET api/workplace/getbyid/{guid}
         [HttpGet("{id}")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<ActionResult<WorkplaceGetDto>> GetById(Guid id)
         {
             var workplace = await _workplaceService.GetWorkplaceById(id);
 
@@ -56,8 +56,8 @@ namespace Exadel.OfficeBooking.Api.Controllers
         // POST api/workplace/create
         [HttpPost]
         [Produces("application/json")]
-        //[Authorize(Roles ="Admin, MapEditor")]
-        public async Task<IActionResult> Create([FromBody] WorkplaceSetDto workplace)
+        [Authorize(Roles ="Admin, MapEditor")]
+        public async Task<ActionResult<WorkplaceGetDto>> Create([FromBody] WorkplaceSetDto workplace)
         {
             var workplaceCreated = await _workplaceService.CreateWorkplace(workplace);
 
@@ -69,8 +69,8 @@ namespace Exadel.OfficeBooking.Api.Controllers
         // PUT api/workplace/update
         [HttpPut]
         [Produces("application/json")]
-        //[Authorize(Roles = "Admin, MapEditor")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] WorkplaceSetDto workplace)
+        [Authorize(Roles = "Admin, MapEditor")]
+        public async Task<ActionResult<WorkplaceGetDto>> Update(Guid id, [FromBody] WorkplaceSetDto workplace)
         {
             var workplaceUpdated = await _workplaceService.UpdateWorkplace(id, workplace);
 
@@ -83,7 +83,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         // DELETE api/workplace/delete/{guid}
         [HttpDelete("{id}")]
         [Produces("application/json")]
-        //[Authorize(Roles = "Admin, MapEditor")]
+        [Authorize(Roles = "Admin, MapEditor")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var workplaceDeleted = await _workplaceService.DeleteWorkplaceById(id);
