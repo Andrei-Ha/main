@@ -61,6 +61,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Name = "YV15"
                 }
                 );
+
         }
     }
 }
