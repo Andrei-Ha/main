@@ -9,5 +9,5 @@ public class GetOneDayBookingDto
     public Guid WorkplaceId { get; set; }
     public Guid? ParkingPlaceId { get; set; }
 
-    public DateTime StartDate { get; set; }
+    public DateTime Date { get; set; }
 }
