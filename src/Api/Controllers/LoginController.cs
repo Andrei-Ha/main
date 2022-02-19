@@ -1,4 +1,5 @@
-﻿using Exadel.OfficeBooking.Domain.Person;
+﻿using Exadel.OfficeBooking.Api.DTO.PersonDto;
+using Exadel.OfficeBooking.Domain.Person;
 using Exadel.OfficeBooking.EF;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
@@ -55,20 +56,5 @@ namespace Exadel.OfficeBooking.Api.Controllers
             loginUserDto.Token = token;
             return Ok(loginUserDto);
         }
-    }
-
-    public class LoginUserDto
-    {
-        public int TelegramId { get; set; }
-
-        public string? UserName { get; set; }
-
-        public string? LastName { get; set; }
-
-        public string? Email { get; set; }
-
-        public string? Role { get; set; }
-
-        public string Token { get; set; } = string.Empty;
     }
 }
