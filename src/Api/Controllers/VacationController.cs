@@ -1,4 +1,4 @@
-﻿using Exadel.OfficeBooking.Api.DTO;
+﻿using Exadel.OfficeBooking.Api.DTO.PersonDto;
 using Exadel.OfficeBooking.Domain.Person;
 using Exadel.OfficeBooking.EF;
 using Mapster;
@@ -18,7 +18,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
     [AllowAnonymous]
     public class VacationController : ControllerBase
     {
-        private AppDbContext _db;
+        private readonly AppDbContext _db;
         public VacationController(AppDbContext appDbContext)
         {
             _db = appDbContext;
@@ -50,7 +50,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(PostVacationDto postVacationDto)
+        public async Task<IActionResult> Post(SetVacationDto postVacationDto)
         {
             User? user = await _db.Users.SingleOrDefaultAsync(x => x.Id == postVacationDto.UserId);
             if (user == null)
@@ -70,7 +70,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, PutVacationDto putVacationDto)
+        public async Task<IActionResult> Put(Guid id, SetVacationDto putVacationDto)
         {
             Vacation? vacation = await _db.Vacations.SingleOrDefaultAsync(v => v.Id == id);
             if (vacation == null)

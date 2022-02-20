@@ -1,4 +1,4 @@
-﻿using Exadel.OfficeBooking.Api.DTO;
+﻿using Exadel.OfficeBooking.Api.DTO.PersonDto;
 using Exadel.OfficeBooking.Domain.Person;
 using Exadel.OfficeBooking.EF;
 using Mapster;
@@ -17,7 +17,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
     [AllowAnonymous]
     public class UserController : ControllerBase
     {
-        private AppDbContext _db;
+        private readonly AppDbContext _db;
         public UserController(AppDbContext context)
         {
             _db = context;
@@ -48,7 +48,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin, Manager")]
-        public async Task<IActionResult> Post(PostUserDto postUserDto )
+        public async Task<IActionResult> Post(SetUserDto postUserDto )
         {
             User user = postUserDto.Adapt<User>();
             _db.Users.Add(user);
@@ -58,22 +58,19 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin, Manager")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] PutUserDto putUserDto)
+        public async Task<IActionResult> Put(Guid id, [FromBody] SetUserDto putUserDto)
         {
-            User? user = await _db.Users.SingleOrDefaultAsync(u => u.Id == id);
+            User? user = await _db.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id);
             if (user == null)
             {
                 return NotFound(new { message = "The user was not found" });
             }
 
-            user.TelegramId = putUserDto.TelegramId;
-            user.FirstName = putUserDto.FirstName;
-            user.LastName = putUserDto.LastName;
-            user.Email = putUserDto.Email;
-            user.EmploymentStart = putUserDto.EmploymentStart;
-            user.EmploymentEnd = putUserDto.EmploymentEnd;
+            var userUpd = putUserDto.Adapt<User>();
+            userUpd.Id = id;
+            _db.Users.Update(userUpd);
             await _db.SaveChangesAsync();
-            return Ok(user.Adapt<GetUserDto>());
+            return Ok(userUpd.Adapt<GetUserDto>());
         }
 
         [HttpDelete("{id}")]
