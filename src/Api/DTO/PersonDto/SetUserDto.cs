@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Exadel.OfficeBooking.Domain.Person;
+using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Exadel.OfficeBooking.Api.DTO
+namespace Exadel.OfficeBooking.Api.DTO.PersonDto
 {
-    public class UserDto
+    public class SetUserDto
     {
         public int TelegramId { get; set; }
 
@@ -20,22 +21,7 @@ namespace Exadel.OfficeBooking.Api.DTO
         public DateTime? EmploymentStart { get; set; }
         
         public DateTime? EmploymentEnd { get; set;}
-    }
 
-    public class GetUserDto :UserDto
-    {
-        public Guid Id { get; set; }
-     
-        public string Role { get; set; } = string.Empty; 
-    }
-
-    public class PostUserDto : UserDto
-    {
-
-    }
-
-    public class PutUserDto : UserDto
-    {
-
+        public UserRole Role { get; set; } = UserRole.CommonUser;
     }
 }
