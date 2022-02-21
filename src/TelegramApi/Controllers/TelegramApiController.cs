@@ -1,4 +1,5 @@
 using Exadel.OfficeBooking.TelegramApi.DTO;
+using Exadel.OfficeBooking.TelegramApi.States;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
@@ -20,12 +21,17 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
         private readonly TelegramBotClient _telegramBotClient;
         private readonly IHttpClientFactory _httpClientFactory;
 
+        private readonly IStateMachine _stateMachine;
+
+        private StatesNamesEnum _state;
+
         private OfficeDto[]? _offices;
 
-        public TelegramApiController(TelegramBot telegramBot, IHttpClientFactory httpClientFactory)
+        public TelegramApiController(TelegramBot telegramBot, IHttpClientFactory httpClientFactory, IStateMachine stateMachine)
         {
             _telegramBotClient = telegramBot.GetBot().Result;
             _httpClientFactory = httpClientFactory;
+            _stateMachine = stateMachine;
         }
 
         [HttpPost]
@@ -37,53 +43,12 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
             var chatId = update.Message.Chat.Id;
             var messageText = update.Message.Text;
 
-            if (messageText == "start")
+            if(messageText == "start")
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:7110/api/office");
-                request.Headers.Add("Accept", "*/*");
-                request.Headers.Add("User-Agent", "HttpClientFactory-Sample");
-
-                var client = _httpClientFactory.CreateClient();
-
-                var response = await client.SendAsync(request);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    using var responseStream = await response.Content.ReadAsStreamAsync();
-                    //Users = await System.Text.Json.JsonSerializer.DeserializeAsync<IEnumerable<GetUserDto>>(responseStream);
-
-                    StreamReader reader = new StreamReader(responseStream);
-                    string text = reader.ReadToEnd();
-                    _offices = JsonConvert.DeserializeObject<OfficeDto[]>(text);
-                }
-                else
-                {
-                    _offices = Array.Empty<OfficeDto>();
-                }
-
-                if (_offices != null)
-                {
-                    var countries = _offices.Select(x => x.Country).ToArray();
-
-                    var countriesToString = string.Empty;
-
-                    for(int i = 0; i < countries.Length; i++)
-                    {
-                        if (i == 0)
-                            countriesToString += countries[i];
-                        
-                        else
-                            countriesToString += $"\n{countries[i]}";
-                    }
-
-                    await _telegramBotClient.SendTextMessageAsync(
-                        chatId: chatId,
-                        text: countriesToString,
-                        parseMode: ParseMode.Markdown);
-
-                    return Ok();
-                }
+                _stateMachine.SetState(StatesNamesEnum.Greetings);
             }
+
+            await _stateMachine.IncomingUpdateHandle(update);
 
             messageText = messageText ?? "no text";
             await _telegramBotClient.SendTextMessageAsync(

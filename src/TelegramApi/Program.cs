@@ -1,4 +1,5 @@
 using Exadel.OfficeBooking.TelegramApi;
+using Exadel.OfficeBooking.TelegramApi.States;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ builder.Configuration.AddJsonFile("appsettings.local.json", optional: true, relo
 builder.Services.AddControllers().AddNewtonsoftJson();
 //builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<TelegramBot>();
+builder.Services.AddSingleton<IStateMachine, StateMachine>();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
