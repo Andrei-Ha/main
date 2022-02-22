@@ -1,4 +1,5 @@
 ﻿using Exadel.OfficeBooking.Domain.Bookings;
+using System;
 
 namespace Exadel.OfficeBooking.Domain.OfficePlan
 {
@@ -7,8 +8,9 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public bool IsBooked { get; set; }
 
         public int PlaceNumber { get; set; }
+        public Guid OfficeId { get; set; }
 
-        public Office Office { get; set; } = new();
+        public virtual  Office Office { get; set; } = new();
         
         public Booking? Booking { get; set; }
     }
