@@ -1,4 +1,5 @@
 ﻿using Exadel.OfficeBooking.Domain.Bookings;
+using System;
 using System.Collections.Generic;
 
 namespace Exadel.OfficeBooking.Domain.OfficePlan
@@ -22,8 +23,9 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public bool HasMouse { get; set; }
 
         public bool HasHeadset { get; set; }
+        public Guid MapId { get; set; }
 
-        public Map Map { get; set; } = new();
+        public virtual Map Map { get; set; } = new();
 
         public List<Booking>? Bookings { get; set; }
     }
