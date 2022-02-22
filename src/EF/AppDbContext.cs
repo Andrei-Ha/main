@@ -27,6 +27,8 @@ namespace Exadel.OfficeBooking.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           
+            
             modelBuilder.Entity<ParkingPlace>()
                 .HasOne(p => p.Booking)
                 .WithOne(b => b.ParkingPlace)
@@ -56,6 +58,11 @@ namespace Exadel.OfficeBooking.EF
                 .Property(o => o.LastName)
                 .HasMaxLength(100);
 
+            modelBuilder.Entity<Map>()
+               .HasOne(e => e.Office)
+               .WithMany(e => e.Maps)
+               .HasForeignKey(e => e.OfficeId);
+
             modelBuilder.Entity<User>()
                 .Property(o => o.Email)
                 .HasMaxLength(100);
@@ -64,8 +71,9 @@ namespace Exadel.OfficeBooking.EF
                 .Property(o => o.Role)
                 .HasDefaultValue(UserRole.CommonUser);
 
-            modelBuilder.ApplyConfiguration(new OfficeTestData());
-            modelBuilder.ApplyConfiguration(new UserTestData());
+            modelBuilder.SeedData();
+
+
         }
     }
 }

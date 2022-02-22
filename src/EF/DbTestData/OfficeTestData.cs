@@ -11,55 +11,56 @@ namespace Exadel.OfficeBooking.EF.DbTestData
 {
     public class OfficeTestData : IEntityTypeConfiguration<Office>
     {
+        public static Guid tbGuid = Guid.NewGuid();
         public void Configure(EntityTypeBuilder<Office> builder)
         {
             builder.HasData(
 
+                //new Office
+                //{
+                //    Id = Guid.NewGuid(),
+                //    City = "Tashkent",
+                //    Country = "Uzbekistan",
+                //    Address = "Mirzo Ulugbek Avenue # 73",
+                //    IsFreeParkingAvailable = true,
+                //    Name = "MU73",
+                //},
+                //new Office
+                //{
+                //    Id = Guid.NewGuid(),
+                //    Country = "Belrus",
+                //    City = "Minsk",
+                //    IsFreeParkingAvailable = true,
+                //    Address = "Naturalistov str # 3",
+                //    Name = "N3"
+                //},
                 new Office
                 {
-                    Id = Guid.NewGuid(),
-                    City = "Tashkent",
-                    Country = "Uzbekistan",
-                    Address = "Mirzo Ulugbek Avenue # 73",
-                    IsFreeParkingAvailable = true,
-                    Name = "MU73",
-                },
-                new Office
-                {
-                    Id = Guid.NewGuid(),
-                    Country = "Belrus",
-                    City = "Minsk",
-                    IsFreeParkingAvailable = true,
-                    Address = "Naturalistov str # 3",
-                    Name = "N3"
-                },
-                new Office
-                {
-                    Id = Guid.NewGuid(),
+                    Id = tbGuid,
                     Country = "Georgia",
                     City = "Tbilisi",
                     IsFreeParkingAvailable = false,
                     Address = "Ilo Mosashvili str #24",
                     Name = "IM24"
-                },
-                new Office
-                {
-                    Id = Guid.NewGuid(),
-                    Country = "Lithuania",
-                    City = "Klaipėda",
-                    IsFreeParkingAvailable = true,
-                    Address = "Danes str # 6-401",
-                    Name = "D6-401"
-                },
-                new Office
-                {
-                    Id = Guid.NewGuid(),
-                    Country = "Ukraine",
-                    City = "Odessa",
-                    IsFreeParkingAvailable = false,
-                    Address = "Yaroslaviv Val # 15",
-                    Name = "YV15"
                 }
+                //new Office
+                //{
+                //    Id = Guid.NewGuid(),
+                //    Country = "Lithuania",
+                //    City = "Klaipėda",
+                //    IsFreeParkingAvailable = true,
+                //    Address = "Danes str # 6-401",
+                //    Name = "D6-401"
+                //},
+                //new Office
+                //{
+                //    Id = Guid.NewGuid(),
+                //    Country = "Ukraine",
+                //    City = "Odessa",
+                //    IsFreeParkingAvailable = false,
+                //    Address = "Yaroslaviv Val # 15",
+                //    Name = "YV15"
+                //}
                 ) ; 
         }
     }
