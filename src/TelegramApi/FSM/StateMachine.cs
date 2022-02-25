@@ -24,6 +24,9 @@ namespace Exadel.OfficeBooking.TelegramApi.FSM
 
         public async Task IncomingUpdateHandle(Update update)
         {
+            // add FsmState to TelegramApi database if not exist
+            // if FsmState exist in database for incoming user, get current StepName
+
             var step = _steps.First(step => step.GetType().Name == _state.StepName.ToString());
 
             _state = await step.CurrentStepHandle(update);

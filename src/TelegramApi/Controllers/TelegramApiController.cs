@@ -45,12 +45,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
             var chatId = update.Message.Chat.Id;
             var messageText = update.Message.Text;
 
-            //if(messageText == "start")
-            //{
-            //    _stateMachine.SetState(StepNamesEnum.Greetings);
-            //}
-
-            //await _stateMachine.IncomingUpdateHandle(update);
+            await _stateMachine.IncomingUpdateHandle(update);
 
             messageText = messageText ?? "no text";
             await _telegramBotClient.SendTextMessageAsync(
