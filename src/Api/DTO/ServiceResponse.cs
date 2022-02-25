@@ -1,9 +1,11 @@
-﻿namespace Exadel.OfficeBooking.Api.DTO;
-
-public class ServiceResponse<T>
+﻿namespace Exadel.OfficeBooking.Api.DTO
 {
-    public T Data { get; set; }
-    public bool Success { get; set; } = true;
-    public string Message { get; set; } = string.Empty;
-    public int StatusCode { get; set; }
+
+    public class ServiceResponse<T>
+    {
+        public T Data { get; set; }
+        public bool Success { get; set; } = true;
+        public string Message { get; set; } = string.Empty;
+        public int StatusCode { get; set; }
+    }
 }
