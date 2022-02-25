@@ -9,21 +9,21 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace Exadel.OfficeBooking.TelegramApi.States.StatesHandlers
+namespace Exadel.OfficeBooking.TelegramApi.FSM.Steps
 {
-    public class SelectCityStateHandler
+    public class SelectCity : IStep
     {
         private readonly TelegramBotClient _botClient;
 
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public SelectCityStateHandler(TelegramBotClient botClient, IHttpClientFactory httpClientFactory)
+        public SelectCity(TelegramBotClient botClient, IHttpClientFactory httpClientFactory)
         {
             _botClient = botClient;
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<StatesNamesEnum> CurrentStateHandle(Update update)
+        public async Task<FsmState> CurrentStepHandle(Update update)
         {
             var chatId = update.Message.Chat.Id;
             var messageText = update.Message.Text;
@@ -49,7 +49,7 @@ namespace Exadel.OfficeBooking.TelegramApi.States.StatesHandlers
                     text: officesInfoToString,
                     parseMode: ParseMode.Markdown);
 
-                return StatesNamesEnum.SelectOffice;
+                return new FsmState { ChatId = chatId, StepName = StepsNamesEnum.SelectOffice };
             }
             else
             {
@@ -58,7 +58,7 @@ namespace Exadel.OfficeBooking.TelegramApi.States.StatesHandlers
                     text: "Something going wrong",
                     parseMode: ParseMode.Markdown);
 
-                return StatesNamesEnum.SelectCity;
+                return new FsmState { ChatId = chatId, StepName = StepsNamesEnum.SelectCity };
             }
         }
 

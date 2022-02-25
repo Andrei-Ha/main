@@ -1,8 +1,7 @@
-﻿namespace Exadel.OfficeBooking.TelegramApi.States
+﻿namespace Exadel.OfficeBooking.TelegramApi.FSM.Steps
 {
-    public enum StatesNamesEnum
+    public enum StepsNamesEnum
     {
-        Default,
         Greetings,
         SelectCity,
         SelectOffice,

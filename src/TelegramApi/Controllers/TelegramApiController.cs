@@ -1,5 +1,6 @@
 using Exadel.OfficeBooking.TelegramApi.DTO;
-using Exadel.OfficeBooking.TelegramApi.States;
+using Exadel.OfficeBooking.TelegramApi.FSM;
+using Exadel.OfficeBooking.TelegramApi.FSM.Steps;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
@@ -21,13 +22,13 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
         private readonly TelegramBotClient _telegramBotClient;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        private readonly IStateMachine _stateMachine;
+        private readonly StateMachine _stateMachine;
 
-        private StatesNamesEnum _state;
+        private StepsNamesEnum _state;
 
         private OfficeDto[]? _offices;
 
-        public TelegramApiController(TelegramBot telegramBot, IHttpClientFactory httpClientFactory, IStateMachine stateMachine)
+        public TelegramApiController(TelegramBot telegramBot, IHttpClientFactory httpClientFactory, StateMachine stateMachine)
         {
             _telegramBotClient = telegramBot.GetBot().Result;
             _httpClientFactory = httpClientFactory;
@@ -40,15 +41,16 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
             if (update.Message!.Type != MessageType.Text)
                 return Ok();
 
+
             var chatId = update.Message.Chat.Id;
             var messageText = update.Message.Text;
 
-            if(messageText == "start")
-            {
-                _stateMachine.SetState(StatesNamesEnum.Greetings);
-            }
+            //if(messageText == "start")
+            //{
+            //    _stateMachine.SetState(StepNamesEnum.Greetings);
+            //}
 
-            await _stateMachine.IncomingUpdateHandle(update);
+            //await _stateMachine.IncomingUpdateHandle(update);
 
             messageText = messageText ?? "no text";
             await _telegramBotClient.SendTextMessageAsync(
