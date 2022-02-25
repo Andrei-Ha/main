@@ -14,6 +14,7 @@ builder.Services.AddSingleton<Exadel.OfficeBooking.TelegramApi.TelegramBot>();
 builder.Services.AddScoped<StateMachine>();
 builder.Services.AddScoped<StateMachineStep,Start>();
 builder.Services.AddScoped<StateMachineStep, ActionChoise>();
+builder.Services.AddScoped<StateMachineStep, CityChoise>();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();

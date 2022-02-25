@@ -6,6 +6,8 @@ namespace Exadel.OfficeBooking.TelegramApi
     {
         public long TelegramId { get; set; } = 0;
         
+        public string City { get; set; }  = string.Empty;
+
         public string StepName { get; set; } = string.Empty; // nameof(Start)
 
         public Result Result { get; set; } = new();
