@@ -48,17 +48,26 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
             var result = _fsm.Process(update);
 
 
-            // Create custom keyboard
-            KeyboardButton[][] keyboardButtons =  result.Propositions
-                .Select(k => new KeyboardButton[] { k }).ToArray() ;
-            ReplyKeyboardMarkup replyKeyboardMarkup = new(keyboardButtons);
-            replyKeyboardMarkup.ResizeKeyboard = true;
+            // Create custom keyboard or Remove
+            IReplyMarkup replyMarkup;
+            if (result.Propositions.Length == 0)
+            {
+                replyMarkup = new ReplyKeyboardRemove();
+            }
+            else
+            {
+                KeyboardButton[][] keyboardButtons = result.Propositions
+                    .Select(k => new KeyboardButton[] { k }).ToArray();
+                ReplyKeyboardMarkup replyKeyboardMarkup = new(keyboardButtons);
+                replyKeyboardMarkup.ResizeKeyboard = true;
+                replyMarkup = replyKeyboardMarkup;
+            }
 
             //Send message from user
             await _bot.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: result.TextMessage,
-                replyMarkup: replyKeyboardMarkup
+                replyMarkup: replyMarkup
                 );
 
             return Ok();

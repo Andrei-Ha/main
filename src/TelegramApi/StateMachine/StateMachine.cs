@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Linq;
 using Telegram.Bot.Types;
-using static Exadel.OfficeBooking.TelegramApi.StateMachine.StateMachineStep;
 
 namespace Exadel.OfficeBooking.TelegramApi.StateMachine
 {
@@ -41,10 +40,18 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
         public Result Process(Update update)
         {
             var curStep = GetCurrentStep();
-            var newState = curStep.Execute(update,  _state);
-            _state.StepName = newState.Result.NextStep;
-            SaveState();
-            return newState.Result;
+            _state = curStep.Execute(update,  _state);
+            _state.StepName = _state.Result.NextStep;
+            if (_state.StepName != "Finish")
+            {
+                SaveState();
+            }
+            else
+            {
+                DeleteFileState();
+            }
+
+            return _state.Result;
         }
 
         private StateMachineStep GetCurrentStep()
@@ -55,6 +62,14 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
         private void SaveState()
         {
             System.IO.File.WriteAllText(_file, JsonConvert.SerializeObject(_state, Formatting.Indented));
+        }
+
+        private void DeleteFileState()
+        {
+            if (System.IO.File.Exists(_file))
+            {
+                System.IO.File.Delete(_file);
+            }
         }
     }
 }
