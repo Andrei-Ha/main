@@ -1,0 +1,13 @@
+{
+  "TelegramId": 1651658270,
+  "StepName": "ActionChoise",
+  "Result": {
+    "Propositions": [
+      "Change or Cancel a booking",
+      "Book a workplace",
+      "Nothing"
+    ],
+    "NextStep": "ActionChoise",
+    "TextMessage": "What do you want to do today?"
+  }
+}

@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
+
+using static Exadel.OfficeBooking.TelegramApi.StateMachine.StateMachineStep;
 
 namespace Exadel.OfficeBooking.TelegramApi.Controllers
 {
@@ -13,13 +17,15 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
     [Route("api/message/update")]
     public class TelegramBotController : ControllerBase
     {
-        private readonly TelegramBotClient _telegramBotClient;
+        private readonly TelegramBotClient _bot;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly StateMachine.StateMachine _fsm;
 
-        public TelegramBotController(TelegramBot telegramBot, IHttpClientFactory httpClientFactory)
+        public TelegramBotController(TelegramBot telegramBot, IHttpClientFactory httpClientFactory, StateMachine.StateMachine stateMachine )
         {
-            _telegramBotClient = telegramBot.GetBot().Result;
+            _bot = telegramBot.GetBot().Result;
             _httpClientFactory = httpClientFactory;
+            _fsm = stateMachine;
         }
 
         [HttpGet]
@@ -34,17 +40,27 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
             if (update?.Type != UpdateType.Message)
                 return Ok();
 
-            if (update.Message!.Type != MessageType.Text)
-                return Ok(); ;
+            var message = update.Message!;
+            if (message.Type != MessageType.Text)
+                return Ok();
 
-            var chatId = update.Message.Chat.Id;
-            var messageText = update.Message.Text;
-            messageText = messageText ?? "no text";
-            Message sentMessage = await _telegramBotClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: messageText,
-                parseMode: ParseMode.Markdown
+            _fsm.Init(message.From.Id);
+            var result = _fsm.Process(update);
+
+
+            // Create custom keyboard
+            KeyboardButton[][] keyboardButtons =  result.Propositions
+                .Select(k => new KeyboardButton[] { k }).ToArray() ;
+            ReplyKeyboardMarkup replyKeyboardMarkup = new(keyboardButtons);
+            replyKeyboardMarkup.ResizeKeyboard = true;
+
+            //Send message from user
+            await _bot.SendTextMessageAsync(
+                chatId: message.Chat.Id,
+                text: result.TextMessage,
+                replyMarkup: replyKeyboardMarkup
                 );
+
             return Ok();
         }
     }
