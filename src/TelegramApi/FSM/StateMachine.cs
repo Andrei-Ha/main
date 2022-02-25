@@ -30,6 +30,7 @@ namespace Exadel.OfficeBooking.TelegramApi.FSM
             var step = _steps.First(step => step.GetType().Name == _state.StepName.ToString());
 
             _state = await step.CurrentStepHandle(update);
+            SaveFsmState();
         }
 
         private void SaveFsmState()
