@@ -7,6 +7,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
     {
         public override FsmState Execute(Update update, FsmState fsmState)
         {
+            System.Console.WriteLine("ActionChoise");
             return fsmState;
         }
     }
