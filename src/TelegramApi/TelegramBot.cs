@@ -21,9 +21,9 @@ namespace Exadel.OfficeBooking.TelegramApi
 				return _botClient;
 			}
 
-			_botClient = new TelegramBotClient(_configuration["Token"]);
+			_botClient = new TelegramBotClient(_configuration["MyToken"]);
 
-			await _botClient.SetWebhookAsync($"{_configuration["Url"]}api/message/update");
+			await _botClient.SetWebhookAsync($"{_configuration["MyUrl"]}api/message/update");
 
 			return _botClient;
 		}

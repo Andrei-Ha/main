@@ -1,4 +1,5 @@
 ﻿using Exadel.OfficeBooking.TelegramApi.DTO;
+using Exadel.OfficeBooking.TelegramApi.EF;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -17,13 +18,13 @@ namespace Exadel.OfficeBooking.TelegramApi.FSM.Steps
 
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public Greetings(TelegramBotClient botClient, IHttpClientFactory httpClientFactory)
+        public Greetings(TelegramBot telegramBot, IHttpClientFactory httpClientFactory)
         {
-            _botClient = botClient;
+            _botClient = telegramBot.GetBot().Result;
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<FsmState> CurrentStepHandle(Update update)
+        public async Task<UserState> CurrentStepHandle(Update update, UserState state)
         {
             var chatId = update.Message.Chat.Id;
 
@@ -45,7 +46,7 @@ namespace Exadel.OfficeBooking.TelegramApi.FSM.Steps
                     text: citiesToString,
                     parseMode: ParseMode.Markdown);
 
-                return new FsmState { ChatId = chatId, StepName = StepsNamesEnum.SelectCity };
+                return new UserState { StepName = nameof(SelectCity) };
             }
             else
             {
@@ -54,7 +55,7 @@ namespace Exadel.OfficeBooking.TelegramApi.FSM.Steps
                     text: "Something going wrong",
                     parseMode: ParseMode.Markdown);
 
-                return new FsmState { ChatId = chatId, StepName = StepsNamesEnum.Greetings };
+                return new UserState { StepName = nameof(Greetings) };
             }
         }
 

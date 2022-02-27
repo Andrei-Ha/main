@@ -1,12 +1,5 @@
-using Exadel.OfficeBooking.TelegramApi.DTO;
 using Exadel.OfficeBooking.TelegramApi.FSM;
-using Exadel.OfficeBooking.TelegramApi.FSM.Steps;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -23,10 +16,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
 
         private readonly StateMachine _stateMachine;
-
-        private StepsNamesEnum _state;
-
-        private OfficeDto[]? _offices;
 
         public TelegramApiController(TelegramBot telegramBot, IHttpClientFactory httpClientFactory, StateMachine stateMachine)
         {
