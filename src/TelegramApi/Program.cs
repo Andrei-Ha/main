@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using Exadel.OfficeBooking.TelegramApi.Steps;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,12 @@ builder.Services.AddScoped<StateMachine>();
 builder.Services.AddScoped<StateMachineStep,Start>();
 builder.Services.AddScoped<StateMachineStep, ActionChoise>();
 builder.Services.AddScoped<StateMachineStep, CityChoise>();
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("WebAPI", c =>
+{
+    c.BaseAddress = new Uri("https://localhost:7110/api/");
+    c.DefaultRequestHeaders.Add("Accept", "*/*");
+    c.DefaultRequestHeaders.Add("User-Agent", "TelegramApi");
+});
 
 var app = builder.Build();
 

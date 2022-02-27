@@ -1,11 +1,10 @@
-﻿using Exadel.OfficeBooking.Domain.Person;
-using System;
+﻿using System;
 
-namespace Exadel.OfficeBooking.Api.DTO.PersonDto
+namespace Exadel.OfficeBooking.TelegramApi.DTO.PersonDto
 {
     public class LoginUserDto
     {
-        public int TelegramId { get; set; }
+        //public int TelegramId { get; set; }
 
         public Guid UserId { get; set; }
 

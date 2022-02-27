@@ -1,10 +1,13 @@
-﻿using Exadel.OfficeBooking.TelegramApi.StateMachine;
+﻿using Exadel.OfficeBooking.TelegramApi.DTO.PersonDto;
+using Exadel.OfficeBooking.TelegramApi.StateMachine;
 
 namespace Exadel.OfficeBooking.TelegramApi
 {
     public class FsmState
     {
         public long TelegramId { get; set; } = 0;
+
+        public LoginUserDto? User { get; set; } 
         
         public string City { get; set; }  = string.Empty;
 

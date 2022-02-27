@@ -10,20 +10,13 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
 {
     public class StateMachine
     {
-        private StateMachineStep[] _steps = { };
+        private readonly StateMachineStep[] _steps = Array.Empty<StateMachineStep>();
         private string _file = string.Empty;
         private FsmState _state = new();
 
         public StateMachine(IServiceProvider serviceProvider)
         {
-            // Initial all steps
-            _steps = serviceProvider.GetServices<StateMachineStep>()
-                .Select(o => 
-                {
-                    o.State = new();
-                    return o;
-                }
-            ).ToArray();
+            _steps = serviceProvider.GetServices<StateMachineStep>().ToArray();
         }
 
         public void Init(long telegramId)

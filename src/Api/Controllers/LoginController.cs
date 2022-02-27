@@ -36,6 +36,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
                 return Ok();
             }
             var loginUserDto = user.Adapt<LoginUserDto>();
+            loginUserDto.UserId = user.Id;
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
