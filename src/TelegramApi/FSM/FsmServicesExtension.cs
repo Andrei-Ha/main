@@ -1,4 +1,5 @@
-﻿using Exadel.OfficeBooking.TelegramApi.FSM.Steps;
+﻿using Exadel.OfficeBooking.TelegramApi.DTO;
+using Exadel.OfficeBooking.TelegramApi.FSM.Steps;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Exadel.OfficeBooking.TelegramApi.FSM
@@ -9,9 +10,15 @@ namespace Exadel.OfficeBooking.TelegramApi.FSM
         {
             services.AddScoped<StateMachine>();
             
-            services.AddScoped<IStep, Greetings>();
+            services.AddScoped<Step, Greetings>();
+            
+            services.AddScoped<Step, ActionChoice>();
 
-            services.AddScoped<IStep, SelectCity>();
+            services.AddScoped<Step, SelectCity>();
+
+            services.AddScoped<Step, SelectOffice>();
+
+            services.AddScoped<Step, Finish>();
         }
     }
 }
