@@ -1,12 +1,14 @@
-﻿using Exadel.OfficeBooking.TelegramApi.EF;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
 namespace Exadel.OfficeBooking.TelegramApi.FSM.Steps
 {
-    public class SelectOffice : IStep
+    public class SelectOffice : Step
     {
-        public Task<UserState> CurrentStepHandle(Update update, UserState state)
+        public SelectOffice(HttpClient http, TelegramBot telegramBot) : base(http, telegramBot)
+        {}
+        public override Task CurrentStepHandle(Update update)
         {
             throw new System.NotImplementedException();
         }
