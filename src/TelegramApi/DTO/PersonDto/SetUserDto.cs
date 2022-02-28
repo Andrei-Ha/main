@@ -1,13 +1,11 @@
-﻿using Exadel.OfficeBooking.Domain.Person;
-using System;
+﻿using System;
 
-namespace Exadel.OfficeBooking.Api.DTO.PersonDto
+namespace Exadel.OfficeBooking.TelegramApi.DTO.PersonDto
 {
     public class SetUserDto
     {
         public int TelegramId { get; set; }
-        //Delete this stepName property
-        public string StepName { get; set; } = "Greetings";
+        public string StepName { get; set; } = "Greeting";
 
         public string FirstName { get; set; } = String.Empty;
         public string LastName { get; set; } = String.Empty;
