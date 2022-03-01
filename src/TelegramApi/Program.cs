@@ -16,6 +16,8 @@ builder.Services.AddScoped<StateMachine>();
 builder.Services.AddScoped<StateMachineStep,Start>();
 builder.Services.AddScoped<StateMachineStep, ActionChoise>();
 builder.Services.AddScoped<StateMachineStep, CityChoise>();
+builder.Services.AddScoped<StateMachineStep, OfficeChoise>();
+builder.Services.AddScoped<StateMachineStep, DatesChoise>();
 builder.Services.AddHttpClient("WebAPI", c =>
 {
     c.BaseAddress = new Uri("https://localhost:7110/api/");

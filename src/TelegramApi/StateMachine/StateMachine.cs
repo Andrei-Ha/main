@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
 namespace Exadel.OfficeBooking.TelegramApi.StateMachine
@@ -30,10 +31,11 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
             _state = JsonConvert.DeserializeObject<FsmState>(System.IO.File.ReadAllText(_file)) ?? new FsmState() { TelegramId = telegramId, StepName = nameof(Start) };
         }
 
-        public Result Process(Update update)
+        public async Task<Result> Process(Update update)
         {
             var curStep = GetCurrentStep();
-            _state = curStep.Execute(update,  _state);
+            curStep.TransmitFsmState(_state);
+            _state = await curStep.Execute(update);
             _state.StepName = _state.Result.NextStep;
             if (_state.StepName != "Finish")
             {

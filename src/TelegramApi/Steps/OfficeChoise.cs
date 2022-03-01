@@ -10,9 +10,9 @@ using Telegram.Bot.Types;
 
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
-    public class CityChoise : StateMachineStep
+    public class OfficeChoise : StateMachineStep
     {
-        public CityChoise(IHttpClientFactory http) : base(http)
+        public OfficeChoise(IHttpClientFactory http) : base(http)
         {
         }
 
@@ -22,17 +22,13 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             var httpResponse = await GetModelFromWebAPI<IEnumerable<OfficeGetDto>>("office");
             if (httpResponse?.Model != null)
             {
-                var propositions = httpResponse.Model
-                    .Where(p => p.City == text)
-                    .OrderBy(p => p.Name)
-                    .Select(p => $"{p.Name} ({p.Address})")
-                    .ToArray();
-                if (propositions.Length > 0)
+                var office = httpResponse.Model.FirstOrDefault(p => $"{p.Name} ({p.Address})" == text);
+                if (office != null)
                 {
-                    _fsmState.City = text!;
-                    _fsmState.Result.TextMessage = "Select the office:";
-                    _fsmState.Result.NextStep = nameof(OfficeChoise);
-                    _fsmState.Result.Propositions = propositions;
+                    _fsmState.OfficeId= office.Id;
+                    _fsmState.Result.TextMessage = "Select booking type:";
+                    _fsmState.Result.NextStep = nameof(DatesChoise);
+                    _fsmState.Result.Propositions = new string[] {"One day", "Continuous"/*, "Recurring"*/};
                 }
             }
             return _fsmState;

@@ -45,7 +45,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
                 return Ok();
 
             _fsm.Init(message.From.Id);
-            var result = _fsm.Process(update);
+            var result = await _fsm.Process(update);
 
 
             // Create custom keyboard or Remove
