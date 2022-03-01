@@ -16,10 +16,11 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
         {
         }
 
-        public override Task<FsmState> Execute(Update update)
+        public override async Task<FsmState> Execute(Update update)
         {
             string? text = update.Message?.Text;
-            throw new NotImplementedException();
+            _fsmState.Result = new();
+            return _fsmState;
         }
     }
 }

@@ -26,6 +26,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 if (office != null)
                 {
                     _fsmState.OfficeId= office.Id;
+                    _fsmState.OfficeName = text!;
                     _fsmState.Result.TextMessage = "Select booking type:";
                     _fsmState.Result.NextStep = nameof(DatesChoise);
                     _fsmState.Result.Propositions = new string[] {"One day", "Continuous"/*, "Recurring"*/};

@@ -1,0 +1,29 @@
+{
+  "TelegramId": 1651658270,
+  "User": {
+    "UserId": "15c89ae1-189f-403d-31bc-08d9f3d0c942",
+    "FirstName": "Andrei",
+    "LastName": "Harahliad",
+    "Email": "as@gmail.com",
+    "Role": 2,
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImV4cCI6MTY0NjIyNzU3MCwiaXNzIjoiV2ViQVBJX1RlYW0zIiwiYXVkIjoiVGVsZWdyYW1Cb3RfVGVhbTMifQ.YnQKpErnJtK7qQlj42ZtCmni9z2nfTHDE7C5521wSP0"
+  },
+  "City": "",
+  "OfficeId": "00000000-0000-0000-0000-000000000000",
+  "OfficeName": "",
+  "BookingType": 0,
+  "DateStart": "0001-01-01T00:00:00",
+  "DateEnd": "0001-01-01T00:00:00",
+  "IsParkingPlace": false,
+  "IsSpecifyWorkplace": false,
+  "StepName": "ActionChoise",
+  "Result": {
+    "Propositions": [
+      "Change or Cancel a booking",
+      "Book a workplace",
+      "Nothing"
+    ],
+    "TextMessage": "Hello, Andrei! What do you want to do today?",
+    "NextStep": "ActionChoise"
+  }
+}

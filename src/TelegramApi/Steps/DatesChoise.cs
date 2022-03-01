@@ -51,24 +51,23 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         {
                             _fsmState.DateStart = dateStart;
                             _fsmState.Result.TextMessage = "Would you like to add parking place?";
-                            _fsmState.Result.NextStep = "Finish";
+                            _fsmState.Result.NextStep = nameof(ParkingChoise);
                             _fsmState.Result.Propositions = new string[] { "yes", "no" };
                         }
                         break;
                     }
                 case BookingTypeEnum.Continuous:
                     {
-                        if (_fsmState.DateStart == null && DateTime.TryParse(text, out DateTime dateStart)) 
+                        if (_fsmState.DateStart == default(DateTime) && DateTime.TryParse(text, out DateTime dateStart)) 
                         {
                             _fsmState.DateStart = dateStart;
                             _fsmState.Result.TextMessage = "Enter the End date in the format dd.mm.yyyy";
-                            _fsmState.Result.NextStep = "Finish";
                         }
-                        else if(_fsmState.DateEnd == null && DateTime.TryParse(text, out DateTime dateEnd))
+                        else if(_fsmState.DateEnd == default(DateTime) && DateTime.TryParse(text, out DateTime dateEnd))
                         {
                             _fsmState.DateEnd = dateEnd;
                             _fsmState.Result.TextMessage = "Would you like to add parking place?";
-                            _fsmState.Result.NextStep = "Finish";
+                            _fsmState.Result.NextStep = nameof(ParkingChoise);
                             _fsmState.Result.Propositions = new string[] { "yes", "no" };
                         }
                         break;

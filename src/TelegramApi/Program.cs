@@ -18,12 +18,15 @@ builder.Services.AddScoped<StateMachineStep, ActionChoise>();
 builder.Services.AddScoped<StateMachineStep, CityChoise>();
 builder.Services.AddScoped<StateMachineStep, OfficeChoise>();
 builder.Services.AddScoped<StateMachineStep, DatesChoise>();
+builder.Services.AddScoped<StateMachineStep, ParkingChoise>();
+builder.Services.AddScoped<StateMachineStep, SpecParamChoise>();
 builder.Services.AddHttpClient("WebAPI", c =>
 {
-    c.BaseAddress = new Uri("https://localhost:7110/api/");
+    c.BaseAddress = new Uri(builder.Configuration["WebApi"]);
     c.DefaultRequestHeaders.Add("Accept", "*/*");
     c.DefaultRequestHeaders.Add("User-Agent", "TelegramApi");
 });
+builder.Services.AddScoped<StateMachineStep, Template>();
 
 var app = builder.Build();
 
