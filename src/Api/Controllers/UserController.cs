@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Exadel.OfficeBooking.Api.DTO;
 
 namespace Exadel.OfficeBooking.Api.Controllers
 {
@@ -44,6 +45,25 @@ namespace Exadel.OfficeBooking.Api.Controllers
             }
 
             return Ok(user.Adapt<GetUserDto>());
+        }
+        
+        //Gets user by his/her telegram id
+        [HttpGet("telegram/{id}")]
+        public async Task<IActionResult> GetByTelegramId(long id)
+        {
+            ServiceResponse<GetUserDto> response = new ServiceResponse<GetUserDto>();
+            User? user = await _db.Users
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.TelegramId == id);
+            if (user == null)
+            {
+                response.Success = false;
+                response.Message = "User is not created";
+                return BadRequest(response);
+            }
+
+            response.Data = user.Adapt<GetUserDto>();
+            return Ok(response);
         }
 
         [HttpPost]

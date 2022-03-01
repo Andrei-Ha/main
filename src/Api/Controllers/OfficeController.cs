@@ -11,7 +11,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    [Authorize]
+    //[Authorize]
     [AllowAnonymous]
     public class OfficeController : ControllerBase
     {

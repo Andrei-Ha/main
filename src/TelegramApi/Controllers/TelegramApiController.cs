@@ -1,6 +1,5 @@
+using Exadel.OfficeBooking.TelegramApi.FSM;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -11,40 +10,39 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
 {
     [ApiController]
     [Route("api/message/update")]
-    public class TelegramBotController : ControllerBase
+    public class TelegramApiController : ControllerBase
     {
-        private readonly TelegramBotClient _telegramBotClient;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly TelegramBotClient _client;
+        private readonly HttpClient _http;
 
-        public TelegramBotController(TelegramBot telegramBot, IHttpClientFactory httpClientFactory)
+        private readonly StateMachine _stateMachine;
+
+        public TelegramApiController(TelegramBot telegramBot, StateMachine stateMachine, HttpClient http)
         {
-            _telegramBotClient = telegramBot.GetBot().Result;
-            _httpClientFactory = httpClientFactory;
+            _client = telegramBot.GetBot().Result;
+            _stateMachine = stateMachine;
+            _http = http;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok("Hello Team3!");
+            return Ok("Get request working");
         }
 
         [HttpPost]
         public async Task<IActionResult> Update([FromBody] Update update)
         {
-            if (update?.Type != UpdateType.Message)
+            if (update.Message!.Type != MessageType.Text)
                 return Ok();
 
-            if (update.Message!.Type != MessageType.Text)
-                return Ok(); ;
+            await _stateMachine.IncomingUpdateHandle(update);
+            //await _client.SendTextMessageAsync(
+            //    chatId: update.Message.Chat.Id,
+            //    text: update.Message?.Text,
+            //    parseMode: ParseMode.Markdown
+            //);
 
-            var chatId = update.Message.Chat.Id;
-            var messageText = update.Message.Text;
-            messageText = messageText ?? "no text";
-            Message sentMessage = await _telegramBotClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: messageText,
-                parseMode: ParseMode.Markdown
-                );
             return Ok();
         }
     }
