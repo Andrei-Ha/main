@@ -6,9 +6,6 @@ namespace Exadel.OfficeBooking.Api.DTO.PersonDto
     public class SetUserDto
     {
         public int TelegramId { get; set; }
-        //Delete this stepName property
-        public string StepName { get; set; } = "Greetings";
-
         public string FirstName { get; set; } = String.Empty;
         public string LastName { get; set; } = String.Empty;
         public string Email { get; set; } = String.Empty;

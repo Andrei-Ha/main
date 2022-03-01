@@ -8,9 +8,6 @@ namespace Exadel.OfficeBooking.Domain.Person
     public class User : BaseModel
     {
         public long TelegramId { get; set; }
-        //!!!Delete this Stepname property
-        public string StepName { get; set; } = "Greetings";
-        
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

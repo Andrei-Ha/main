@@ -48,6 +48,12 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
                 return Ok();
 
             await _stateMachine.IncomingUpdateHandle(update);
+            //await _client.SendTextMessageAsync(
+            //    chatId: update.Message.Chat.Id,
+            //    text: update.Message?.Text,
+            //    parseMode: ParseMode.Markdown
+            //);
+
             return Ok();
         }
         

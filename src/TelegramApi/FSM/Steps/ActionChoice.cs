@@ -1,32 +1,55 @@
-﻿using System.Net.Http;
+﻿using Exadel.OfficeBooking.TelegramApi.DTO;
+using Exadel.OfficeBooking.TelegramApi.EF;
+using System;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
-namespace Exadel.OfficeBooking.TelegramApi.FSM.Steps;
-
-public class ActionChoice : Step
+namespace Exadel.OfficeBooking.TelegramApi.FSM.Steps
 {
-    public ActionChoice(HttpClient http, TelegramBot telegramBot) : base(http, telegramBot) {}
-
-    public override async Task CurrentStepHandle(Update update)
+    public class ActionChoice : Step
     {
-        string? text = update.Message?.Text;
-        if (text == "Change or cancel a booking")
+        public ActionChoice(HttpClient http, TelegramBot telegramBot, TelegramDbContext context)
+            : base(http, telegramBot, context) { }
+
+        public override async Task CurrentStepHandle(Update update)
         {
-            await SendKeyboardButtons(update, new string[] { }, "Next time...");
-            await SetNextStep(update, nameof(Finish));
+            string? text = update.Message?.Text;
+
+            var cities = await GetSitiesArray();
+
+            if (text == "Book a workplace")
+            {
+                await SendKeyboardButtons(update, cities, "Choose city");
+                await SetNextStep(update, nameof(SelectOffice));
+            }
+
+            if (text == "Change or cancel a booking")
+            {
+                await SendKeyboardButtons(update, Array.Empty<string>(), "Not implemented -((");
+                await SetNextStep(update, nameof(Finish));
+            }
+
+            if (text == "Nothing")
+            {
+                await SendKeyboardButtons(update, Array.Empty<string>(), "Bye bye");
+                await SetNextStep(update, nameof(Finish));
+            }
         }
 
-        if (text == "Nothing")
+        private async Task<string[]> GetSitiesArray()
         {
-            await SendKeyboardButtons(update, new string[] { }, "Bye bye");
-            await SetNextStep(update, nameof(Finish));
-        }
+            var offices = await GetRequestServer<OfficeDto[]>("office");
 
-        if (text == "Book a workplace")
-        {
-            await SendKeyboardButtons(update, new string[] { "Delhi", "Singapore" }, "Choose city");
-            await SetNextStep(update, nameof(SelectCity));
+            if (offices != null || offices != Array.Empty<OfficeDto>())
+            {
+                return offices.Select(x => x.City).Distinct().OrderBy(y => y).ToArray();
+            }
+            else
+            {
+                return Array.Empty<string>();
+            }
         }
     }
 }

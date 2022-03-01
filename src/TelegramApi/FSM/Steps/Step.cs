@@ -1,13 +1,11 @@
-﻿using System;
+﻿using Exadel.OfficeBooking.TelegramApi.EF;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Exadel.OfficeBooking.TelegramApi.DTO;
-using Exadel.OfficeBooking.TelegramApi.DTO.PersonDto;
-using Mapster;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -19,10 +17,12 @@ namespace Exadel.OfficeBooking.TelegramApi.FSM.Steps
     {
         private readonly HttpClient _http;
         private readonly TelegramBotClient _client;
-        
-        protected Step(HttpClient http, TelegramBot telegramBot)
+        private readonly TelegramDbContext _context;
+
+        protected Step(HttpClient http, TelegramBot telegramBot, TelegramDbContext context)
         {
             _http = http;
+            _context = context;
             _client = telegramBot.GetBot().Result;
         }
 
@@ -36,18 +36,13 @@ namespace Exadel.OfficeBooking.TelegramApi.FSM.Steps
         //sets next step for user
         public async Task SetNextStep(Update update, string nextStepName)
         {
-            long userTelegramId = update.Message.Chat.Id;
-            
-            //find user with given telegramId
-            string getEndpoint = $"user/telegram/{userTelegramId}";
-            ServiceResponse<GetUserDto>? user = await GetRequestServer<ServiceResponse<GetUserDto>>(getEndpoint);
-            
-            //change user's state
-            string putEndpoint = $"user/{user.Data.Id}";
-            SetUserDto updatedUser = user.Data.Adapt<SetUserDto>();
-            updatedUser.StepName = nextStepName.ToLower();
-            
-            await PutRequestServer<GetUserDto, SetUserDto>(putEndpoint, updatedUser);
+            var userState = await _context.UsersStates.AsNoTracking()
+                .FirstOrDefaultAsync(u => u.ChatId == update.Message.Chat.Id);
+
+            userState.StepName = nextStepName;
+
+            _context.UsersStates.Update(userState);
+            await _context.SaveChangesAsync();
         }
 
         /*
@@ -129,7 +124,7 @@ namespace Exadel.OfficeBooking.TelegramApi.FSM.Steps
                 replyMarkup = replyKeyboardMarkup;
             }
 
-            //Send message from user
+            //Send message to user
             await _client.SendTextMessageAsync(
                 chatId: update.Message.Chat.Id,
                 text: message,
