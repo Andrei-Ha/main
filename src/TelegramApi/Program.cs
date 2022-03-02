@@ -5,10 +5,15 @@ using Microsoft.Extensions.Hosting;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using Exadel.OfficeBooking.TelegramApi.Steps;
 using System;
+using Exadel.OfficeBooking.TelegramApi.EF;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
+
+var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
+builder.Services.AddDbContext<TelegramDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddSingleton<Exadel.OfficeBooking.TelegramApi.TelegramBot>();

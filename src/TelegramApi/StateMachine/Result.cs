@@ -1,7 +1,11 @@
-﻿namespace Exadel.OfficeBooking.TelegramApi.StateMachine
+﻿using System;
+
+namespace Exadel.OfficeBooking.TelegramApi.StateMachine
 {
     public class Result
     {
+        public Guid Id { get; set; }
+
         public string TextMessage { get; set; } = "Not implemented yet";
 
         public string NextStep { get; set; } = "Finish";

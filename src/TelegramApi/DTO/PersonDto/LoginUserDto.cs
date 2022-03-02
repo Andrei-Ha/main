@@ -4,7 +4,7 @@ namespace Exadel.OfficeBooking.TelegramApi.DTO.PersonDto
 {
     public class LoginUserDto
     {
-        //public int TelegramId { get; set; }
+        public Guid Id { get; set; }
 
         public Guid UserId { get; set; }
 

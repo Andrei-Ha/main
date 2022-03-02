@@ -8,6 +8,8 @@ namespace Exadel.OfficeBooking.TelegramApi
 {
     public class FsmState
     {
+        public Guid id { get; set; } = Guid.NewGuid();
+
         public long TelegramId { get; set; } = 0;
 
         public LoginUserDto User { get; set; } = new();
@@ -34,7 +36,7 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public string Summary()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append($"{User.FirstName} {User.LastName}, email:{User.Email}\n");
             sb.Append($"Office: {OfficeName} {City}\n");
             sb.Append($"Booking type: {BookingType.ToString()}\n");
