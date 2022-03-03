@@ -12,7 +12,7 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
     {
         protected FsmState _state = new();
 
-        public void TransmitFsmState(FsmState state)
+        public void SetFsmState(FsmState state)
         { 
             _state = state;
         }

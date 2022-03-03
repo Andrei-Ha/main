@@ -26,7 +26,7 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
         public async Task<Result> Process(Update update)
         {
             var curStep = GetCurrentStep();
-            curStep.TransmitFsmState(_state);
+            curStep.SetFsmState(_state);
             _state = await curStep.Execute(update);
             if (_state.NextStep != "Finish")
             {
