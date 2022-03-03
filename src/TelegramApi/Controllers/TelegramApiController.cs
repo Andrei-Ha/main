@@ -9,8 +9,6 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-using static Exadel.OfficeBooking.TelegramApi.StateMachine.StateMachineStep;
-
 namespace Exadel.OfficeBooking.TelegramApi.Controllers
 {
     [ApiController]
@@ -44,7 +42,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
 
             Console.WriteLine(message.From.Id);
 
-            await _fsm.Init(message.From.Id, false);
+            await _fsm.GetState(message.From.Id);
             var result = await _fsm.Process(update);
 
 

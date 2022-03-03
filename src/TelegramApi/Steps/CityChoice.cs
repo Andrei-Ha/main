@@ -12,14 +12,16 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class CityChoice : StateMachineStep
     {
-        public CityChoice(IHttpClientFactory http) : base(http)
+        private readonly IHttpClientFactory _httpClient;
+        public CityChoice(IHttpClientFactory httpClient)
         {
+            _httpClient = httpClient;
         }
 
         public override async Task<FsmState> Execute(Update update)
         {
             string? text = update.Message?.Text;
-            var httpResponse = await GetModelFromWebAPI<IEnumerable<OfficeGetDto>>("office");
+            var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _fsmState.User.Token);
             if (httpResponse?.Model != null)
             {
                 var propositions = httpResponse.Model

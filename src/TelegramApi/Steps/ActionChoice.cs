@@ -12,8 +12,10 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class ActionChoice : StateMachineStep
     {
-        public ActionChoice(IHttpClientFactory http) : base(http)
+        private readonly IHttpClientFactory _httpClient;
+        public ActionChoice(IHttpClientFactory httpClient)
         {
+            _httpClient = httpClient;
         }
 
         public override async Task<FsmState> Execute(Update update)
@@ -33,7 +35,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             // Book a workplace
             else if (text == _fsmState.Propositions[1])
             {
-                var httpResponse = await GetModelFromWebAPI<IEnumerable<OfficeGetDto>>("office");
+                var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _fsmState.User.Token);
                 IEnumerable<OfficeGetDto>? offices = httpResponse?.Model;
                 if (offices != null)
                 {

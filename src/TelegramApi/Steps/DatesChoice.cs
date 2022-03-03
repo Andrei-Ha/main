@@ -12,10 +12,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class DatesChoice : StateMachineStep
     {
-        public DatesChoice(IHttpClientFactory http) : base(http)
-        {
-        }
-
         public override async Task<FsmState> Execute(Update update)
         {
             string? text = update.Message?.Text;
