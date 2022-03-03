@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,6 +33,7 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
         public static async Task<HttpResponse<T1>?> PostWebApiModel<T1,T2>(this IHttpClientFactory factory, string relativeUri, T2 model, string jwtToken = "")
         {
             var client = factory.CreateClient("WebAPI");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
             string strModel = JsonConvert.SerializeObject(model, Formatting.Indented);
             using var response = await client.PostAsync(relativeUri, new StringContent(strModel, Encoding.UTF8, "application/json"));
             var httpResponse = new HttpResponse<T1>() { StatusCode = response.StatusCode };
