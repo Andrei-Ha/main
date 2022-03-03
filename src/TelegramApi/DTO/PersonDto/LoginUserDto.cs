@@ -1,11 +1,10 @@
-﻿using Exadel.OfficeBooking.Domain.Person;
-using System;
+﻿using System;
 
-namespace Exadel.OfficeBooking.Api.DTO.PersonDto
+namespace Exadel.OfficeBooking.TelegramApi.DTO.PersonDto
 {
     public class LoginUserDto
     {
-        public long TelegramId { get; set; }
+        public Guid Id { get; set; }
 
         public Guid UserId { get; set; }
 
@@ -18,5 +17,9 @@ namespace Exadel.OfficeBooking.Api.DTO.PersonDto
         public UserRole Role { get; set; }
 
         public string Token { get; set; } = string.Empty;
+
+        public Guid FsmStateId { get; set; }
+        
+        public UserState? FsmState { get; set; }
     }
 }
