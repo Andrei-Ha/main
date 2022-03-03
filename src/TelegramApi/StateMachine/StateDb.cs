@@ -21,17 +21,17 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
             _isStoredInDb = _config.GetValue<bool>("IsStoredInDb");
         }
 
-        public async Task<FsmState> GetState(long telegramId)
+        public async Task<UserState> GetState(long telegramId)
         {
-            FsmState? state;
+            UserState? state;
             _file = telegramId.ToString() + ".json";
             if (_isStoredInDb)
             {
-                state = await _db.FsmStates.Include(f => f.User).AsNoTracking().FirstOrDefaultAsync(s => s.TelegramId == telegramId);
+                state = await _db.UserStates.Include(f => f.User).AsNoTracking().FirstOrDefaultAsync(s => s.TelegramId == telegramId);
                 if (state == null)
                 {
-                    state = new FsmState() { TelegramId = telegramId, NextStep = nameof(Start) };
-                    _db.FsmStates.Add(state);
+                    state = new UserState() { TelegramId = telegramId, NextStep = nameof(Start) };
+                    _db.UserStates.Add(state);
                     await _db.SaveChangesAsync();
                 }
             }
@@ -42,17 +42,17 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
                     System.IO.File.WriteAllText(_file, "");
                 }
 
-                state = JsonConvert.DeserializeObject<FsmState>(System.IO.File.ReadAllText(_file)) ?? new FsmState() { TelegramId = telegramId, NextStep = nameof(Start) };
+                state = JsonConvert.DeserializeObject<UserState>(System.IO.File.ReadAllText(_file)) ?? new UserState() { TelegramId = telegramId, NextStep = nameof(Start) };
             }
 
             return state;
         }
 
-        public async Task SaveState(FsmState state)
+        public async Task SaveState(UserState state)
         {
             if (_isStoredInDb)
             {
-                _db.FsmStates.Update(state);
+                _db.UserStates.Update(state);
                 await _db.SaveChangesAsync();
             }
             else
@@ -61,14 +61,14 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
             }
         }
 
-        public async Task DeleteState(FsmState state)
+        public async Task DeleteState(UserState state)
         {
             if (_isStoredInDb)
             {
-                var fsmState = await _db.FsmStates.AsNoTracking().FirstOrDefaultAsync(s => s.Id == state.Id);
-                if (fsmState != null)
+                var userState = await _db.UserStates.AsNoTracking().FirstOrDefaultAsync(s => s.Id == state.Id);
+                if (userState != null)
                 {
-                    _db.FsmStates.Remove(fsmState);
+                    _db.UserStates.Remove(userState);
                     await _db.SaveChangesAsync();
                 }
             }

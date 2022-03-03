@@ -2,12 +2,11 @@
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 
 namespace Exadel.OfficeBooking.TelegramApi
 {
-    public class FsmState
+    public class UserState
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 

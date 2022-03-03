@@ -9,7 +9,7 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
     public class StateMachine
     {
         private readonly StateMachineStep[] _steps = Array.Empty<StateMachineStep>();
-        private FsmState _state = new();
+        private UserState _state = new();
         private readonly StateDb _db;
 
         public StateMachine(IServiceProvider serviceProvider, StateDb db)

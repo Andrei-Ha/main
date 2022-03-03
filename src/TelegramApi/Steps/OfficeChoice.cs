@@ -18,7 +18,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             _httpClient = httpClient;
         }
 
-        public override async Task<FsmState> Execute(Update update)
+        public override async Task<UserState> Execute(Update update)
         {
             string? text = update.Message?.Text;
             var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _state.User.Token);

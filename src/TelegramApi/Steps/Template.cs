@@ -12,7 +12,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class Template : StateMachineStep
     {
-        public override async Task<FsmState> Execute(Update update)
+        public override async Task<UserState> Execute(Update update)
         {
             string? text = update.Message?.Text;
             _state.SetResult();

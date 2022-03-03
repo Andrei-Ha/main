@@ -20,6 +20,6 @@ namespace Exadel.OfficeBooking.TelegramApi.DTO.PersonDto
 
         public Guid FsmStateId { get; set; }
         
-        public FsmState? FsmState { get; set; }
+        public UserState? FsmState { get; set; }
     }
 }

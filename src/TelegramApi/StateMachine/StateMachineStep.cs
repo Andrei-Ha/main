@@ -1,22 +1,17 @@
-﻿using Exadel.OfficeBooking.TelegramApi.DTO.PersonDto;
-using Newtonsoft.Json;
-using System.IO;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
 namespace Exadel.OfficeBooking.TelegramApi.StateMachine
 {
     public abstract class StateMachineStep
     {
-        protected FsmState _state = new();
+        protected UserState _state = new();
 
-        public void SetFsmState(FsmState state)
+        public void SetFsmState(UserState state)
         { 
             _state = state;
         }
 
-        public abstract Task<FsmState> Execute(Update update);
+        public abstract Task<UserState> Execute(Update update);
     }
 }

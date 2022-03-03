@@ -13,7 +13,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
         {
             _httpClient = httpClient;
         }
-        public override async Task<FsmState> Execute(Update update)
+        public override async Task<UserState> Execute(Update update)
         {
             var httpResponse = await _httpClient.PostWebApiModel<LoginUserDto, string>("login", _state.TelegramId.ToString());
             var user = httpResponse?.Model;
