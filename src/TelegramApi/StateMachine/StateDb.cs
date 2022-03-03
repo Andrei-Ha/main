@@ -61,14 +61,14 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
             }
         }
 
-        public async Task DeleteState(FsmState fsmState)
+        public async Task DeleteState(FsmState state)
         {
             if (_isStoredInDb)
             {
-                var state = await _db.FsmStates.AsNoTracking().FirstOrDefaultAsync(s => s.Id == fsmState.Id);
-                if (state != null)
+                var fsmState = await _db.FsmStates.AsNoTracking().FirstOrDefaultAsync(s => s.Id == state.Id);
+                if (fsmState != null)
                 {
-                    _db.FsmStates.Remove(state);
+                    _db.FsmStates.Remove(fsmState);
                     await _db.SaveChangesAsync();
                 }
             }

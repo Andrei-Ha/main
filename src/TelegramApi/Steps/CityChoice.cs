@@ -21,7 +21,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
         public override async Task<FsmState> Execute(Update update)
         {
             string? text = update.Message?.Text;
-            var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _fsmState.User.Token);
+            var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _state.User.Token);
             if (httpResponse?.Model != null)
             {
                 var propositions = httpResponse.Model
@@ -31,14 +31,14 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     .ToList();
                 if (propositions != null)
                 {
-                    _fsmState.City = text!;
-                    _fsmState.TextMessage = "Select the office:";
-                    _fsmState.Propositions = propositions;
-                    _fsmState.NextStep = nameof(OfficeChoice);
+                    _state.City = text!;
+                    _state.TextMessage = "Select the office:";
+                    _state.Propositions = propositions;
+                    _state.NextStep = nameof(OfficeChoice);
                 }
             }
 
-            return _fsmState;
+            return _state;
         }
     }
 }

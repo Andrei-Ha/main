@@ -15,26 +15,26 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
         public override async Task<FsmState> Execute(Update update)
         {
             string? text = update.Message?.Text;
-            if (_fsmState.Propositions == null)
+            if (_state.Propositions == null)
             {
-                return _fsmState;
+                return _state;
             }
 
             // Yes, I have special preferences
-            if (text == _fsmState.Propositions[0])
+            if (text == _state.Propositions[0])
             {
-                _fsmState.IsSpecifyWorkplace = true;
-                _fsmState.SetResult();
+                _state.IsSpecifyWorkplace = true;
+                _state.SetResult();
             }
             // No, I can take any available workplace
-            else if (text == _fsmState.Propositions[1])
+            else if (text == _state.Propositions[1])
             {
-                _fsmState.IsSpecifyWorkplace = false;
-                _fsmState.TextMessage = _fsmState.Summary() + "\n\nConfirm the booking?";
-                _fsmState.Propositions = new() { "confirm", "cancel" };
-                _fsmState.NextStep = nameof(Template);
+                _state.IsSpecifyWorkplace = false;
+                _state.TextMessage = _state.Summary() + "\n\nConfirm the booking?";
+                _state.Propositions = new() { "confirm", "cancel" };
+                _state.NextStep = nameof(Template);
             }
-            return _fsmState;
+            return _state;
         }
     }
 }

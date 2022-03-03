@@ -21,20 +21,20 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
         public override async Task<FsmState> Execute(Update update)
         {
             string? text = update.Message?.Text;
-            var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _fsmState.User.Token);
+            var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _state.User.Token);
             if (httpResponse?.Model != null)
             {
                 var office = httpResponse.Model.FirstOrDefault(p => $"{p.Name} ({p.Address})" == text);
                 if (office != null)
                 {
-                    _fsmState.OfficeId= office.Id;
-                    _fsmState.OfficeName = text!;
-                    _fsmState.TextMessage = "Select booking type:";
-                    _fsmState.Propositions = new() {"One day", "Continuous", "Recurring"};
-                    _fsmState.NextStep = nameof(DatesChoice);
+                    _state.OfficeId= office.Id;
+                    _state.OfficeName = text!;
+                    _state.TextMessage = "Select booking type:";
+                    _state.Propositions = new() {"One day", "Continuous", "Recurring"};
+                    _state.NextStep = nameof(DatesChoice);
                 }
             }
-            return _fsmState;
+            return _state;
         }
     }
 }

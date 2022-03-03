@@ -10,11 +10,11 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
 {
     public abstract class StateMachineStep
     {
-        protected FsmState _fsmState = new();
+        protected FsmState _state = new();
 
-        public void TransmitFsmState(FsmState fsmState)
+        public void TransmitFsmState(FsmState state)
         { 
-            _fsmState = fsmState;
+            _state = state;
         }
 
         public abstract Task<FsmState> Execute(Update update);

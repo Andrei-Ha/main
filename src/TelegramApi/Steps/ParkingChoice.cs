@@ -15,30 +15,30 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
         public override async Task<FsmState> Execute(Update update)
         {
             string? text = update.Message?.Text;
-            if (_fsmState.Propositions == null)
+            if (_state.Propositions == null)
             {
-                return _fsmState;
+                return _state;
             }
 
             // yes
-            if (text == _fsmState.Propositions[0])
+            if (text == _state.Propositions[0])
             {
-                _fsmState.IsParkingPlace = true;
+                _state.IsParkingPlace = true;
             }
             // no
-            else if (text == _fsmState.Propositions[1])
+            else if (text == _state.Propositions[1])
             {
-                _fsmState.IsParkingPlace = false;
+                _state.IsParkingPlace = false;
             }
             else
             {
-                return _fsmState;
+                return _state;
             }
 
-            _fsmState.TextMessage = "Would you like to specify workplace parameners?";
-            _fsmState.Propositions = new() { "Yes, I have special preferences", "No, I can take any available workplace" };
-            _fsmState.NextStep = nameof(SpecParamChoice);
-            return _fsmState;
+            _state.TextMessage = "Would you like to specify workplace parameners?";
+            _state.Propositions = new() { "Yes, I have special preferences", "No, I can take any available workplace" };
+            _state.NextStep = nameof(SpecParamChoice);
+            return _state;
         }
     }
 }

@@ -17,34 +17,34 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             string? text = update.Message?.Text;
             string start = "Start";
 
-            switch (_fsmState.BookingType)
+            switch (_state.BookingType)
             {
                 case BookingTypeEnum.None:
                     {
-                        if (_fsmState.Propositions == null)
+                        if (_state.Propositions == null)
                         {
-                            return _fsmState;
+                            return _state;
                         }
 
                         // One day
-                        if (text == _fsmState.Propositions[0])
+                        if (text == _state.Propositions[0])
                         {
-                            _fsmState.BookingType = BookingTypeEnum.OneDay;
+                            _state.BookingType = BookingTypeEnum.OneDay;
                             start = string.Empty;
                         }
                         // Continuous
-                        else if (text == _fsmState.Propositions[1])
+                        else if (text == _state.Propositions[1])
                         {
-                            _fsmState.BookingType = BookingTypeEnum.Continuous;
+                            _state.BookingType = BookingTypeEnum.Continuous;
                         }
                         // Reccuring
-                        else if (text == _fsmState.Propositions[2])
+                        else if (text == _state.Propositions[2])
                         {
-                            _fsmState.BookingType = BookingTypeEnum.Recurring;
+                            _state.BookingType = BookingTypeEnum.Recurring;
                         }
-                        _fsmState.TextMessage = $"Enter the {start} date in the format dd.mm.yyyy";
-                        _fsmState.Propositions = default;
-                        // fsmState.NextState does not change
+                        _state.TextMessage = $"Enter the {start} date in the format dd.mm.yyyy";
+                        _state.Propositions = default;
+                        // state.NextState does not change
                         break;
                     }
 
@@ -52,38 +52,38 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         if (DateTime.TryParse(text, out DateTime dateStart))
                         {
-                            _fsmState.DateStart = dateStart;
-                            _fsmState.TextMessage = "Would you like to add parking place?";
-                            _fsmState.Propositions = new() { "yes", "no" };
-                            _fsmState.NextStep = nameof(ParkingChoice);
+                            _state.DateStart = dateStart;
+                            _state.TextMessage = "Would you like to add parking place?";
+                            _state.Propositions = new() { "yes", "no" };
+                            _state.NextStep = nameof(ParkingChoice);
                         }
                         break;
                     }
                 case BookingTypeEnum.Continuous:
                     {
-                        if (_fsmState.DateStart == default(DateTime) && DateTime.TryParse(text, out DateTime dateStart)) 
+                        if (_state.DateStart == default(DateTime) && DateTime.TryParse(text, out DateTime dateStart)) 
                         {
-                            _fsmState.DateStart = dateStart;
-                            _fsmState.TextMessage = "Enter the End date in the format dd.mm.yyyy";
-                            // fsmState.NextState does not change and proposition = default
+                            _state.DateStart = dateStart;
+                            _state.TextMessage = "Enter the End date in the format dd.mm.yyyy";
+                            // state.NextState does not change and proposition = default
                         }
-                        else if(_fsmState.DateEnd == default && DateTime.TryParse(text, out DateTime dateEnd))
+                        else if(_state.DateEnd == default && DateTime.TryParse(text, out DateTime dateEnd))
                         {
-                            _fsmState.DateEnd = dateEnd;
-                            _fsmState.TextMessage = "Would you like to add parking place?";
-                            _fsmState.Propositions = new() { "yes", "no" };
-                            _fsmState.NextStep = nameof(ParkingChoice);
+                            _state.DateEnd = dateEnd;
+                            _state.TextMessage = "Would you like to add parking place?";
+                            _state.Propositions = new() { "yes", "no" };
+                            _state.NextStep = nameof(ParkingChoice);
                         }
                         break;
                     }
                 case BookingTypeEnum.Recurring:
                     {
-                        _fsmState.SetResult();
+                        _state.SetResult();
                         break;
                     }
 
             }
-            return _fsmState;
+            return _state;
         }
     }
 }

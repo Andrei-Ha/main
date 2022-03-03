@@ -21,41 +21,41 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
         public override async Task<FsmState> Execute(Update update)
         {
             string? text = update.Message?.Text;
-            if (_fsmState.Propositions == null)
+            if (_state.Propositions == null)
             {
-                return _fsmState;
+                return _state;
             }
 
             // Change or Cancel a booking
-            if (text == _fsmState.Propositions[0]) 
+            if (text == _state.Propositions[0]) 
             {
-                _fsmState.SetResult();
+                _state.SetResult();
             }
 
             // Book a workplace
-            else if (text == _fsmState.Propositions[1])
+            else if (text == _state.Propositions[1])
             {
-                var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _fsmState.User.Token);
+                var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _state.User.Token);
                 IEnumerable<OfficeGetDto>? offices = httpResponse?.Model;
                 if (offices != null)
                 {
-                    _fsmState.TextMessage = "Select a city:";
-                    _fsmState.Propositions = offices.Select(o => o.City).OrderBy(p => p).Distinct().ToList();
-                    _fsmState.NextStep = nameof(CityChoice);
+                    _state.TextMessage = "Select a city:";
+                    _state.Propositions = offices.Select(o => o.City).OrderBy(p => p).Distinct().ToList();
+                    _state.NextStep = nameof(CityChoice);
                 }
                 else
                 {
-                    _fsmState.TextMessage = $"\nStatusCode: {httpResponse?.StatusCode.ToString()}";
+                    _state.TextMessage = $"\nStatusCode: {httpResponse?.StatusCode.ToString()}";
                 }
             }
 
             // Nothing
-            else if (text == _fsmState.Propositions[2])
+            else if (text == _state.Propositions[2])
             {
-                _fsmState.SetResult(textMessage: "Bye! See you later");
+                _state.SetResult(textMessage: "Bye! See you later");
             }
 
-            return _fsmState;
+            return _state;
         }
     }
 }
