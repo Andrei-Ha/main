@@ -6,7 +6,7 @@ namespace Exadel.OfficeBooking.Api.DTO.PersonDto
 {
     public class SetUserDto
     {
-        public int TelegramId { get; set; }
+        public long TelegramId { get; set; }
 
         [Required]
         public string FirstName { get; set; } = String.Empty;
