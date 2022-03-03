@@ -1,4 +1,6 @@
-﻿using Exadel.OfficeBooking.TelegramApi.Steps;
+﻿using Exadel.OfficeBooking.TelegramApi.EF;
+using Exadel.OfficeBooking.TelegramApi.Steps;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
@@ -12,23 +14,47 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
     public class StateMachine
     {
         private readonly StateMachineStep[] _steps = Array.Empty<StateMachineStep>();
+        private long _telegramId = 0;
         private string _file = string.Empty;
         private FsmState _state = new();
+        private readonly TelegramDbContext _db;
+        private bool _isStoredInDb;
 
-        public StateMachine(IServiceProvider serviceProvider)
+        public StateMachine(IServiceProvider serviceProvider, TelegramDbContext db)
         {
             _steps = serviceProvider.GetServices<StateMachineStep>().ToArray();
+            _db = db;
         }
 
-        public void Init(long telegramId)
+        public async Task Init(long telegramId, bool isStoredInDb = true)
         {
+            _telegramId = telegramId;
             _file = telegramId.ToString() + ".json";
-            if (!System.IO.File.Exists(_file))
+            _isStoredInDb = isStoredInDb;
+            if (_isStoredInDb)
             {
-                System.IO.File.WriteAllText(_file, "");
+                var fsmState = await _db.FsmStates.Include(f => f.User)
+                    .Include(f => f.Result).AsNoTracking().FirstOrDefaultAsync(s => s.TelegramId == telegramId);
+                if (fsmState != null)
+                {
+                    _state = fsmState;
+                }
+                else
+                {
+                    _state = new FsmState() { TelegramId = telegramId, StepName = nameof(Start) };
+                    _db.FsmStates.Add(_state);
+                    await _db.SaveChangesAsync();
+                }
             }
+            else
+            {
+                if (!System.IO.File.Exists(_file))
+                {
+                    System.IO.File.WriteAllText(_file, "");
+                }
 
-            _state = JsonConvert.DeserializeObject<FsmState>(System.IO.File.ReadAllText(_file)) ?? new FsmState() { TelegramId = telegramId, StepName = nameof(Start) };
+                _state = JsonConvert.DeserializeObject<FsmState>(System.IO.File.ReadAllText(_file)) ?? new FsmState() { TelegramId = telegramId, StepName = nameof(Start) };
+            }
         }
 
         public async Task<Result> Process(Update update)
@@ -39,11 +65,11 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
             _state.StepName = _state.Result.NextStep;
             if (_state.StepName != "Finish")
             {
-                SaveState();
+                await SaveState();
             }
             else
             {
-                DeleteFileState();
+                await DeleteFileState();
             }
 
             return _state.Result;
@@ -54,16 +80,36 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
             return _steps.First(s => s.GetType().Name == _state.StepName);
         }
 
-        private void SaveState()
+        private async Task SaveState()
         {
-            System.IO.File.WriteAllText(_file, JsonConvert.SerializeObject(_state, Formatting.Indented));
+            if (_isStoredInDb)
+            {
+                _db.FsmStates.Update(_state);
+                await _db.SaveChangesAsync();
+            }
+            else
+            {
+                System.IO.File.WriteAllText(_file, JsonConvert.SerializeObject(_state, Formatting.Indented));
+            }
         }
 
-        private void DeleteFileState()
+        private async Task DeleteFileState()
         {
-            if (System.IO.File.Exists(_file))
+            if (_isStoredInDb)
             {
-                System.IO.File.Delete(_file);
+                var fsmState = await _db.FsmStates.AsNoTracking().FirstOrDefaultAsync(s => s.Id == _state.Id);
+                if (fsmState != null)
+                {
+                    _db.FsmStates.Remove(_state);
+                    await _db.SaveChangesAsync();
+                }
+            }
+            else
+            {
+                if (System.IO.File.Exists(_file))
+                {
+                    System.IO.File.Delete(_file);
+                }
             }
         }
     }

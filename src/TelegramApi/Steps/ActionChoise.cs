@@ -40,7 +40,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         TextMessage = "Select a city:",
                         NextStep = nameof(CityChoise),
-                        Propositions = offices.Select(o => o.City).OrderBy(p => p).Distinct().ToArray(),
+                        Propositions = offices.Select(o => o.City).OrderBy(p => p).Distinct().ToList(),
                     };
                 }
                 else

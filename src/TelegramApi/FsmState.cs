@@ -8,7 +8,7 @@ namespace Exadel.OfficeBooking.TelegramApi
 {
     public class FsmState
     {
-        public Guid id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public long TelegramId { get; set; } = 0;
 

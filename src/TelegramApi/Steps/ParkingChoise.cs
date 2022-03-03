@@ -33,7 +33,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             }
             _fsmState.Result.TextMessage = "Would you like to specify workplace parameners?";
             _fsmState.Result.NextStep = nameof(SpecParamChoise);
-            _fsmState.Result.Propositions = new[] { "Yes, I have special preferences", "No, I can take any available workplace" };
+            _fsmState.Result.Propositions = new() { "Yes, I have special preferences", "No, I can take any available workplace" };
             return _fsmState;
         }
     }

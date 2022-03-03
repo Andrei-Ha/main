@@ -22,20 +22,19 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             if (text == _fsmState.Result.Propositions[0])
             {
                 _fsmState.IsSpecifyWorkplace = true;
-                _fsmState.Result = new();
+                _fsmState.Result.TextMessage = "no)";
+                _fsmState.Result.NextStep = "Finish";
+                _fsmState.Result.Propositions = new();
                 return _fsmState;
             }
             else if (text == _fsmState.Result.Propositions[1])
             {
                 _fsmState.IsSpecifyWorkplace = false;
-            }
-            else
-            {
+                _fsmState.Result.TextMessage = _fsmState.Summary() + "\n\nConfirm the booking?";
+                _fsmState.Result.NextStep = nameof(Template);
+                _fsmState.Result.Propositions = new() { "confirm", "cancel" };
                 return _fsmState;
             }
-            _fsmState.Result.TextMessage = _fsmState.Summary() + "\n\nConfirm the booking?";
-            _fsmState.Result.NextStep = nameof(Template);
-            _fsmState.Result.Propositions = new[] { "confirm", "cancel" };
             return _fsmState;
         }
     }

@@ -17,5 +17,9 @@ namespace Exadel.OfficeBooking.TelegramApi.DTO.PersonDto
         public UserRole Role { get; set; }
 
         public string Token { get; set; } = string.Empty;
+
+        public Guid FsmStateId { get; set; }
+        
+        public FsmState? FsmState { get; set; }
     }
 }

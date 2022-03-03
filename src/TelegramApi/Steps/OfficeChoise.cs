@@ -29,7 +29,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     _fsmState.OfficeName = text!;
                     _fsmState.Result.TextMessage = "Select booking type:";
                     _fsmState.Result.NextStep = nameof(DatesChoise);
-                    _fsmState.Result.Propositions = new string[] {"One day", "Continuous"/*, "Recurring"*/};
+                    _fsmState.Result.Propositions = new() {"One day", "Continuous"/*, "Recurring"*/};
                 }
             }
             return _fsmState;

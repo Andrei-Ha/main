@@ -41,7 +41,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             _fsmState.BookingType = BookingTypeEnum.Recurring;
                         }
                         _fsmState.Result.TextMessage = $"Enter the {start} date in the format dd.mm.yyyy";
-                        _fsmState.Result.Propositions = Array.Empty<string>();
+                        _fsmState.Result.Propositions = new();
                         break;
                     }
 
@@ -52,7 +52,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             _fsmState.DateStart = dateStart;
                             _fsmState.Result.TextMessage = "Would you like to add parking place?";
                             _fsmState.Result.NextStep = nameof(ParkingChoise);
-                            _fsmState.Result.Propositions = new string[] { "yes", "no" };
+                            _fsmState.Result.Propositions = new() { "yes", "no" };
                         }
                         break;
                     }
@@ -68,7 +68,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             _fsmState.DateEnd = dateEnd;
                             _fsmState.Result.TextMessage = "Would you like to add parking place?";
                             _fsmState.Result.NextStep = nameof(ParkingChoise);
-                            _fsmState.Result.Propositions = new string[] { "yes", "no" };
+                            _fsmState.Result.Propositions = new() { "yes", "no" };
                         }
                         break;
                     }

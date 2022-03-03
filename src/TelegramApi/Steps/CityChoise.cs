@@ -26,8 +26,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     .Where(p => p.City == text)
                     .OrderBy(p => p.Name)
                     .Select(p => $"{p.Name} ({p.Address})")
-                    .ToArray();
-                if (propositions.Length > 0)
+                    .ToList();
+                if (propositions != null)
                 {
                     _fsmState.City = text!;
                     _fsmState.Result.TextMessage = "Select the office:";

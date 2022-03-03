@@ -44,13 +44,15 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
             if (message.Type != MessageType.Text)
                 return Ok();
 
-            _fsm.Init(message.From.Id);
+            Console.WriteLine(message.From.Id);
+
+            await _fsm.Init(message.From.Id, false);
             var result = await _fsm.Process(update);
 
 
             // Create custom keyboard or Remove
             IReplyMarkup replyMarkup;
-            if (result.Propositions.Length == 0)
+            if (result.Propositions == null || result.Propositions.Count == 0)
             {
                 replyMarkup = new ReplyKeyboardRemove();
             }

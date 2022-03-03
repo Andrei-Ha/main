@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Exadel.OfficeBooking.TelegramApi.StateMachine
 {
@@ -10,6 +11,10 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
 
         public string NextStep { get; set; } = "Finish";
 
-        public string[] Propositions = System.Array.Empty<string>();
+        public List<string>? Propositions { get; set; } = new();
+
+        public Guid FsmStateId { get; set; }
+
+        public FsmState? FsmState { get; set; }
     }
 }
