@@ -33,15 +33,14 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
             _isStoredInDb = isStoredInDb;
             if (_isStoredInDb)
             {
-                var fsmState = await _db.FsmStates.Include(f => f.User)
-                    .Include(f => f.Result).AsNoTracking().FirstOrDefaultAsync(s => s.TelegramId == telegramId);
+                var fsmState = await _db.FsmStates.Include(f => f.User).AsNoTracking().FirstOrDefaultAsync(s => s.TelegramId == telegramId);
                 if (fsmState != null)
                 {
                     _state = fsmState;
                 }
                 else
                 {
-                    _state = new FsmState() { TelegramId = telegramId, StepName = nameof(Start) };
+                    _state = new FsmState() { TelegramId = telegramId, NextStep = nameof(Start) };
                     _db.FsmStates.Add(_state);
                     await _db.SaveChangesAsync();
                 }
@@ -53,7 +52,7 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
                     System.IO.File.WriteAllText(_file, "");
                 }
 
-                _state = JsonConvert.DeserializeObject<FsmState>(System.IO.File.ReadAllText(_file)) ?? new FsmState() { TelegramId = telegramId, StepName = nameof(Start) };
+                _state = JsonConvert.DeserializeObject<FsmState>(System.IO.File.ReadAllText(_file)) ?? new FsmState() { TelegramId = telegramId, NextStep = nameof(Start) };
             }
         }
 
@@ -62,8 +61,7 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
             var curStep = GetCurrentStep();
             curStep.TransmitFsmState(_state);
             _state = await curStep.Execute(update);
-            _state.StepName = _state.Result.NextStep;
-            if (_state.StepName != "Finish")
+            if (_state.NextStep != "Finish")
             {
                 await SaveState();
             }
@@ -72,12 +70,12 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
                 await DeleteFileState();
             }
 
-            return _state.Result;
+            return _state.GetResult();
         }
 
         private StateMachineStep GetCurrentStep()
         {
-            return _steps.First(s => s.GetType().Name == _state.StepName);
+            return _steps.First(s => s.GetType().Name == _state.NextStep);
         }
 
         private async Task SaveState()

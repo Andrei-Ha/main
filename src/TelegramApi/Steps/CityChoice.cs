@@ -10,9 +10,9 @@ using Telegram.Bot.Types;
 
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
-    public class CityChoise : StateMachineStep
+    public class CityChoice : StateMachineStep
     {
-        public CityChoise(IHttpClientFactory http) : base(http)
+        public CityChoice(IHttpClientFactory http) : base(http)
         {
         }
 
@@ -30,11 +30,12 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 if (propositions != null)
                 {
                     _fsmState.City = text!;
-                    _fsmState.Result.TextMessage = "Select the office:";
-                    _fsmState.Result.NextStep = nameof(OfficeChoise);
-                    _fsmState.Result.Propositions = propositions;
+                    _fsmState.TextMessage = "Select the office:";
+                    _fsmState.Propositions = propositions;
+                    _fsmState.NextStep = nameof(OfficeChoice);
                 }
             }
+
             return _fsmState;
         }
     }

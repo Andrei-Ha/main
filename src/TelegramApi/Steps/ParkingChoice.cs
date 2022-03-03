@@ -10,20 +10,27 @@ using Telegram.Bot.Types;
 
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
-    public class ParkingChoise : StateMachineStep
+    public class ParkingChoice : StateMachineStep
     {
-        public ParkingChoise(IHttpClientFactory http) : base(http)
+        public ParkingChoice(IHttpClientFactory http) : base(http)
         {
         }
 
         public override async Task<FsmState> Execute(Update update)
         {
             string? text = update.Message?.Text;
-            if (text == _fsmState.Result.Propositions[0])
+            if (_fsmState.Propositions == null)
+            {
+                return _fsmState;
+            }
+
+            // yes
+            if (text == _fsmState.Propositions[0])
             {
                 _fsmState.IsParkingPlace = true;
             }
-            else if (text == _fsmState.Result.Propositions[1])
+            // no
+            else if (text == _fsmState.Propositions[1])
             {
                 _fsmState.IsParkingPlace = false;
             }
@@ -31,9 +38,10 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             {
                 return _fsmState;
             }
-            _fsmState.Result.TextMessage = "Would you like to specify workplace parameners?";
-            _fsmState.Result.NextStep = nameof(SpecParamChoise);
-            _fsmState.Result.Propositions = new() { "Yes, I have special preferences", "No, I can take any available workplace" };
+
+            _fsmState.TextMessage = "Would you like to specify workplace parameners?";
+            _fsmState.Propositions = new() { "Yes, I have special preferences", "No, I can take any available workplace" };
+            _fsmState.NextStep = nameof(SpecParamChoice);
             return _fsmState;
         }
     }

@@ -18,13 +18,11 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
     public class TelegramBotController : ControllerBase
     {
         private readonly TelegramBotClient _bot;
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly StateMachine.StateMachine _fsm;
 
-        public TelegramBotController(TelegramBot telegramBot, IHttpClientFactory httpClientFactory, StateMachine.StateMachine stateMachine )
+        public TelegramBotController(TelegramBot telegramBot, StateMachine.StateMachine stateMachine )
         {
             _bot = telegramBot.GetBot().Result;
-            _httpClientFactory = httpClientFactory;
             _fsm = stateMachine;
         }
 

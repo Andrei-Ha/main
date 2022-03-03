@@ -19,12 +19,12 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddSingleton<Exadel.OfficeBooking.TelegramApi.TelegramBot>();
 builder.Services.AddScoped<StateMachine>();
 builder.Services.AddScoped<StateMachineStep,Start>();
-builder.Services.AddScoped<StateMachineStep, ActionChoise>();
-builder.Services.AddScoped<StateMachineStep, CityChoise>();
-builder.Services.AddScoped<StateMachineStep, OfficeChoise>();
-builder.Services.AddScoped<StateMachineStep, DatesChoise>();
-builder.Services.AddScoped<StateMachineStep, ParkingChoise>();
-builder.Services.AddScoped<StateMachineStep, SpecParamChoise>();
+builder.Services.AddScoped<StateMachineStep, ActionChoice>();
+builder.Services.AddScoped<StateMachineStep, CityChoice>();
+builder.Services.AddScoped<StateMachineStep, OfficeChoice>();
+builder.Services.AddScoped<StateMachineStep, DatesChoice>();
+builder.Services.AddScoped<StateMachineStep, ParkingChoice>();
+builder.Services.AddScoped<StateMachineStep, SpecParamChoice>();
 builder.Services.AddHttpClient("WebAPI", c =>
 {
     c.BaseAddress = new Uri(builder.Configuration["WebApi"]);

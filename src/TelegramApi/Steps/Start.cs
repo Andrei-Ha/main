@@ -15,15 +15,17 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
         {
             if (await Login())
             {
-                _fsmState.Result.TextMessage = $"Hello, {_fsmState.User.FirstName}! What do you want to do today?";
-                _fsmState.Result.NextStep = nameof(ActionChoise);
-                _fsmState.Result.Propositions = new() { "Change or Cancel a booking", "Book a workplace", "Nothing" };
+                _fsmState.TextMessage = $"Hello, {_fsmState.User.FirstName}! What do you want to do today?";
+                _fsmState.Propositions = new() { "Change or Cancel a booking", "Book a workplace", "Nothing" };
+                _fsmState.NextStep = nameof(ActionChoice);
             }
             else
             {
-                _fsmState.Result.TextMessage = "Sorry, you can't do booking!";
-                _fsmState.Result.NextStep = "Finish";
-                _fsmState.Result.Propositions = new();
+                _fsmState.SetResult(textMessage: "Sorry, you can't do booking!");
+                // or
+                //_fsmState.TextMessage = "Sorry, you can't do booking!";
+                //_fsmState.Propositions = default;
+                //_fsmState.NextStep = "Finish";
             }
 
             return _fsmState;

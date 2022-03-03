@@ -15,7 +15,7 @@ namespace Exadel.OfficeBooking.TelegramApi.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Result>().Property(p => p.Propositions)
+            modelBuilder.Entity<FsmState>().Property(p => p.Propositions)
                 .HasConversion(
                 v => JsonConvert.SerializeObject(v),
                 v => JsonConvert.DeserializeObject<List<string>>(v));

@@ -1,6 +1,7 @@
 ﻿using Exadel.OfficeBooking.TelegramApi.DTO.PersonDto;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -30,9 +31,23 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public bool IsSpecifyWorkplace { get; set; } = false;
 
-        public string StepName { get; set; } = string.Empty; // nameof(Start)
+        public string NextStep { get; set; } = "Finish";
 
-        public Result Result { get; set; } = new();
+        public string TextMessage { get; set; } = "Not implemented yet";
+
+        public List<string>? Propositions { get; set; } = new();
+
+        public Result GetResult()
+        {
+            return new Result() { TextMessage = TextMessage, Propositions = Propositions };
+        }
+
+        public void SetResult(string textMessage = "Not implemented yet", List<string>? propositions = default, string nextStep = "Finish")
+        {
+            TextMessage = textMessage;
+            Propositions = propositions;
+            NextStep = nextStep;
+        }
 
         public string Summary()
         {
