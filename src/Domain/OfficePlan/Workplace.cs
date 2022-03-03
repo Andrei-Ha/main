@@ -23,6 +23,7 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public bool HasMouse { get; set; }
 
         public bool HasHeadset { get; set; }
+
         public Guid MapId { get; set; }
 
         public virtual Map Map { get; set; } = new();

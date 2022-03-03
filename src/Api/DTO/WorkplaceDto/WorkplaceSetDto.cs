@@ -1,4 +1,6 @@
-﻿namespace Exadel.OfficeBooking.Api.DTO.WorkplaceDto
+﻿using System;
+
+namespace Exadel.OfficeBooking.Api.DTO.WorkplaceDto
 {
     public class WorkplaceSetDto
     {
@@ -19,5 +21,7 @@
         public bool HasMouse { get; set; }
 
         public bool HasHeadset { get; set; }
+
+        public Guid MapId { get; set; }
     }
 }

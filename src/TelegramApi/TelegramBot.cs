@@ -16,15 +16,15 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public async Task<TelegramBotClient> GetBot()
 		{
-
 			if (_botClient != null)
 			{
 				return _botClient;
 			}
 
 			_botClient = new TelegramBotClient(_configuration["Token"]);
-			var hook = $"{_configuration["Url"]}api/message/update";
-			await _botClient.SetWebhookAsync(hook);
+
+			await _botClient.SetWebhookAsync($"{_configuration["Url"]}api/message/update");
+
 			return _botClient;
 		}
 	}

@@ -125,6 +125,7 @@ public class BookingService : IBookingService
         await _context.SaveChangesAsync();
 
         response.Data = booking.Adapt<GetOneDayBookingDto>();
+        response.Data.Date = booking.StartDate;
         return response;
     }
 
