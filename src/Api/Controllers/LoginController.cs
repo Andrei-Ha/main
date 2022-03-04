@@ -28,7 +28,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] int TelegramId)
+        public async Task<IActionResult> Login([FromBody] long TelegramId)
         {
             User? user = await _db.Users.AsNoTracking().SingleOrDefaultAsync(t => t.TelegramId == TelegramId);
             if (user == null)
@@ -36,6 +36,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
                 return Ok();
             }
             var loginUserDto = user.Adapt<LoginUserDto>();
+            loginUserDto.UserId = user.Id;
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),

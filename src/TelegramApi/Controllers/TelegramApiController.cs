@@ -1,47 +1,70 @@
-using Exadel.OfficeBooking.TelegramApi.FSM;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Exadel.OfficeBooking.TelegramApi.Controllers
 {
     [ApiController]
     [Route("api/message/update")]
-    public class TelegramApiController : ControllerBase
+    public class TelegramBotController : ControllerBase
     {
-        private readonly TelegramBotClient _client;
-        private readonly HttpClient _http;
+        private readonly TelegramBotClient _bot;
+        private readonly StateMachine.StateMachine _fsm;
 
-        private readonly StateMachine _stateMachine;
-
-        public TelegramApiController(TelegramBot telegramBot, StateMachine stateMachine, HttpClient http)
+        public TelegramBotController(TelegramBot telegramBot, StateMachine.StateMachine stateMachine )
         {
-            _client = telegramBot.GetBot().Result;
-            _stateMachine = stateMachine;
-            _http = http;
+            _bot = telegramBot.GetBot().Result;
+            _fsm = stateMachine;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
-            return Ok("Get request working");
+            return Ok("Hello Team3!");
         }
 
         [HttpPost]
         public async Task<IActionResult> Update([FromBody] Update update)
         {
-            if (update.Message!.Type != MessageType.Text)
+            if (update?.Type != UpdateType.Message)
                 return Ok();
 
-            await _stateMachine.IncomingUpdateHandle(update);
-            //await _client.SendTextMessageAsync(
-            //    chatId: update.Message.Chat.Id,
-            //    text: update.Message?.Text,
-            //    parseMode: ParseMode.Markdown
-            //);
+            var message = update.Message!;
+            if (message.Type != MessageType.Text)
+                return Ok();
+
+            Console.WriteLine(message.From.Id);
+
+            await _fsm.GetState(message.From.Id);
+            var result = await _fsm.Process(update);
+
+
+            // Create custom keyboard or Remove
+            IReplyMarkup replyMarkup;
+            if (result.Propositions == null || result.Propositions.Count == 0)
+            {
+                replyMarkup = new ReplyKeyboardRemove();
+            }
+            else
+            {
+                KeyboardButton[][] keyboardButtons = result.Propositions
+                    .Select(k => new KeyboardButton[] { k }).ToArray();
+                ReplyKeyboardMarkup replyKeyboardMarkup = new(keyboardButtons);
+                replyKeyboardMarkup.ResizeKeyboard = true;
+                replyMarkup = replyKeyboardMarkup;
+            }
+
+            //Send message from user
+            await _bot.SendTextMessageAsync(
+                chatId: message.Chat.Id,
+                text: result.TextMessage,
+                replyMarkup: replyMarkup
+                );
 
             return Ok();
         }
