@@ -239,10 +239,10 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 {
                     Id = Guid.NewGuid(),
                     FirstName = "Vasili",
-                    LastName = "Molkov",
-                    Email = "VasiliMolkov@fake.com",
+                    LastName = "",
+                    Email = "Vmalkou.vasili@gmail.com",
                     EmploymentStart = DateTime.Now,
-                    TelegramId = 778899
+                    TelegramId = 957365793
                 },
                 new User
                 {
