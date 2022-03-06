@@ -45,5 +45,29 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
             }
             return httpResponse;
         }
+
+        // PUT
+        public static async Task<HttpResponse<T1>?> PutWebApiModel<T1, T2>(this IHttpClientFactory factory, string relativeUri, T2 model, string jwtToken = "")
+        {
+            var client = factory.CreateClient("WebAPI");
+            var request = new HttpRequestMessage(HttpMethod.Put, relativeUri);
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            string strModel = JsonConvert.SerializeObject(model, Formatting.Indented);
+            using var response = await client.PutAsync(relativeUri, new StringContent(strModel, Encoding.UTF8, "application/json"));
+            var httpResponse = new HttpResponse<T1>() { StatusCode = response.StatusCode };
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                StreamReader reader = new(responseStream);
+                httpResponse.Model = JsonConvert.DeserializeObject<T1>(reader.ReadToEnd());
+            }
+            return httpResponse;
+        }
+
+
+        // DELETE
+        // On the way
     }
 }
