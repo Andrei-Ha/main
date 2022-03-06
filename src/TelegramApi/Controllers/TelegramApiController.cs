@@ -40,6 +40,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
 
             Console.WriteLine(message.From.Id);
 
+            // ! This method tell the user that something is happening on the bot's side !
+            await _bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
             await _fsm.GetState(message.From.Id);
             var result = await _fsm.Process(update);
 

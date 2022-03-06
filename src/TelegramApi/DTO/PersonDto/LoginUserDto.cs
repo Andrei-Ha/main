@@ -18,8 +18,8 @@ namespace Exadel.OfficeBooking.TelegramApi.DTO.PersonDto
 
         public string Token { get; set; } = string.Empty;
 
-        public Guid FsmStateId { get; set; }
+        public Guid UserStateId { get; set; }
         
-        public UserState? FsmState { get; set; }
+        public UserState? UserState { get; set; }
     }
 }
