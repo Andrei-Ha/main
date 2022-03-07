@@ -55,20 +55,21 @@ namespace Exadel.OfficeBooking.TelegramApi
         public string Summary()
         {
             StringBuilder sb = new();
-            sb.Append(GetFullNameWithEmail() + "\n");
-            sb.Append($"Office: {OfficeName} {City}\n");
-            sb.Append($"Booking type: {BookingType}\n");
+            sb.Append(GetFullName() + "\n");
+            sb.Append($"Email: {User.Email}" + "\n");
+            sb.Append($"Office: <b>{OfficeName} {City}</b>\n");
+            sb.Append($"Booking type: <b>{BookingType}</b>\n");
             if (BookingType == BookingTypeEnum.OneDay)
             {
-                sb.Append($"Booking date: {DateStart:dd.MM.yyyy}\n");
+                sb.Append($"Booking date: <b>{DateStart:dd.MM.yyyy}</b>\n");
             }
             if (BookingType == BookingTypeEnum.Continuous)
             {
-                sb.Append($"Booking first day: {DateStart:dd.MM.yyyy} and last day:{DateEnd:dd.MM.yyyy}\n");
+                sb.Append($"Booking first day: <b>{DateStart:dd.MM.yyyy}</b> and last day: <b>{DateEnd:dd.MM.yyyy}</b>\n");
             }
             if (IsParkingPlace) 
             {
-                sb.Append($"Parking place added\n"); 
+                sb.Append($"Parking place <b>added</b>\n"); 
             }
 
             return sb.ToString();
@@ -76,12 +77,7 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public string GetFullName() 
         {
-            return $"{User.LastName} {User.FirstName}"; 
-        }
-
-        public string GetFullNameWithEmail()
-        {
-            return GetFullName() +$"\nemail: {User.Email}";
+            return $"<b>{User.LastName} {User.FirstName}</b>"; 
         }
     }    
 }

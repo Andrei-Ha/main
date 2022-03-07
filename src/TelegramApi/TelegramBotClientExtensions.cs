@@ -22,9 +22,10 @@ namespace Exadel.OfficeBooking.TelegramApi
             return sendMess.MessageId;
         }
 
-        public static async Task DeleteInlineKeyboard(this TelegramBotClient bot, Update update)
+        public static async Task<int> DeleteInlineKeyboard(this TelegramBotClient bot, Update update)
         {
             await bot.EditMessageReplyMarkupAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Message.MessageId);
+            return default;
         }
     }
 }

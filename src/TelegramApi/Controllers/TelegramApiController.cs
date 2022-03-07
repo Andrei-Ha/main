@@ -31,22 +31,30 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Update([FromBody] Update update)
         {
-            if (update?.Type != UpdateType.Message && update?.Type != UpdateType.CallbackQuery)
-                return Ok();
-            
-            var message = update.Message!;
-            if (update?.Type == UpdateType.Message && message.Type != MessageType.Text)
-                return Ok();
-
             long chatId;
-            if (update?.Type == UpdateType.CallbackQuery)
+            switch (update.Type)
             {
-                chatId = update.CallbackQuery.Message.Chat.Id;
+                case UpdateType.CallbackQuery:
+                    {
+                        chatId = update.CallbackQuery.Message.Chat.Id;
+                        break;
+                    }
+                case UpdateType.Message:
+                    {
+                        if (update.Message.Type != MessageType.Text)
+                        {
+                            return Ok();
+                        }
+
+                        chatId = update.Message.Chat.Id;
+                        break;
+                    }
+                default:
+                    {
+                        return Ok();
+                    }
             }
-            else
-            {
-                chatId = update.Message.Chat.Id;
-            }
+
             Console.WriteLine(chatId);
 
             // ! This method tell the user that something is happening on the bot's side !

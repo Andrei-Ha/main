@@ -61,18 +61,19 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 if (_state.CallbackMessageId == update.CallbackQuery.Message.MessageId)
                 {
                     var httpResponse = await _http.GetWebApiModel<LoginUserDto>($"login/{update.CallbackQuery.Data}");
-                    if (httpResponse?.Model != null)
+                    var loginUserDto = httpResponse?.Model;
+                    if (loginUserDto != null)
+
                     {
-                        await _bot.DeleteInlineKeyboard(update);
-                        string token = _state.User.Token;
-                        UserRole role = _state.User.Role;
-                        _state.User = httpResponse.Model;
-                        _state.User.Token = token;
-                        _state.User.Role = role;
+                        // delete inlineKeyboard and set CallbackMessageId to default value
+                        _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
+                        _state.User.FirstName = loginUserDto.FirstName;
+                        _state.User.LastName = loginUserDto.LastName;
+                        _state.User.Email = loginUserDto.Email;
+                        // !!! Token and role don't changed
                         _state.TextMessage = $"You have selected employee with name: <b>{_state.GetFullName()}</b>.\n What do you want to do on his behalf?";
                         _state.Propositions = new() { "Change or Cancel a booking", "Book a workplace", "Nothing" };
                         _state.NextStep = nameof(ActionChoice);
-                        _state.CallbackMessageId = default;
                     }
                 }
                 return _state;
