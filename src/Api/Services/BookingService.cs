@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Exadel.OfficeBooking.Api.DTO;
 using Exadel.OfficeBooking.Api.DTO.BookingDto;
+using Exadel.OfficeBooking.Api.DTO.WorkplaceDto;
 using Exadel.OfficeBooking.Api.Interfaces;
 using Exadel.OfficeBooking.Domain.Bookings;
 using Exadel.OfficeBooking.Domain.OfficePlan;
@@ -53,7 +54,47 @@ public class BookingService : IBookingService
         };
         return response;
     }
-    
+
+    public async Task<WorkplaceGetDto?> GetFirstFreeWorkplaceInOfficeOnSpecificDate(FirstFreeWorkplaceParamsDto freeWorkplaceParams)
+    {
+        if (freeWorkplaceParams.BookingType == BookingTypeEnum.Recuring)
+        {
+            var officeMaps = await _context.Maps.AsNoTracking().Where(m => m.OfficeId == freeWorkplaceParams.OfficeId).ToArrayAsync();
+
+            foreach (var officeMap in officeMaps)
+            {
+                var workplaces = await _context.Workplaces.AsNoTracking()
+                    .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToArrayAsync();
+
+                foreach (var workplace in workplaces)
+                {
+                    if (IsWorkplaceAvailableForOneDayBooking(workplace, freeWorkplaceParams.BookingDate))
+                    {
+                        return workplace.Adapt<WorkplaceGetDto>();
+                    }
+                }
+            }
+        }
+
+        //var officeMaps = await _context.Maps.AsNoTracking().Where(m => m.OfficeId == officeId).ToArrayAsync();
+
+        //foreach (var officeMap in officeMaps)
+        //{
+        //    var workplaces = await _context.Workplaces.AsNoTracking()
+        //        .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToArrayAsync();
+
+        //    foreach (var workplace in workplaces)
+        //    {
+        //        if (IsWorkplaceAvailableForOneDayBooking(workplace, bookingDate))
+        //        {
+        //            return workplace.Adapt<WorkplaceGetDto>();
+        //        }
+        //    }
+        //}
+
+        return null;
+    }
+
     public async Task<ServiceResponse<GetOneDayBookingDto>> CreateBooking(AddBookingDto bookingDto)
     {
         ServiceResponse<GetOneDayBookingDto> response = new();
@@ -406,5 +447,4 @@ public class BookingService : IBookingService
             Message = message
         };
     }
-    
 }

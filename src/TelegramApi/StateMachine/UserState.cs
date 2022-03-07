@@ -1,5 +1,6 @@
-﻿using Exadel.OfficeBooking.TelegramApi.DTO.PersonDto;
-using Exadel.OfficeBooking.TelegramApi.StateMachine;
+﻿using Exadel.OfficeBooking.TelegramApi.DTO;
+using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
+using Exadel.OfficeBooking.TelegramApi.DTO.PersonDto;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,15 +17,26 @@ namespace Exadel.OfficeBooking.TelegramApi
         
         public string City { get; set; }  = string.Empty;
 
+        public string OfficeName { get; set; } = string.Empty;
+
         public Guid OfficeId { get; set; } = default;
 
-        public string OfficeName { get; set; } = string.Empty;
+        public Guid MapId { get; set; } = default;
+
+        public Guid WorkplaceId { get; set; } = default;
 
         public BookingTypeEnum BookingType { get; set; } = BookingTypeEnum.None;
 
         public DateTime DateStart { get; set; } = default;
 
         public DateTime DateEnd { get; set; } = default;
+
+        public bool IsRecurring { get; set; }
+
+        public int? Count { get; set; }
+        public int Interval { get; set; } = 1;
+        public WeekDaysEnum RecurringWeekDays { get; set; }
+        public RecurringFrequencyEnum Frequency { get; set; }
 
         public bool IsParkingPlace { get; set; } = false;
 

@@ -30,6 +30,11 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             else if (text == _state.Propositions[1])
             {
                 _state.IsSpecifyWorkplace = false;
+
+
+                //_state.WorkplaceId = 
+
+
                 _state.TextMessage = _state.Summary() + "\n\nConfirm the booking?";
                 _state.Propositions = new() { "confirm", "cancel" };
                 _state.NextStep = nameof(Template);
