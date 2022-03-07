@@ -1,4 +1,5 @@
 ﻿using Exadel.OfficeBooking.TelegramApi.DTO.OfficeDto;
+using Exadel.OfficeBooking.TelegramApi.DTO.ParkingPlaceDto;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,42 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class ParkingChoice : StateMachineStep
     {
-        public override async Task<UserState> Execute(Update update)
+        private readonly IHttpClientFactory _httpClient;
+        private   bool _hasParking;
+        private bool _parkingAvailable;
+        private ParkingPlaceGetDto _parking;
+        public ParkingChoice(IHttpClientFactory httpClient)
         {
+            _httpClient = httpClient;
+        }
+     
+
+    public override async Task<UserState> Execute(Update update)
+        {
+            var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _state.User.Token);
+            var httpResponseParking = await _httpClient.GetWebApiModel<IEnumerable<ParkingPlaceGetDto>>("parkingPlace", _state.User.Token);
+            if (httpResponse.Model != null)
+            {
+                _hasParking = httpResponse.Model.First(p => p.Id == _state.OfficeId)
+                   .IsFreeParkingAvailable;
+            }
+            if (httpResponseParking.Model != null)
+            {
+                var parkings = httpResponseParking.Model
+                    .Where(p => p.OfficeId == _state.OfficeId)
+                    .ToList();
+
+                foreach(var parking in parkings)
+                {
+                    if(parking.IsBooked == false)
+                    {
+                        _parkingAvailable = true;
+                        _parking = parking;
+                        break;
+                    }
+                }
+            }
+
             string? text = update.Message?.Text;
             if (_state.Propositions == null)
             {
@@ -23,21 +58,43 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             // yes
             if (text == _state.Propositions[0])
             {
-                _state.IsParkingPlace = true;
+                if (_hasParking == false)
+                {
+                    _state.IsParkingPlace = false;
+                    _state.TextMessage = "Office has no parking available, would You like to proceed without parking ?";
+                    _state.Propositions = new() { "Yes, proceed", "No" };
+                    _state.NextStep = nameof(ParkingPlaceSpecifications);
+                }
+                else if (_parkingAvailable == false)
+                {
+                    _state.IsParkingPlace = false;
+                    _state.TextMessage = "Office has no parking available, would You like to proceed without parking ?";
+                    _state.Propositions = new() { "Yes, proceed", "No" };
+                    _state.NextStep = nameof(ParkingPlaceSpecifications);
+                }
+                else
+                {
+                    _state.IsParkingPlace = true;
+                    _state.TextMessage = $"Parking place {_parking.PlaceNumber} booked. Would you like to specify workplace parameters?";
+                    _state.Propositions = new() { "Yes, I have special preferences", "No, I can take any available workplace" };
+                    _state.NextStep = nameof(SpecParamChoice);
+                }
+
             }
+            
             // no
             else if (text == _state.Propositions[1])
             {
                 _state.IsParkingPlace = false;
+                _state.TextMessage = "Would you like to specify workplace parameters?";
+                _state.Propositions = new() { "Yes, I have special preferences", "No, I can take any available workplace" };
+                _state.NextStep = nameof(SpecParamChoice);
             }
             else
             {
                 return _state;
             }
 
-            _state.TextMessage = "Would you like to specify workplace parameners?";
-            _state.Propositions = new() { "Yes, I have special preferences", "No, I can take any available workplace" };
-            _state.NextStep = nameof(SpecParamChoice);
             return _state;
         }
     }
