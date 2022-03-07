@@ -67,6 +67,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         // delete inlineKeyboard and set CallbackMessageId to default value
                         _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
+                        _state.User.UserId = loginUserDto.Id;
                         _state.User.FirstName = loginUserDto.FirstName;
                         _state.User.LastName = loginUserDto.LastName;
                         _state.User.Email = loginUserDto.Email;
