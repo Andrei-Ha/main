@@ -65,7 +65,7 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
         {
             if (_isStoredInDb)
             {
-                var userState = await _db.UserStates.AsNoTracking().FirstOrDefaultAsync(s => s.Id == state.Id);
+                var userState = await _db.UserStates.FirstOrDefaultAsync(s => s.Id == state.Id);
                 if (userState != null)
                 {
                     _db.UserStates.Remove(userState);
