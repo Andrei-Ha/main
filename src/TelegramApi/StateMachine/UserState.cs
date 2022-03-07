@@ -38,9 +38,11 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public List<string>? Propositions { get; set; } = new();
 
+        public int CallbackMessageId { get; set; } = 0;
+
         public Result GetResult()
         {
-            return new Result() { TextMessage = TextMessage, Propositions = Propositions };
+            return new Result() { TextMessage = TextMessage, Propositions = Propositions, IsSendMessage = CallbackMessageId == 0 };
         }
 
         public void SetResult(string textMessage = "Not implemented yet", List<string>? propositions = default, string nextStep = "Finish")
@@ -53,25 +55,33 @@ namespace Exadel.OfficeBooking.TelegramApi
         public string Summary()
         {
             StringBuilder sb = new();
-            sb.Append($"{User.FirstName} {User.LastName}, email:{User.Email}\n");
+            sb.Append(GetFullNameWithEmail() + "\n");
             sb.Append($"Office: {OfficeName} {City}\n");
-            sb.Append($"Booking type: {BookingType.ToString()}\n");
+            sb.Append($"Booking type: {BookingType}\n");
             if (BookingType == BookingTypeEnum.OneDay)
             {
-                sb.Append($"Booking date: {DateStart.ToString("dd.MM.yyyy")}\n");
+                sb.Append($"Booking date: {DateStart:dd.MM.yyyy}\n");
             }
             if (BookingType == BookingTypeEnum.Continuous)
             {
-                sb.Append($"Booking first day: {DateStart.ToString("dd.MM.yyyy")} and last day:{DateEnd.ToString("dd.MM.yyyy")}\n");
+                sb.Append($"Booking first day: {DateStart:dd.MM.yyyy} and last day:{DateEnd:dd.MM.yyyy}\n");
             }
             if (IsParkingPlace) 
             {
                 sb.Append($"Parking place added\n"); 
             }
-            /*sb.Append($"{}\n");
-            sb.Append($"{}\n");
-            sb.Append($"{}\n");*/
+
             return sb.ToString();
+        }
+
+        public string GetFullName() 
+        {
+            return $"{User.LastName} {User.FirstName}"; 
+        }
+
+        public string GetFullNameWithEmail()
+        {
+            return GetFullName() +$"\nemail: {User.Email}";
         }
     }    
 }

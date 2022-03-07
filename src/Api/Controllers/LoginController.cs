@@ -45,6 +45,20 @@ namespace Exadel.OfficeBooking.Api.Controllers
             return Ok(loginUsers);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUser(Guid id)
+        {
+            var user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                return Ok();
+            }
+            var loginUserDto = user.Adapt<LoginUserDto>();
+            loginUserDto.UserId = user.Id;
+
+            return Ok(loginUserDto);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] long TelegramId)
         {

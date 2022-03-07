@@ -30,13 +30,13 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 _state.User = user;
                 if (_state.User.Role == UserRole.Admin || _state.User.Role == UserRole.Manager)
                 {
-                    _state.TextMessage = $"Hello, {_state.User.FirstName}! You have {user.Role} rights.\n Who would you like to manage workplaces for?";
+                    _state.TextMessage = $"Hello, <b>{_state.User.FirstName}</b>! You role is <b>{user.Role}</b>.\n Who would you like to manage workplaces for?";
                     _state.Propositions = new() { "myself", "other employee" };
                     _state.NextStep = nameof(ManageForChoice);
                 }
                 else
                 {
-                    _state.TextMessage = $"Hello, {_state.User.FirstName}! What do you want to do today?";
+                    _state.TextMessage = $"Hello, <b>{_state.User.FirstName}</b>! What do you want to do today?";
                     _state.Propositions = new() { "Change or Cancel a booking", "Book a workplace", "Nothing" };
                     _state.NextStep = nameof(ActionChoice);
                 }

@@ -7,5 +7,7 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
         public string TextMessage { get; set; } = "Not implemented yet";
 
         public List<string>? Propositions { get; set; } = default;
+
+        public bool IsSendMessage = true;
     }
 }
