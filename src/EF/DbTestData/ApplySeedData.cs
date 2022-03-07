@@ -260,7 +260,8 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Sherazadishvili",
                     Email = "sherashera777@gmail.com",
                     EmploymentStart = DateTime.Now,
-                    TelegramId = 5046701077
+                    TelegramId = 5046701077,
+                    Role = UserRole.Admin
                 }
                 );
         }

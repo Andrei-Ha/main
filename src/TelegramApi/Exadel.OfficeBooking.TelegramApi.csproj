@@ -22,4 +22,8 @@
     <Folder Include="EF\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Exadel.OfficeBooking.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
