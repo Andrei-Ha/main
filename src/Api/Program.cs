@@ -54,6 +54,7 @@ builder.Services.AddScoped<IOfficeService, OfficeService>();
 builder.Services.AddScoped<IWorkplaceService, WorkplaceService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IMapService, MapService>();
+builder.Services.AddScoped<IParkingPlaceService, ParkingPlaceService>();
 
 var app = builder.Build();
 
