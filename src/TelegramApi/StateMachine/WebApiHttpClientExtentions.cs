@@ -49,9 +49,11 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
         // PUT
         public static async Task<HttpResponse<T1>?> PutWebApiModel<T1, T2>(this IHttpClientFactory factory, string relativeUri, T2 model, string jwtToken = "")
         {
-            var client = factory.CreateClient("WebAPI");
             var request = new HttpRequestMessage(HttpMethod.Put, relativeUri);
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var client = factory.CreateClient("WebAPI");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
             string strModel = JsonConvert.SerializeObject(model, Formatting.Indented);
             using var response = await client.PutAsync(relativeUri, new StringContent(strModel, Encoding.UTF8, "application/json"));
@@ -68,6 +70,23 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
 
 
         // DELETE
-        // On the way
+        public static async Task<HttpResponse<T>?> DeleteWebApiModel<T>(this IHttpClientFactory factory, string relativeUri, string jwtToken = "")
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, relativeUri);
+            request.Headers.Accept.Remove(new MediaTypeWithQualityHeaderValue("application/json"));
+            
+            var client = factory.CreateClient("WebAPI");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+            using var response = await client.DeleteAsync(relativeUri);
+            var httpResponse = new HttpResponse<T>() { StatusCode = response.StatusCode };
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                StreamReader reader = new(responseStream);
+                httpResponse.Model = JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+            }
+            return httpResponse;
+        }
     }
 }
