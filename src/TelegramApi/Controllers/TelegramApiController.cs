@@ -31,16 +31,35 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Update([FromBody] Update update)
         {
-            if (update?.Type != UpdateType.Message)
-                return Ok();
+            long chatId;
+            switch (update.Type)
+            {
+                case UpdateType.CallbackQuery:
+                    {
+                        chatId = update.CallbackQuery.Message.Chat.Id;
+                        break;
+                    }
+                case UpdateType.Message:
+                    {
+                        if (update.Message.Type != MessageType.Text)
+                        {
+                            return Ok();
+                        }
 
-            var message = update.Message!;
-            if (message.Type != MessageType.Text)
-                return Ok();
+                        chatId = update.Message.Chat.Id;
+                        break;
+                    }
+                default:
+                    {
+                        return Ok();
+                    }
+            }
 
-            Console.WriteLine(message.From.Id);
+            Console.WriteLine(chatId);
 
-            await _fsm.GetState(message.From.Id);
+            // ! This method tell the user that something is happening on the bot's side !
+            await _bot.SendChatActionAsync(chatId, ChatAction.Typing);
+            await _fsm.GetState(chatId);
             var result = await _fsm.Process(update);
 
 
@@ -56,15 +75,20 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
                     .Select(k => new KeyboardButton[] { k }).ToArray();
                 ReplyKeyboardMarkup replyKeyboardMarkup = new(keyboardButtons);
                 replyKeyboardMarkup.ResizeKeyboard = true;
+                replyKeyboardMarkup.OneTimeKeyboard = true;
                 replyMarkup = replyKeyboardMarkup;
             }
 
             //Send message from user
-            await _bot.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: result.TextMessage,
-                replyMarkup: replyMarkup
-                );
+            if (result.IsSendMessage)
+            {
+                await _bot.SendTextMessageAsync(
+                    chatId: chatId,
+                    text: result.TextMessage,
+                    parseMode:ParseMode.Html,
+                    replyMarkup: replyMarkup
+                    );
+            }
 
             return Ok();
         }

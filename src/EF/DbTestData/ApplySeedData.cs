@@ -204,7 +204,8 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                       LastName = "Majidov",
                       Email = "majidovanvar30.11.2002@gmail.com",
                       EmploymentStart = DateTime.Now,
-                      TelegramId = 534430877
+                      TelegramId = 534430877,
+                      Role = UserRole.Admin
 
                   },
                 new User
@@ -214,7 +215,8 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Davletov",
                     Email = "KhamzaDavletov@fake.com",
                     EmploymentStart = DateTime.Now,
-                    TelegramId = 223344
+                    TelegramId = 223344,
+                    Role = UserRole.Admin
                 },
                 new User
                 {
@@ -223,7 +225,8 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Khamzaev",
                     Email = "AnvarkhonKhamzaev@fake.com",
                     EmploymentStart = DateTime.Now,
-                    TelegramId = 445566
+                    TelegramId = 445566,
+                    Role = UserRole.Admin
                 },
 
                 new User
@@ -233,7 +236,8 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "",
                     Email = "apfpo2001@gmail.com",
                     EmploymentStart = DateTime.Now,
-                    TelegramId = 635524939
+                    TelegramId = 635524939,
+                    Role = UserRole.Admin
                 },
                 new User
                 {
@@ -242,7 +246,8 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "",
                     Email = "Vmalkou.vasili@gmail.com",
                     EmploymentStart = DateTime.Now,
-                    TelegramId = 957365793
+                    TelegramId = 957365793,
+                    Role = UserRole.Admin
                 },
                 new User
                 {
@@ -251,7 +256,8 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Harahliad",
                     Email = "asgoreglyad@gmail.com",
                     EmploymentStart = DateTime.Now,
-                    TelegramId = 1651658270
+                    TelegramId = 1651658270,
+                    Role = UserRole.Admin
                 },
                 new User
                 {

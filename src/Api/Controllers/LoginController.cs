@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using System.Linq;
 
 namespace Exadel.OfficeBooking.Api.Controllers
 {
@@ -27,6 +28,37 @@ namespace Exadel.OfficeBooking.Api.Controllers
             _config = configuration;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetUser()
+        {
+            var users = await _db.Users.AsNoTracking().ToListAsync();
+            if (users == null)
+            {
+                return Ok();
+            }
+            var loginUsers = users.Select(u =>
+            {
+                var logU = u.Adapt<LoginUserDto>();
+                logU.UserId = u.Id;
+                return logU;
+            });
+            return Ok(loginUsers);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUser(Guid id)
+        {
+            var user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                return Ok();
+            }
+            var loginUserDto = user.Adapt<LoginUserDto>();
+            loginUserDto.UserId = user.Id;
+
+            return Ok(loginUserDto);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] long TelegramId)
         {
@@ -39,6 +71,9 @@ namespace Exadel.OfficeBooking.Api.Controllers
             loginUserDto.UserId = user.Id;
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.GivenName, user.FirstName),
+                new Claim(ClaimTypes.Surname, user.LastName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             };

@@ -14,6 +14,8 @@ namespace Exadel.OfficeBooking.TelegramApi
         public long TelegramId { get; set; } = 0;
 
         public LoginUserDto User { get; set; } = new();
+
+        public bool IsBookForOther = false;
         
         public string City { get; set; }  = string.Empty;
 
@@ -52,9 +54,11 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public List<string>? Propositions { get; set; } = new();
 
+        public int CallbackMessageId { get; set; } = 0;
+
         public Result GetResult()
         {
-            return new Result() { TextMessage = TextMessage, Propositions = Propositions };
+            return new Result() { TextMessage = TextMessage, Propositions = Propositions, IsSendMessage = CallbackMessageId == 0 };
         }
 
         public void SetResult(string textMessage = "Not implemented yet", List<string>? propositions = default, string nextStep = "Finish")
@@ -67,16 +71,17 @@ namespace Exadel.OfficeBooking.TelegramApi
         public string Summary()
         {
             StringBuilder sb = new();
-            sb.Append($"{User.FirstName} {User.LastName}, email:{User.Email}\n");
-            sb.Append($"Office: {OfficeName} {City}\n");
-            sb.Append($"Booking type: {BookingType.ToString()}\n");
+            sb.Append(GetFullName() + "\n");
+            sb.Append($"Email: {User.Email}" + "\n");
+            sb.Append($"Office: <b>{OfficeName} {City}</b>\n");
+            sb.Append($"Booking type: <b>{BookingType}</b>\n");
             if (BookingType == BookingTypeEnum.OneDay)
             {
-                sb.Append($"Booking date: {DateStart.ToString("dd.MM.yyyy")}\n");
+                sb.Append($"Booking date: <b>{DateStart:dd.MM.yyyy}</b>\n");
             }
             if (BookingType == BookingTypeEnum.Continuous)
             {
-                sb.Append($"Booking first day: {DateStart.ToString("dd.MM.yyyy")} and last day:{DateEnd.ToString("dd.MM.yyyy")}\n");
+                sb.Append($"Booking first day: <b>{DateStart:dd.MM.yyyy}</b> and last day: <b>{DateEnd:dd.MM.yyyy}</b>\n");
             }
 
             if (BookingType == BookingTypeEnum.Recurring)
@@ -96,12 +101,15 @@ namespace Exadel.OfficeBooking.TelegramApi
             }
             if (IsParkingPlace) 
             {
-                sb.Append($"Parking place added\n"); 
+                sb.Append($"Parking place <b>added</b>\n"); 
             }
-            /*sb.Append($"{}\n");
-            sb.Append($"{}\n");
-            sb.Append($"{}\n");*/
+
             return sb.ToString();
+        }
+
+        public string GetFullName() 
+        {
+            return $"<b>{User.LastName} {User.FirstName}</b>"; 
         }
     }    
 }
