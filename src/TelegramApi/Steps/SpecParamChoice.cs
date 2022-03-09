@@ -49,9 +49,9 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         StartDate = _state.DateStart,
                         EndDate = _state.DateEnd,
                         Count = _state.Count,
-                        Interval = _state.Interval,
-                        RecurringWeekDays = _state.RecurringWeekDays,
-                        Frequency = _state.Frequency
+                        Interval = (int)_state.Interval,
+                        RecurringWeekDays = (WeekDays)_state.RecurringWeekDays,
+                        Frequency = (RecurringFrequency)_state.Frequency
                     };
 
                     var httpResponseRecuring = await _httpClient.PostWebApiModel<WorkplaceGetDto, AddFirstFreeWorkplaceRecuringBookingDto>("booking/add/recuringfirstfree", recuringBooking);
