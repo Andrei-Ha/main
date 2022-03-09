@@ -49,9 +49,6 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
         // PUT
         public static async Task<HttpResponse<T1>?> PutWebApiModel<T1, T2>(this IHttpClientFactory factory, string relativeUri, T2 model, string jwtToken = "")
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, relativeUri);
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
             var client = factory.CreateClient("WebAPI");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
@@ -72,9 +69,6 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
         // DELETE
         public static async Task<HttpResponse<T>?> DeleteWebApiModel<T>(this IHttpClientFactory factory, string relativeUri, string jwtToken = "")
         {
-            var request = new HttpRequestMessage(HttpMethod.Delete, relativeUri);
-            request.Headers.Accept.Remove(new MediaTypeWithQualityHeaderValue("application/json"));
-            
             var client = factory.CreateClient("WebAPI");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
 
