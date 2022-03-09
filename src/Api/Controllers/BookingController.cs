@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Exadel.OfficeBooking.Api.DTO.BookingDto;
+using Exadel.OfficeBooking.Api.DTO.WorkplaceDto;
 using Exadel.OfficeBooking.Api.Interfaces;
 using Exadel.OfficeBooking.EF;
 using Microsoft.AspNetCore.Authorization;
@@ -14,12 +15,10 @@ namespace Exadel.OfficeBooking.Api.Controllers;
 [AllowAnonymous]
 public class BookingController : ControllerBase
 {
-    private readonly AppDbContext _context;
     private readonly IBookingService _bookingService;
 
-    public BookingController(AppDbContext context, IBookingService bookingService)
+    public BookingController(IBookingService bookingService)
     {
-        _context = context;
         _bookingService = bookingService;
     }
     
@@ -49,6 +48,17 @@ public class BookingController : ControllerBase
         return Ok(response);
     }
 
+    [HttpPost("add/firstfree")]
+    public async Task<ActionResult<WorkplaceGetDto>> CreateBookingWithFirstFreeWorkplaceInOffice(AddFirstFreeWorkplaceBookingDto bookingDto)
+    {
+        var workplace = await _bookingService.CreateBookingWithFirstFreeWorkplaceInOffice(bookingDto);
+
+        if (workplace == null)
+            return NotFound(new { message = "Requested workplace not found" });
+
+        return Ok(workplace);
+    }
+
     [HttpPost("add/recurring")]
     public async Task<IActionResult> AddRecurringBooking(AddRecurringBookingDto bookingDto)
     {
@@ -58,7 +68,18 @@ public class BookingController : ControllerBase
         
         return Ok(response);
     }
-    
+
+    [HttpPost("add/recuringfirstfree")]
+    public async Task<ActionResult<WorkplaceGetDto>> CreateRecuringBookingWithFirstFreeWorkplaceInOffice(AddFirstFreeWorkplaceRecuringBookingDto bookingDto)
+    {
+        var workplace = await _bookingService.CreateRecuringBookingWithFirstFreeWorkplaceInOffice(bookingDto);
+
+        if (workplace == null)
+            return NotFound(new { message = "Requested workplace not found" });
+
+        return Ok(workplace);
+    }
+
     [HttpPut("update/one-day")]
     public async Task<IActionResult> UpdateBooking(UpdateBookingDto bookingDto)
     {

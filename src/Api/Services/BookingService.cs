@@ -55,46 +55,6 @@ public class BookingService : IBookingService
         return response;
     }
 
-    public async Task<WorkplaceGetDto?> GetFirstFreeWorkplaceInOfficeOnSpecificDate(FirstFreeWorkplaceParamsDto freeWorkplaceParams)
-    {
-        if (freeWorkplaceParams.BookingType == BookingTypeEnum.Recuring)
-        {
-            var officeMaps = await _context.Maps.AsNoTracking().Where(m => m.OfficeId == freeWorkplaceParams.OfficeId).ToArrayAsync();
-
-            foreach (var officeMap in officeMaps)
-            {
-                var workplaces = await _context.Workplaces.AsNoTracking()
-                    .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToArrayAsync();
-
-                foreach (var workplace in workplaces)
-                {
-                    if (IsWorkplaceAvailableForOneDayBooking(workplace, freeWorkplaceParams.BookingDate))
-                    {
-                        return workplace.Adapt<WorkplaceGetDto>();
-                    }
-                }
-            }
-        }
-
-        //var officeMaps = await _context.Maps.AsNoTracking().Where(m => m.OfficeId == officeId).ToArrayAsync();
-
-        //foreach (var officeMap in officeMaps)
-        //{
-        //    var workplaces = await _context.Workplaces.AsNoTracking()
-        //        .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToArrayAsync();
-
-        //    foreach (var workplace in workplaces)
-        //    {
-        //        if (IsWorkplaceAvailableForOneDayBooking(workplace, bookingDate))
-        //        {
-        //            return workplace.Adapt<WorkplaceGetDto>();
-        //        }
-        //    }
-        //}
-
-        return null;
-    }
-
     public async Task<ServiceResponse<GetOneDayBookingDto>> CreateBooking(AddBookingDto bookingDto)
     {
         ServiceResponse<GetOneDayBookingDto> response = new();
@@ -132,6 +92,44 @@ public class BookingService : IBookingService
         response.Data = responseBooking;
         
         return response;
+    }
+
+    public async Task<WorkplaceGetDto?> CreateBookingWithFirstFreeWorkplaceInOffice(AddFirstFreeWorkplaceBookingDto bookingDto)
+    {
+        User? user = await _context.Users
+            .Include(u => u.Vacations)
+            .FirstOrDefaultAsync(u => u.Id == bookingDto.UserId);
+
+        var officeMaps = await _context.Maps.AsNoTracking().Where(m => m.OfficeId == bookingDto.OfficeId).ToArrayAsync();
+
+        foreach (var officeMap in officeMaps)
+        {
+            var workplaces = await _context.Workplaces.AsNoTracking()
+                .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToArrayAsync();
+
+            foreach (var workplace in workplaces)
+            {
+                //check if StartDate is not in the period of vacation days of user
+                //check if workplace is available at the StartDate
+                if (HasOneDayBookingVacationConflict(user, bookingDto.Date) || !IsWorkplaceAvailableForOneDayBooking(workplace, bookingDto.Date))
+                    continue;
+
+                //workplace is not booked, create newBooking
+                var newBooking = new Booking
+                {
+                    Id = new Guid(),
+                    User = user,
+                    Workplace = workplace,
+                    StartDate = bookingDto.Date
+                };
+
+                await _context.Bookings.AddAsync(newBooking);
+                await _context.SaveChangesAsync();
+
+                return workplace.Adapt<WorkplaceGetDto>();
+            }
+        }
+        return null;
     }
 
     public async Task<ServiceResponse<GetOneDayBookingDto>> UpdateBooking(UpdateBookingDto bookingDto)
@@ -206,6 +204,45 @@ public class BookingService : IBookingService
         response.Data = newBooking.Adapt<GetRecurringBookingDto>();
         response.StatusCode = 209;
         return response;
+    }
+
+    public async Task<WorkplaceGetDto?> CreateRecuringBookingWithFirstFreeWorkplaceInOffice(AddFirstFreeWorkplaceRecuringBookingDto bookingDto)
+    {
+        User? user = await _context.Users
+            .Include(u => u.Vacations)
+            .FirstOrDefaultAsync(u => u.Id == bookingDto.UserId);
+
+        List<DateTime> recurringDates = GetRecurringBookingDates(bookingDto.Adapt<RecurrencePattern>());
+
+        var officeMaps = await _context.Maps.AsNoTracking().Where(m => m.OfficeId == bookingDto.OfficeId).ToArrayAsync();
+
+        foreach (var officeMap in officeMaps)
+        {
+            var workplaces = await _context.Workplaces.AsNoTracking()
+                .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToArrayAsync();
+
+            foreach (var workplace in workplaces)
+            {
+
+                //check if workplace is not booked in the period of vacation days of user
+                //check if workplace is available at given dates
+                if (await HasRecurringBookingVacationConflict(user, recurringDates) || !IsWorkplaceAvailableForRecurringBooking(workplace, recurringDates))
+                    continue;
+
+                //Add new recurring booking
+                Booking newBooking = bookingDto.Adapt<Booking>();
+                newBooking.Id = new Guid();
+                newBooking.User = user;
+                newBooking.Workplace = workplace;
+                newBooking.IsRecurring = true;
+
+                await _context.Bookings.AddAsync(newBooking);
+                await _context.SaveChangesAsync();
+
+                return workplace.Adapt<WorkplaceGetDto>();
+            }
+        }
+        return null;
     }
 
     public async Task<ServiceResponse<GetBookingDto>> UpdateRecurringBooking(UpdateRecurringBookingDto bookingDto)
@@ -447,4 +484,8 @@ public class BookingService : IBookingService
             Message = message
         };
     }
+
+    
+
+    
 }

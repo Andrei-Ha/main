@@ -1,10 +1,8 @@
 ﻿using Exadel.OfficeBooking.TelegramApi.DTO.OfficeDto;
 using Exadel.OfficeBooking.TelegramApi.DTO.ParkingPlaceDto;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
@@ -13,17 +11,17 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class ParkingChoice : StateMachineStep
     {
-        private readonly IHttpClientFactory _httpClient;
-        private   bool _hasParking;
+        private bool _hasParking;
         private bool _parkingAvailable;
         private ParkingPlaceGetDto _parking;
+        private readonly IHttpClientFactory _httpClient;
+
         public ParkingChoice(IHttpClientFactory httpClient)
         {
             _httpClient = httpClient;
         }
-     
 
-    public override async Task<UserState> Execute(Update update)
+        public override async Task<UserState> Execute(Update update)
         {
             var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _state.User.Token);
             var httpResponseParking = await _httpClient.GetWebApiModel<IEnumerable<ParkingPlaceGetDto>>("parkingPlace", _state.User.Token);

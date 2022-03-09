@@ -1,6 +1,6 @@
 ﻿namespace Exadel.OfficeBooking.TelegramApi.DTO.BookingDto
 {
-    public enum RecurringFrequencyEnum
+    public enum RecurringFrequency
     {
         Daily,
         Weekly,

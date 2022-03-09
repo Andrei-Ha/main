@@ -3,7 +3,7 @@
 namespace Exadel.OfficeBooking.TelegramApi.DTO.BookingDto
 {
     [Flags]
-    public enum WeekDaysEnum
+    public enum WeekDays
     {
         Sunday = 1,
         Monday = 1 << 1,

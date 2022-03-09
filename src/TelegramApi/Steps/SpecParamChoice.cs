@@ -1,4 +1,6 @@
-﻿using Exadel.OfficeBooking.TelegramApi.DTO.OfficeDto;
+﻿using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
+using Exadel.OfficeBooking.TelegramApi.DTO.OfficeDto;
+using Exadel.OfficeBooking.TelegramApi.DTO.WorkplaceDto;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,13 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class SpecParamChoice : StateMachineStep
     {
+        private readonly IHttpClientFactory _httpClient;
+
+        public SpecParamChoice(IHttpClientFactory httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
         public override async Task<UserState> Execute(Update update)
         {
             string? text = update.Message?.Text;
@@ -31,8 +40,32 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             {
                 _state.IsSpecifyWorkplace = false;
 
+                if (_state.IsRecurring)
+                {
+                    var recuringBooking = new AddFirstFreeWorkplaceRecuringBookingDto()
+                    {
+                        UserId = _state.User.UserId,
+                        OfficeId = _state.OfficeId,
+                        StartDate = _state.DateStart,
+                        EndDate = _state.DateEnd,
+                        Count = _state.Count,
+                        Interval = _state.Interval,
+                        RecurringWeekDays = _state.RecurringWeekDays,
+                        Frequency = _state.Frequency
+                    };
 
-                //_state.WorkplaceId = 
+                    var httpResponseRecuring = await _httpClient.PostWebApiModel<WorkplaceGetDto, AddFirstFreeWorkplaceRecuringBookingDto>("booking/add/recuringfirstfree", recuringBooking);
+                    _state.WorkplaceId = httpResponseRecuring.Model.Id;
+                }
+
+                var booking = new AddFirstFreeWorkplaceBookingDto()
+                {
+                    UserId = _state.User.UserId,
+                    OfficeId = _state.OfficeId,
+                    Date = _state.DateStart
+                };
+                var httpResponse = await _httpClient.PostWebApiModel<WorkplaceGetDto, AddFirstFreeWorkplaceBookingDto>("booking/add/recuringfirstfree", booking);
+                _state.WorkplaceId = httpResponse.Model.Id;
 
 
                 _state.TextMessage = _state.Summary() + "\n\nConfirm the booking?";

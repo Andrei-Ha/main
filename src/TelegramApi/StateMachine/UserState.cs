@@ -4,7 +4,6 @@ using Exadel.OfficeBooking.TelegramApi.DTO.PersonDto;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Exadel.OfficeBooking.TelegramApi.DTO;
 
 namespace Exadel.OfficeBooking.TelegramApi
 {
@@ -37,25 +36,13 @@ namespace Exadel.OfficeBooking.TelegramApi
         public bool IsRecurring { get; set; }
 
         public int? Count { get; set; }
-        public int Interval { get; set; } = 1;
-        public WeekDaysEnum RecurringWeekDays { get; set; }
-        public RecurringFrequencyEnum Frequency { get; set; }
-
-        public bool IsParkingPlace { get; set; } = false;
-        
-        public int? Count { get; set; }
-
         public bool? IsCountGiven { get; set; }
-
         public int? Interval { get; set; }
-
         public bool? IsIntervalGiven { get; set; }
-        
         public WeekDays? RecurringWeekDays { get; set; }
-        
         public RecurringFrequency? Frequency { get; set; }
-        
         public bool? IsRecurringFrequencyWeekly { get; set; }
+        public bool IsParkingPlace { get; set; } = false;
         
         public bool IsSpecifyWorkplace { get; set; } = false;
 
