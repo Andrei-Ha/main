@@ -67,7 +67,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 var httpResponse = await _httpClient.PostWebApiModel<WorkplaceGetDto, AddFirstFreeWorkplaceBookingDto>("booking/add/recuringfirstfree", booking);
                 _state.WorkplaceId = httpResponse.Model.Id;
 
-
                 _state.TextMessage = _state.Summary() + "\n\nConfirm the booking?";
                 _state.Propositions = new() { "confirm", "cancel" };
                 _state.NextStep = nameof(Template);
