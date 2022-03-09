@@ -12,7 +12,8 @@ using Exadel.OfficeBooking.EF;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 
-namespace Exadel.OfficeBooking.Api.Services;
+namespace Exadel.OfficeBooking.Api.Services
+{
 
 
     public class BookingService : IBookingService
@@ -412,3 +413,4 @@ namespace Exadel.OfficeBooking.Api.Services;
         }
 
     }
+}
