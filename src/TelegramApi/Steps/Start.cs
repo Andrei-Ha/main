@@ -8,7 +8,8 @@ using Telegram.Bot.Types;
     The first step of a bot evaluates user's role and lets user to decide for what purpose, bot is going to be used.
     When user authorizes, the system gets user's role from database, and if user is admin it has additional 1 action:
       1.Is admin wants to manage bookings of employees or book for him/herself.
-    Then for every user actions and buttons are the same: choosing either new booking, modifying or doing nothing
+    Then for every user actions and buttons are the same: choosing either new booking, modifying or doing nothing.
+    The next step is CityChoice.
 */
 
 namespace Exadel.OfficeBooking.TelegramApi.Steps

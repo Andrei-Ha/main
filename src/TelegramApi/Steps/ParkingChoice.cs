@@ -7,6 +7,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
+/*
+In this step, user can decide whether parking is necessary or not.
+The previous step is DateChoice.
+The next step is SpecParamChoice.
+*/
+
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class ParkingChoice : StateMachineStep
@@ -59,14 +65,14 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 if (_hasParking == false)
                 {
                     _state.IsParkingPlace = false;
-                    _state.TextMessage = "Office has no parking available, would You like to proceed without parking ?";
+                    _state.TextMessage = "Office has no parking available, would You like to proceed without parking?";
                     _state.Propositions = new() { "Yes, proceed", "No" };
                     _state.NextStep = nameof(ParkingPlaceSpecifications);
                 }
                 else if (_parkingAvailable == false)
                 {
                     _state.IsParkingPlace = false;
-                    _state.TextMessage = "Office has no parking available, would You like to proceed without parking ?";
+                    _state.TextMessage = "Office has no parking available, would You like to proceed without parking?";
                     _state.Propositions = new() { "Yes, proceed", "No" };
                     _state.NextStep = nameof(ParkingPlaceSpecifications);
                 }

@@ -6,6 +6,12 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
+/*
+This step covers every booking period logic, such as one day, continuous and reccuring.
+Previous step is OfficeChoice.
+Next step is ParkingChoice.
+*/
+
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class DatesChoice : StateMachineStep
