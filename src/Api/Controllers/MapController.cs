@@ -21,9 +21,9 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         // GET
         [HttpGet]
-        public async Task<MapGetDto[]> GetMap()
+        public async Task<MapGetDto[]> GetMap([FromQuery] MapFilterDto mapFilterDto)
         {
-            var maps = await _mapService.GetMaps();
+            var maps = await _mapService.GetMaps(mapFilterDto);
 
             return maps;
         }

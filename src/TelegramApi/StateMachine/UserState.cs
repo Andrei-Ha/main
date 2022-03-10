@@ -50,6 +50,10 @@ namespace Exadel.OfficeBooking.TelegramApi
         
         public bool IsSpecifyWorkplace { get; set; } = false;
 
+        public bool IsKitchenPresent { get; set; } = false;
+
+        public bool IsMeetingRoomPresent { get; set; } = false;
+
         public string NextStep { get; set; } = "Finish";
 
         public string TextMessage { get; set; } = "Not implemented yet";
