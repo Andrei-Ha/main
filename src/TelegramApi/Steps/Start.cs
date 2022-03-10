@@ -3,14 +3,13 @@ using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Security.Claims;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Linq;
+
+/*
+    The first step of a bot evaluates user's role and lets user to decide for what purpose, bot is going to be used.
+    When user authorizes, the system gets user's role from database, and if user is admin it has additional 1 action:
+      1.Is admin wants to manage bookings of employees or book for him/herself.
+    Then for every user actions and buttons are the same: choosing either new booking, modifying or doing nothing
+*/
 
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
@@ -30,20 +29,20 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 _state.User = user;
                 if (_state.User.Role == UserRole.Admin || _state.User.Role == UserRole.Manager)
                 {
-                    _state.TextMessage = $"Hello, <b>{_state.User.FirstName}</b>! You role is <b>{user.Role}</b>.\n Who would you like to manage workplaces for?";
-                    _state.Propositions = new() { "myself", "other employee" };
+                    _state.TextMessage = $"Hello, <b>{_state.User.FirstName}</b>! Your role is <b>{user.Role}</b>.\n For whom you would like to manage workplace?";
+                    _state.Propositions = new() { "For myself", "For other employees" };
                     _state.NextStep = nameof(ManageForChoice);
                 }
                 else
                 {
-                    _state.TextMessage = $"Hello, <b>{_state.User.FirstName}</b>! What do you want to do today?";
+                    _state.TextMessage = $"Hello, <b>{_state.User.FirstName}</b>! What would you like to do today?";
                     _state.Propositions = new() { "Change or Cancel a booking", "Book a workplace", "Nothing" };
                     _state.NextStep = nameof(ActionChoice);
                 }
             }
             else
             {
-                _state.SetResult(textMessage: "Sorry, you can't do booking!");
+                _state.SetResult(textMessage: "Sorry, you cannot book.");
                 // or
                 //_state.TextMessage = "Sorry, you can't do booking!";
                 //_state.Propositions = default;
