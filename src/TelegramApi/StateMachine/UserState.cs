@@ -27,9 +27,6 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public Guid MapId { get; set; } = default;
 
-        public string OfficeName { get; set; } = string.Empty;
-        public Guid MapId { get; set; } = default;
-
         public Guid WorkplaceId { get; set; } = default;
 
         public BookingTypeEnum BookingType { get; set; } = BookingTypeEnum.None;
