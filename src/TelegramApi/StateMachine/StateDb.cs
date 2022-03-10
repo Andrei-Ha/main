@@ -27,7 +27,7 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
             _file = telegramId.ToString() + ".json";
             if (_isStoredInDb)
             {
-                state = await _db.UserStates.Include(f => f.User).AsNoTracking().FirstOrDefaultAsync(s => s.TelegramId == telegramId);
+                state = await _db.UserStates.Include(f => f.User).FirstOrDefaultAsync(s => s.TelegramId == telegramId);
                 if (state == null)
                 {
                     state = new UserState() { TelegramId = telegramId, NextStep = nameof(Start) };
