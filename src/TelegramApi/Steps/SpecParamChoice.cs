@@ -49,23 +49,28 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         StartDate = _state.DateStart,
                         EndDate = _state.DateEnd,
                         Count = _state.Count,
-                        Interval = (int)_state.Interval,
-                        RecurringWeekDays = (WeekDays)_state.RecurringWeekDays,
-                        Frequency = (RecurringFrequency)_state.Frequency
+                        Interval = _state.Interval?? 1,
+                        RecurringWeekDays = _state.RecurringWeekDays?? 0,
+                        Frequency = _state.Frequency?? 0
                     };
 
                     var httpResponseRecuring = await _httpClient.PostWebApiModel<WorkplaceGetDto, AddFirstFreeWorkplaceRecuringBookingDto>("booking/add/recuringfirstfree", recuringBooking);
                     _state.WorkplaceId = httpResponseRecuring.Model.Id;
                 }
-
-                var booking = new AddFirstFreeWorkplaceBookingDto()
+                else
                 {
-                    UserId = _state.User.UserId,
-                    OfficeId = _state.OfficeId,
-                    Date = _state.DateStart
-                };
-                var httpResponse = await _httpClient.PostWebApiModel<WorkplaceGetDto, AddFirstFreeWorkplaceBookingDto>("booking/add/recuringfirstfree", booking);
-                _state.WorkplaceId = httpResponse.Model.Id;
+                    var booking = new AddFirstFreeWorkplaceBookingDto()
+                    {
+                        UserId = _state.User.UserId,
+                        OfficeId = _state.OfficeId,
+                        Date = _state.DateStart
+                    };
+                    var httpResponse =
+                        await _httpClient.PostWebApiModel<WorkplaceGetDto, AddFirstFreeWorkplaceBookingDto>(
+                            "booking/add/recuringfirstfree", booking);
+                    _state.WorkplaceId = httpResponse.Model.Id;
+                    _state.WorkplaceName = httpResponse.Model.Name;
+                }
 
                 _state.TextMessage = _state.Summary() + "\n\nConfirm the booking?";
                 _state.Propositions = new() { "confirm", "cancel" };

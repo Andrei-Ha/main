@@ -104,8 +104,8 @@ public class BookingService : IBookingService
 
         foreach (var officeMap in officeMaps)
         {
-            var workplaces = await _context.Workplaces.AsNoTracking()
-                .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToArrayAsync();
+            var workplaces = await _context.Workplaces
+                .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToListAsync();
 
             foreach (var workplace in workplaces)
             {
@@ -218,8 +218,8 @@ public class BookingService : IBookingService
 
         foreach (var officeMap in officeMaps)
         {
-            var workplaces = await _context.Workplaces.AsNoTracking()
-                .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToArrayAsync();
+            var workplaces = await _context.Workplaces
+                .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToListAsync();
 
             foreach (var workplace in workplaces)
             {
