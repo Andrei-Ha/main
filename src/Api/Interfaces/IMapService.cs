@@ -6,7 +6,7 @@ namespace Exadel.OfficeBooking.Api.Interfaces
 {
     public interface IMapService
     {
-        Task<MapGetDto[]> GetMaps();
+        Task<MapGetDto[]> GetMaps(MapFilterDto mapFilterDto);
         Task<MapGetDto?> GetMapById(Guid id);
         Task<MapGetDto> CreateMap(MapSetDto map);
         Task<MapGetDto?> UpdateMap(Guid id, MapSetDto map);

@@ -21,6 +21,8 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public Guid OfficeId { get; set; } = default;
 
+        public Guid MapId { get; set; } = default;
+
         public string OfficeName { get; set; } = string.Empty;
 
         public BookingTypeEnum BookingType { get; set; } = BookingTypeEnum.None;
@@ -48,6 +50,10 @@ namespace Exadel.OfficeBooking.TelegramApi
         public bool? IsRecurringFrequencyWeekly { get; set; }
         
         public bool IsSpecifyWorkplace { get; set; } = false;
+
+        public bool IsKitchenPresent { get; set; } = false;
+
+        public bool IsMeetingRoomPresent { get; set; } = false;
 
         public string NextStep { get; set; } = "Finish";
 

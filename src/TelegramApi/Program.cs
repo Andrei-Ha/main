@@ -27,6 +27,8 @@ builder.Services.AddScoped<StateMachineStep, ParkingChoice>();
 builder.Services.AddScoped<StateMachineStep, ParkingPlaceSpecifications>();
 builder.Services.AddScoped<StateMachineStep, SpecParamChoice>();
 builder.Services.AddScoped<StateMachineStep, ManageForChoice>();
+builder.Services.AddScoped<StateMachineStep, FloorChoice>();
+builder.Services.AddScoped<StateMachineStep, WorkplaceChoice>();
 builder.Services.AddScoped<StateDb>();
 builder.Services.AddHttpClient("WebAPI", c =>
 {

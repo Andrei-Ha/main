@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Exadel.OfficeBooking.Api.DTO.MapDto;
 using Exadel.OfficeBooking.Api.Interfaces;
@@ -18,9 +19,19 @@ namespace Exadel.OfficeBooking.Api.Services
             _context = context;
         }
 
-        public async Task<MapGetDto[]> GetMaps()
+        public async Task<MapGetDto[]> GetMaps(MapFilterDto mapFilterDto)
         {
-            var maps = await _context.Maps.AsNoTracking().ToArrayAsync();
+            var maps = _context.Maps.AsNoTracking();
+            if (mapFilterDto.IsKitchenPresent != null)
+                maps = maps.Where(w => w.IsKitchenPresent == mapFilterDto.IsKitchenPresent);
+
+            if (mapFilterDto.IsMeetingRoomPresent != null)
+                maps = maps.Where(w => w.IsMeetingRoomPresent == mapFilterDto.IsMeetingRoomPresent);
+
+            if (mapFilterDto.OfficeId != null)
+                maps = maps.Where(w => w.OfficeId == mapFilterDto.OfficeId);
+
+            var mapsList = await maps.ToListAsync();
             return maps.Adapt<MapGetDto[]>();
         }
 
