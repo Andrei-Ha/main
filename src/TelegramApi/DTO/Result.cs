@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Exadel.OfficeBooking.TelegramApi.StateMachine
+namespace Exadel.OfficeBooking.TelegramApi.DTO
 {
     public class Result
     {

@@ -18,7 +18,7 @@ builder.Services.AddDbContext<TelegramDbContext>(options => options.UseSqlServer
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddSingleton<Exadel.OfficeBooking.TelegramApi.TelegramBot>();
 builder.Services.AddScoped<StateMachine>();
-builder.Services.AddScoped<StateMachineStep,Start>();
+builder.Services.AddScoped<StateMachineStep, Start>();
 builder.Services.AddScoped<StateMachineStep, ActionChoice>();
 builder.Services.AddScoped<StateMachineStep, CityChoice>();
 builder.Services.AddScoped<StateMachineStep, OfficeChoice>();

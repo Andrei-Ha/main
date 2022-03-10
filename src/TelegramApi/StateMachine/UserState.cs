@@ -1,9 +1,9 @@
-﻿using Exadel.OfficeBooking.TelegramApi.DTO.PersonDto;
-using Exadel.OfficeBooking.TelegramApi.StateMachine;
+﻿using Exadel.OfficeBooking.TelegramApi.DTO;
+using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
+using Exadel.OfficeBooking.TelegramApi.DTO.PersonDto;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Exadel.OfficeBooking.TelegramApi.DTO;
 
 namespace Exadel.OfficeBooking.TelegramApi
 {
@@ -19,11 +19,18 @@ namespace Exadel.OfficeBooking.TelegramApi
         
         public string City { get; set; }  = string.Empty;
 
+        public string OfficeName { get; set; } = string.Empty;
+
+        public string WorkplaceName { get; set; } = string.Empty;
+
         public Guid OfficeId { get; set; } = default;
 
         public Guid MapId { get; set; } = default;
 
         public string OfficeName { get; set; } = string.Empty;
+        public Guid MapId { get; set; } = default;
+
+        public Guid WorkplaceId { get; set; } = default;
 
         public BookingTypeEnum BookingType { get; set; } = BookingTypeEnum.None;
 
@@ -33,21 +40,16 @@ namespace Exadel.OfficeBooking.TelegramApi
         
         public bool? IsEndDateGiven { get; set; }
 
-        public bool IsParkingPlace { get; set; } = false;
-        
+        public bool IsRecurring { get; set; }
+
         public int? Count { get; set; }
-
         public bool? IsCountGiven { get; set; }
-
         public int? Interval { get; set; }
-
         public bool? IsIntervalGiven { get; set; }
-        
         public WeekDays? RecurringWeekDays { get; set; }
-        
         public RecurringFrequency? Frequency { get; set; }
-        
         public bool? IsRecurringFrequencyWeekly { get; set; }
+        public bool IsParkingPlace { get; set; } = false;
         
         public bool IsSpecifyWorkplace { get; set; } = false;
 
@@ -81,6 +83,7 @@ namespace Exadel.OfficeBooking.TelegramApi
             sb.Append(GetFullName() + "\n");
             sb.Append($"Email: {User.Email}" + "\n");
             sb.Append($"Office: <b>{OfficeName} {City}</b>\n");
+            sb.Append($"Workplace : <b>{WorkplaceName}</b>\n");
             sb.Append($"Booking type: <b>{BookingType}</b>\n");
             if (BookingType == BookingTypeEnum.OneDay)
             {
