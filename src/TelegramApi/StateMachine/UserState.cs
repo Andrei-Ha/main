@@ -21,6 +21,8 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public string OfficeName { get; set; } = string.Empty;
 
+        public string WorkplaceName { get; set; } = string.Empty;
+
         public Guid OfficeId { get; set; } = default;
 
         public Guid MapId { get; set; } = default;
@@ -74,6 +76,7 @@ namespace Exadel.OfficeBooking.TelegramApi
             sb.Append(GetFullName() + "\n");
             sb.Append($"Email: {User.Email}" + "\n");
             sb.Append($"Office: <b>{OfficeName} {City}</b>\n");
+            sb.Append($"Workplace : <b>{WorkplaceName}</b>\n");
             sb.Append($"Booking type: <b>{BookingType}</b>\n");
             if (BookingType == BookingTypeEnum.OneDay)
             {
