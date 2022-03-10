@@ -1,4 +1,4 @@
-﻿namespace Exadel.OfficeBooking.TelegramApi.StateMachine
+﻿namespace Exadel.OfficeBooking.TelegramApi.DTO.BookingDto
 {
     public enum BookingTypeEnum
     {

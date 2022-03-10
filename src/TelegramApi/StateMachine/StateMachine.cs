@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Exadel.OfficeBooking.TelegramApi.DTO;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
