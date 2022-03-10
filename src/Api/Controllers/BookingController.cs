@@ -50,7 +50,7 @@ public class BookingController : ControllerBase
     }
 
     [HttpPost("get/recuringfirstfree")]
-    public async Task<ActionResult<WorkplaceGetDto>> CreateRecuringBookingWithFirstFreeWorkplaceInOffice(GetFirstFreeWorkplaceForRecuringBookingDto bookingDto)
+    public async Task<ActionResult<WorkplaceGetDto>> GetFirstFreeWorkplaceInOfficeForRecuringBooking(GetFirstFreeWorkplaceForRecuringBookingDto bookingDto)
     {
         var workplace = await _bookingService.GetFirstFreeWorkplaceInOfficeForRecuringBooking(bookingDto);
 
