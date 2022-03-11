@@ -1,10 +1,14 @@
-﻿namespace Exadel.OfficeBooking.Api.DTO.WorkplaceDto
+﻿using System;
+
+namespace Exadel.OfficeBooking.Api.DTO.WorkplaceDto
 {
     public class WorkplaceFilterDto
     {
         public string? Name { get; set; }
 
-        public WorkplaceTypesDto Type { get; set; }
+        public Guid? MapId { get; set; }
+
+        public WorkplaceTypesDto? Type { get; set; }
 
         public bool? IsBooked { get; set; }
 

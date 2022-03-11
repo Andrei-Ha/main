@@ -47,7 +47,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         var dictionary = httpResponse.Model
                             .OrderBy(m => m.LastName)
-                            .ToDictionary(k => $"{ k.LastName } { k.FirstName }", v => $"{v.UserId}");
+                            .ToDictionary(k => $"{k.UserId}", v => $"{ v.LastName } { v.FirstName }");
                         _state.CallbackMessageId = await _bot.SendInlineKbList(update, "Select the employee:", dictionary);
                     }
 

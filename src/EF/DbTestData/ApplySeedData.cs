@@ -90,6 +90,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
 
                     OfficeId = tk
                 },
+        // Minsk office
                 new
                 {
                     FloorNumber = 3,
@@ -186,6 +187,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Type = WorkplaceTypes.Administrative,
                     MapId = mapTk
                 },
+        // Minsk office
                 new
                 {
                     HasHeadset = false,
@@ -196,7 +198,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
                     IsBooked = true,
-                    Name = "Super Workplace",
+                    Name = "301",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
                 },
@@ -210,7 +212,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
                     IsBooked = true,
-                    Name = "Super Workplace",
+                    Name = "302",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
                 },
@@ -224,7 +226,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
                     IsBooked = true,
-                    Name = "Super Workplace",
+                    Name = "303",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
                 },
@@ -238,35 +240,49 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
                     IsBooked = true,
-                    Name = "Super Workplace",
+                    Name = "304",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
                 },
                 new
                 {
-                    HasHeadset = false,
+                    HasHeadset = true,
                     HasKeyboard = true,
                     HasMonitor = true,
-                    HasMouse = false,
+                    HasMouse = true,
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
                     IsBooked = true,
-                    Name = "Super Workplace",
+                    Name = "305",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
                 },
                 new
                 {
-                    HasHeadset = false,
+                    HasHeadset = true,
+                    HasKeyboard = true,
+                    HasMonitor = true,
+                    HasMouse = true,
+                    HasPC = true,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = true,
+                    IsBooked = true,
+                    Name = "333",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin3
+                },
+                new
+                {
+                    HasHeadset = true,
                     HasKeyboard = true,
                     HasMonitor = true,
                     HasMouse = false,
-                    HasPC = true,
+                    HasPC = false,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
                     IsBooked = true,
-                    Name = "Super Workplace",
+                    Name = "401",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin4
                 },
@@ -280,7 +296,49 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
                     IsBooked = true,
-                    Name = "Super Workplace",
+                    Name = "402",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin4
+                },
+                new
+                {
+                    HasHeadset = false,
+                    HasKeyboard = true,
+                    HasMonitor = true,
+                    HasMouse = false,
+                    HasPC = true,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = false,
+                    IsBooked = true,
+                    Name = "403",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin4
+                },
+                new
+                {
+                    HasHeadset = false,
+                    HasKeyboard = true,
+                    HasMonitor = true,
+                    HasMouse = false,
+                    HasPC = true,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = false,
+                    IsBooked = true,
+                    Name = "501",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin5
+                },
+                new
+                {
+                    HasHeadset = true,
+                    HasKeyboard = true,
+                    HasMonitor = true,
+                    HasMouse = true,
+                    HasPC = true,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = true,
+                    IsBooked = true,
+                    Name = "502",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin5
                 },

@@ -74,9 +74,9 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     _state.WorkplaceName = httpResponse.Model.Name;
                 }
 
-                _state.TextMessage = _state.Summary() + "\n\nConfirm the booking?";
+                _state.TextMessage = _state.Summary() + "\nConfirm the booking?";
                 _state.Propositions = new() { "confirm", "cancel" };
-                _state.NextStep = nameof(Template);
+                _state.NextStep = nameof(ConfirmBooking);
             }
             return _state;
         }

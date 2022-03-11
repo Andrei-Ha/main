@@ -35,7 +35,7 @@ namespace Exadel.OfficeBooking.TelegramApi
         private static InlineKeyboardMarkup CreateInlineKeyboardMarkup(Dictionary<string, string> dictionary)
         {
             InlineKeyboardButton[][] inlineKeyboardButtons = dictionary
-                .Select(d => new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(d.Key, d.Value )}).ToArray();
+                .Select(d => new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(d.Value, d.Key )}).ToArray();
             return new InlineKeyboardMarkup(inlineKeyboardButtons);
         }
     }

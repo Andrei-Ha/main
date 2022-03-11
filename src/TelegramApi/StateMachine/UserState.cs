@@ -53,6 +53,19 @@ namespace Exadel.OfficeBooking.TelegramApi
         public bool IsKitchenPresent { get; set; } = false;
 
         public bool IsMeetingRoomPresent { get; set; } = false;
+        public bool IsNextToWindow { get; set; } = false;
+
+        public bool IsVIP { get; set; } = false;
+
+        public bool HasPC { get; set; } = false;
+
+        public bool HasMonitor { get; set; } = false;
+
+        public bool HasKeyboard { get; set; } = false;
+
+        public bool HasMouse { get; set; } = false;
+
+        public bool HasHeadset { get; set; } = false;
 
         public string NextStep { get; set; } = "Finish";
 

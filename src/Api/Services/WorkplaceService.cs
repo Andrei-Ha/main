@@ -32,7 +32,15 @@ namespace Exadel.OfficeBooking.Api.Services
             if (!string.IsNullOrEmpty(filterModel.Name))
                 workplaces = workplaces.Where(w => w.Name.Contains(filterModel.Name));
 
-            workplaces = workplaces.Where(w => w.Type.ToString() == filterModel.Type.ToString());
+            if (filterModel.MapId != null)
+            {
+                workplaces = workplaces.Where(w => w.MapId == filterModel.MapId);
+            }
+
+            if (filterModel.Type != null)
+            {
+                workplaces = workplaces.Where(w => w.Type.ToString() == filterModel.Type.ToString());
+            }
 
             if (filterModel.IsBooked != null)
                 workplaces = workplaces.Where(w => w.IsBooked == filterModel.IsBooked);
