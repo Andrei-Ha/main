@@ -111,7 +111,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
 
                     OfficeId = tk
                 },
-        // Minsk office
                 new
                 {
                     FloorNumber = 8,
@@ -257,7 +256,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     IsNextToWindow = true,
                     IsBooked = false,
-                    Name = "1",
+                    Name = "2",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapTb
 
@@ -272,7 +271,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
                     IsBooked = false,
-                    Name = "1",
+                    Name = "3",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapTb
                 },
