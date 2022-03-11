@@ -274,7 +274,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Name = "1",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapTb
-                }
+                },
                 new
                 {
                     HasHeadset = false,
@@ -285,7 +285,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     IsNextToWindow = true,
                     IsBooked = false,
-                    Name = "Best Workplace",
+                    Name = "77",
                     Type = WorkplaceTypes.Administrative,
                     MapId = mapTk
                 },
@@ -299,7 +299,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
                     IsBooked = true,
-                    Name = "Super Workplace",
+                    Name = "88",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
                 },
