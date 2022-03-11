@@ -54,7 +54,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         var dictionary = httpResponse.Model
                             .OrderBy(m => m.LastName)
-                            .ToDictionary(k => $"{ k.LastName } { k.FirstName }", v => $"{v.UserId}");
+                            .ToDictionary(k => $"{k.UserId}", v => $"{ v.LastName } { v.FirstName }");
                         _state.CallbackMessageId = await _bot.SendInlineKbList(update, "Select the employee:", dictionary);
                     }
 
@@ -68,13 +68,14 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 if (_state.CallbackMessageId == update.CallbackQuery.Message.MessageId)
                 {
                     var httpResponse = await _http.GetWebApiModel<LoginUserDto>($"login/{update.CallbackQuery.Data}");
+                    System.Console.WriteLine($"login/{update.CallbackQuery.Data}");
                     var loginUserDto = httpResponse?.Model;
                     if (loginUserDto != null)
 
                     {
                         // delete inlineKeyboard and set CallbackMessageId to default value
                         _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
-                        _state.User.UserId = loginUserDto.Id;
+                        _state.User.UserId = loginUserDto.UserId;
                         _state.User.FirstName = loginUserDto.FirstName;
                         _state.User.LastName = loginUserDto.LastName;
                         _state.User.Email = loginUserDto.Email;

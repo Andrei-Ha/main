@@ -1,14 +1,11 @@
 ﻿using Exadel.OfficeBooking.TelegramApi.DTO.MapDto;
-using Exadel.OfficeBooking.TelegramApi.DTO.OfficeDto;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using Mapster;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -44,7 +41,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         var dictionary = httpResponse.Model
                             .OrderBy(m => m.FloorNumber)
-                            .ToDictionary(k => $"{k.FloorNumber }", v => $"{ v.FloorNumber }:{v.Id}");
+                            .ToDictionary(k => $"{k.FloorNumber }:{k.Id}", v => $"{ v.FloorNumber }");
+                        dictionary.Add("Back:true", "<< Back");
                         _state.CallbackMessageId = await _bot.SendInlineKbList(update, "Select the floor:", dictionary);
                     }
                     else
@@ -94,20 +92,22 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 await _bot.EditInlineKbList(update, GetList());
                                 break;
                             }
-                        // OK
+                        // << Back
+                        case "Back":
+                            {
+                                _state.IsKitchenPresent = false;
+                                _state.IsMeetingRoomPresent = false;
+                                _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
+                                break;
+                            }
+                        // [ OK ]
                         default:
                             {
                                 _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
                                 var dictionary = GetList();
                                 _state.TextMessage = string.Empty;
-                                if (_state.IsKitchenPresent)
-                                {
-                                    _state.TextMessage += $"{dictionary.ElementAt(0).Key}\n";
-                                }
-                                if (_state.IsMeetingRoomPresent)
-                                {
-                                    _state.TextMessage += $"{dictionary.ElementAt(1).Key}\n";
-                                }
+                                _state.TextMessage += _state.IsKitchenPresent ? $"{dictionary.ElementAt(0).Value}\n" : "";
+                                _state.TextMessage += _state.IsMeetingRoomPresent ? $"{dictionary.ElementAt(1).Value}\n" : "";
 
                                 var httpResponse = await _http.GetWebApiModel<IEnumerable<MapGetDto>>($"map?{_state.Adapt<MapFilterDto>().GetQueryString()}");
                                 if (httpResponse?.Model != null)
@@ -138,24 +138,26 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
         private Dictionary<string, string> GetList()
         {
             var dictionary = new Dictionary<string, string>();
-            if (_state.IsKitchenPresent)
+           if (_state.IsKitchenPresent)
             {
-                dictionary.Add("Kitchen ✔", "Kitchen:false");
+                dictionary.Add("Kitchen:false", "Kitchen ✔");
             }
             else
             {
-                dictionary.Add("Kitchen", "Kitchen:true");
-            }
-            if (_state.IsMeetingRoomPresent)
-            {
-                dictionary.Add("Meeting room ✔", "Meeting room:false");
-            }
-            else
-            {
-                dictionary.Add("Meeting room", "Meeting room:true");
+                dictionary.Add("Kitchen:true", "Kitchen");
             }
 
-            dictionary.Add("OK", "OK:true");
+            if (_state.IsMeetingRoomPresent)
+            {
+                dictionary.Add("Meeting room:false", "Meeting room ✔");
+            }
+            else
+            {
+                dictionary.Add("Meeting room:true", "Meeting room");
+            }
+
+            dictionary.Add("OK:true", "[ OK ]");
+            dictionary.Add("Back:true", "<< Back");
             return dictionary;
         }
     }
