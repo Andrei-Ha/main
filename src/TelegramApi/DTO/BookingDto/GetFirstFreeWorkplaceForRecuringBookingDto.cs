@@ -2,7 +2,7 @@
 
 namespace Exadel.OfficeBooking.TelegramApi.DTO.BookingDto
 {
-    public class AddFirstFreeWorkplaceRecuringBookingDto
+    public class GetFirstFreeWorkplaceForRecuringBookingDto
     {
         public Guid UserId { get; set; }
         public Guid OfficeId { get; set; }
