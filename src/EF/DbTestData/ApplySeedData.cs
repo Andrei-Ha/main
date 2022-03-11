@@ -15,9 +15,13 @@ namespace Exadel.OfficeBooking.EF.DbTestData
         {
             Guid tb = Guid.NewGuid();
             Guid mapTb = Guid.NewGuid();
+            Guid mapTb1 = Guid.NewGuid();
+            Guid mapTb2 = Guid.NewGuid();
 
             Guid tk = Guid.NewGuid();
             Guid mapTk = Guid.NewGuid();
+            Guid mapTk1 = Guid.NewGuid();
+            Guid mapTk2 = Guid.NewGuid();
 
             Guid min = Guid.NewGuid();
             Guid mapMin3 = Guid.NewGuid();
@@ -84,7 +88,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 new
                 {
                     FloorNumber = 2,
-                    Id = mapTb,
+                    Id = mapTb1,
                     IsKitchenPresent = false,
                     IsMeetingRoomPresent = true,
 
@@ -94,7 +98,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 new
                 {
                     FloorNumber = 3,
-                    Id = mapTb,
+                    Id = mapTb2,
                     IsKitchenPresent = false,
                     IsMeetingRoomPresent = false,
 
@@ -113,7 +117,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 new
                 {
                     FloorNumber =2,
-                    Id = mapTk,
+                    Id = mapTk1,
                     IsKitchenPresent = false,
                     IsMeetingRoomPresent = false,
 
@@ -122,7 +126,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 new
                 {
                     FloorNumber = 3,
-                    Id = mapTk,
+                    Id = mapTk2,
                     IsKitchenPresent = false,
                     IsMeetingRoomPresent = true,
 
