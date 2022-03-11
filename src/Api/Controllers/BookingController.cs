@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Exadel.OfficeBooking.Api.DTO.BookingDto;
 using Exadel.OfficeBooking.Api.DTO.WorkplaceDto;
 using Exadel.OfficeBooking.Api.Interfaces;
-using Exadel.OfficeBooking.EF;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
