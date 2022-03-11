@@ -5,6 +5,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
+/*
+At this step, user can specify floor and/or choose the exact place at office for booking.
+*/
+
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class SpecParamChoice : StateMachineStep
@@ -24,7 +28,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 return _state;
             }
 
-            // Yes, I have special preferences
+            // If the choice is "Yes, I have special preferences"
             if (text == _state.Propositions[0])
             {
                 _state.IsSpecifyWorkplace = true;
@@ -32,7 +36,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 _state.Propositions = new() { "yes", "no" };
                 _state.NextStep = nameof(FloorChoice);
             }
-            // No, I can take any available workplace
+            // If the choice is "No, I can take any available workplace"
             else if (text == _state.Propositions[1])
             {
                 _state.IsSpecifyWorkplace = false;

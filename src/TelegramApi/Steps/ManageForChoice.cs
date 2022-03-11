@@ -8,6 +8,13 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
+/*
+This step is available only for admin role.
+It allows admins to book and manage bookings on behalf of other users.
+Both, new booking and changing a booking leads to exact flow as in ordinary users' flows.
+The next step depends on admin's choice: new booking or change/cancel booking.
+*/
+
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class ManageForChoice : StateMachineStep
@@ -31,14 +38,14 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     return _state;
                 }
 
-                // for myself
+                // If the choice is "For myself"
                 if (text == _state.Propositions[0])
                 {
                     _state.TextMessage = $"Ok. What do you want to do today?";
                     _state.Propositions = new() { "Change or Cancel a booking", "Book a workplace", "Nothing" };
                     _state.NextStep = nameof(ActionChoice);
                 }
-                // for other employee
+                // If the choice is "For other employee"
                 else if (text == _state.Propositions[1])
                 {
                     _state.IsBookForOther = true;
@@ -71,8 +78,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         _state.User.FirstName = loginUserDto.FirstName;
                         _state.User.LastName = loginUserDto.LastName;
                         _state.User.Email = loginUserDto.Email;
-                        // !!! Token and role don't changed
-                        _state.TextMessage = $"You have selected employee with name: <b>{_state.GetFullName()}</b>.\n What do you want to do on his behalf?";
+                        // !!! Token and role aren't changed
+                        _state.TextMessage = $"You have selected employee with the name: <b>{_state.GetFullName()}</b>.\n What would you like to do on his behalf?";
                         _state.Propositions = new() { "Change or Cancel a booking", "Book a workplace", "Nothing" };
                         _state.NextStep = nameof(ActionChoice);
                     }
