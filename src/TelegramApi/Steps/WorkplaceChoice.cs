@@ -75,9 +75,9 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
                     _state.TextMessage = $"You have selected workplace: <b>{data[0]}</b>.\n";
 
-                    /*_state.TextMessage += "Would you like to choose the exact workplace?";
-                    _state.Propositions = new() { "yes", "no" };*/
-                    _state.NextStep = "Finish";
+                    _state.TextMessage += "\n" + _state.Summary() + "\nConfirm the booking?";
+                    _state.Propositions = new() { "confirm", "cancel" };
+                    _state.NextStep = nameof(ConfirmBooking);
 
                 }
                 // if CallbackQuery received from "workplace with attributes"
