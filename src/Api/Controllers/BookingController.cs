@@ -37,7 +37,29 @@ public class BookingController : ControllerBase
             return NotFound(response);
         return Ok(response);
     }
-    
+
+    [HttpPost("get/firstfree")]
+    public async Task<ActionResult<WorkplaceGetDto>> GetFirstFreeWorkplaceInOfficeForBooking(GetFirstFreeWorkplaceForBookingDto bookingDto)
+    {
+        var workplace = await _bookingService.GetFirstFreeWorkplaceInOfficeForBooking(bookingDto);
+
+        if (workplace == null)
+            return NotFound(new { message = "Requested workplace not found" });
+
+        return Ok(workplace);
+    }
+
+    [HttpPost("get/recuringfirstfree")]
+    public async Task<ActionResult<WorkplaceGetDto>> GetFirstFreeWorkplaceInOfficeForRecuringBooking(GetFirstFreeWorkplaceForRecuringBookingDto bookingDto)
+    {
+        var workplace = await _bookingService.GetFirstFreeWorkplaceInOfficeForRecuringBooking(bookingDto);
+
+        if (workplace == null)
+            return NotFound(new { message = "Requested workplace not found" });
+
+        return Ok(workplace);
+    }
+
     [HttpPost("add/one-day")]
     public async Task<IActionResult> CreateBooking(AddBookingDto bookingDto)
     {
@@ -48,17 +70,6 @@ public class BookingController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost("add/firstfree")]
-    public async Task<ActionResult<WorkplaceGetDto>> CreateBookingWithFirstFreeWorkplaceInOffice(AddFirstFreeWorkplaceBookingDto bookingDto)
-    {
-        var workplace = await _bookingService.CreateBookingWithFirstFreeWorkplaceInOffice(bookingDto);
-
-        if (workplace == null)
-            return NotFound(new { message = "Requested workplace not found" });
-
-        return Ok(workplace);
-    }
-
     [HttpPost("add/recurring")]
     public async Task<IActionResult> AddRecurringBooking(AddRecurringBookingDto bookingDto)
     {
@@ -67,17 +78,6 @@ public class BookingController : ControllerBase
             return Conflict(response);
         
         return Ok(response);
-    }
-
-    [HttpPost("add/recuringfirstfree")]
-    public async Task<ActionResult<WorkplaceGetDto>> CreateRecuringBookingWithFirstFreeWorkplaceInOffice(AddFirstFreeWorkplaceRecuringBookingDto bookingDto)
-    {
-        var workplace = await _bookingService.CreateRecuringBookingWithFirstFreeWorkplaceInOffice(bookingDto);
-
-        if (workplace == null)
-            return NotFound(new { message = "Requested workplace not found" });
-
-        return Ok(workplace);
     }
 
     [HttpPut("update/one-day")]

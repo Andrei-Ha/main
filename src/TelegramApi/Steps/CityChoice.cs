@@ -8,6 +8,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
+/*
+Step send to user available in database cities to choose.
+Only buttons are used, no keyboard custom entering.
+The previous step is Start.
+The next step is OfficeChoice.
+*/
+
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
     public class CityChoice : StateMachineStep
