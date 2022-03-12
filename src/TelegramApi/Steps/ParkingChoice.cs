@@ -20,6 +20,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
         private bool _hasParking;
         private bool _parkingAvailable;
         private ParkingPlaceGetDto _parking;
+        private ParkingPlaceSetDto addParking;
         private readonly IHttpClientFactory _httpClient;
 
         public ParkingChoice(IHttpClientFactory httpClient)
@@ -76,12 +77,19 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     _state.Propositions = new() { "Yes, proceed", "No" };
                     _state.NextStep = nameof(ParkingPlaceSpecifications);
                 }
+
                 else
                 {
+                    
                     _state.IsParkingPlace = true;
+                    addParking = _parking;
+                    addParking.IsBooked = true;
+                    await _httpClient.PutWebApiModel<ParkingPlaceGetDto, ParkingPlaceSetDto>($"parkingPlace/put/{_parking.Id}", addParking, _state.User.Token);
                     _state.TextMessage = $"Parking place {_parking.PlaceNumber} booked. Would you like to specify workplace parameters?";
                     _state.Propositions = new() { "Yes, I have special preferences", "No, I can take any available workplace" };
                     _state.NextStep = nameof(SpecParamChoice);
+                   
+                   
                 }
 
             }
