@@ -48,19 +48,19 @@ namespace Exadel.OfficeBooking.Api.Services
 
         public async Task<ParkingPlaceGetDto?> UpdateParking(Guid id, ParkingPlaceSetDto parking)
         {
-            var ParkingFromDb = await _context.ParkingPlaces.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
+                var ParkingFromDb = await _context.ParkingPlaces.FirstOrDefaultAsync(o => o.Id == id);
 
-            if (ParkingFromDb == null)
-                return null;
+                if (ParkingFromDb == null)
+                    return null;
 
-            var parkingPlaceDomain = parking.Adapt<ParkingPlace>();
+                ParkingFromDb.IsBooked = parking.IsBooked;
+                
+             
 
-            parkingPlaceDomain.Id = id;
+                await _context.SaveChangesAsync();
 
-            _context.ParkingPlaces.Update(parkingPlaceDomain);
-            await _context.SaveChangesAsync();
-
-            return parkingPlaceDomain.Adapt<ParkingPlaceGetDto>();
+                return ParkingFromDb.Adapt<ParkingPlaceGetDto>();
+           
         }
 
         public async Task<ParkingPlaceGetDto?> DeleteParking(Guid id)
