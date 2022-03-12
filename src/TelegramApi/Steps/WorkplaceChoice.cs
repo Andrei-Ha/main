@@ -37,8 +37,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 // Yes, I like to choose the exact workplace
                 if (text == _state.Propositions[0])
                 {
-                    Console.WriteLine($"workplace/GetFiltered?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}");
-                    var httpResponse = await _http.GetWebApiModel<IEnumerable<WorkplaceGetDto>>($"workplace/GetFiltered?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}");
+                    Console.WriteLine($"workplace?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}");
+                    var httpResponse = await _http.GetWebApiModel<IEnumerable<WorkplaceGetDto>>($"workplace?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}");
                     if (httpResponse?.Model != null)
                     {
                         var dictionary = httpResponse.Model
@@ -147,7 +147,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 _state.TextMessage += _state.HasMouse ? $"{dictionary.ElementAt(4).Value}\n" : "";
                                 _state.TextMessage += _state.HasHeadset ? $"{dictionary.ElementAt(5).Value}\n" : "";
 
-                                var httpResponse = await _http.GetWebApiModel<IEnumerable<WorkplaceGetDto>>($"workplace/GetFiltered?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}");
+                                Console.WriteLine($"workplace?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}");
+                                var httpResponse = await _http.GetWebApiModel<IEnumerable<WorkplaceGetDto>>($"workplace?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}");
                                 if (httpResponse?.Model != null/* && httpResponse?.Model.Count() != 0*/)
                                 {
                                     var workplace = httpResponse.Model.FirstOrDefault();

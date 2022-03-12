@@ -12,21 +12,9 @@ namespace Exadel.OfficeBooking.TelegramApi.DTO.MapDto
         public string GetQueryString()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            if (IsKitchenPresent == true)
-            {
-                stringBuilder.Append($"{nameof(IsKitchenPresent)}=true&");
-            }
-
-            if (IsMeetingRoomPresent == true)
-            {
-                stringBuilder.Append($"{nameof(IsMeetingRoomPresent)}=true&");
-            }
-
-            if (OfficeId != null)
-            {
-                stringBuilder.Append($"{nameof(OfficeId)}={OfficeId}&");
-            }
-
+            stringBuilder.Append(IsKitchenPresent == true ? $"{nameof(IsKitchenPresent)}=true&" : string.Empty);
+            stringBuilder.Append(IsMeetingRoomPresent == true ? $"{nameof(IsMeetingRoomPresent)}=true&" : string.Empty);
+            stringBuilder.Append(OfficeId != null ? $"{nameof(OfficeId)}={OfficeId}&" : string.Empty);
             return stringBuilder.ToString();
         }
     }

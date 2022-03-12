@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace Exadel.OfficeBooking.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]/[action]")]
     [Authorize]
     [AllowAnonymous]
     public class WorkplaceController : ControllerBase
@@ -21,29 +20,26 @@ namespace Exadel.OfficeBooking.Api.Controllers
             _workplaceService = workplaceService;
         }
 
-        // GET: api/workplace/getall
+        [Route("api/[controller]")]
         [HttpGet]
-        [Produces("application/json")]
-        public async Task<WorkplaceGetDto[]> GetAll()
+        public async Task<WorkplaceGetDto[]> GetFiltered([FromQuery] WorkplaceFilterDto filterModel, Guid? officeId)
         {
-            var workplaces = await _workplaceService.GetWorkplaces();
+            var workplaces = await _workplaceService.GetWorkplaces(filterModel, officeId);
 
             return workplaces;
         }
 
-        // GET: api/workplace/getfiltered
+        [Route("api/Office/{officeId?}/[controller]")]
         [HttpGet]
-        [Produces("application/json")]
-        public async Task<WorkplaceGetDto[]> GetFiltered ([FromQuery] WorkplaceFilterDto filterModel)
+        public async Task<WorkplaceGetDto[]> GetFilteredInExactOffice ([FromQuery] WorkplaceFilterDto filterModel, Guid? officeId)
         {
-            var workplaces = await _workplaceService.GetWorkplaces(filterModel);
+            var workplaces = await _workplaceService.GetWorkplaces(filterModel, officeId);
 
             return workplaces;
         }
-
-        // GET api/workplace/getbyid/{guid}
-        [HttpGet("{id}")]
-        [Produces("application/json")]
+        
+        [Route("api/[controller]/{id}")]
+        [HttpGet]
         public async Task<ActionResult<WorkplaceGetDto>> GetById(Guid id)
         {
             var workplace = await _workplaceService.GetWorkplaceById(id);
@@ -53,23 +49,25 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
             return Ok(workplace);
         }
-
-        // POST api/workplace/create
+        
+        [Route("api/Map/{mapId}/[controller]")]
         [HttpPost]
-        [Produces("application/json")]
         [Authorize(Roles ="Admin, MapEditor")]
-        public async Task<ActionResult<WorkplaceGetDto>> Create([FromBody] WorkplaceSetDto workplace)
+        public async Task<ActionResult<WorkplaceGetDto>> Create(WorkplaceSetDto workplace, Guid mapId)
         {
+            workplace.MapId = mapId;
+            Console.WriteLine("MapId = " + workplace.MapId);
             var workplaceCreated = await _workplaceService.CreateWorkplace(workplace);
 
-            var uri = new Uri($"{Request.Path.Value}/{workplaceCreated.Id}".ToLower(), UriKind.Relative);
+            var uri = new Uri($"api/Workplace/{workplaceCreated.Id}".ToLower(), UriKind.Relative);
 
+            //Why in the created record the MapId does not match the sent one???
+            //May be we need to get all Map with sent MapId and then save...
             return Created(uri, workplaceCreated);
         }
-
-        // PUT api/workplace/update
+        
+        [Route("api/[controller]/{id}")]
         [HttpPut]
-        [Produces("application/json")]
         [Authorize(Roles = "Admin, MapEditor")]
         public async Task<ActionResult<WorkplaceGetDto>> Update(Guid id, [FromBody] WorkplaceSetDto workplace)
         {
@@ -81,9 +79,8 @@ namespace Exadel.OfficeBooking.Api.Controllers
             return Ok(workplaceUpdated);
         }
 
-        // DELETE api/workplace/delete/{guid}
-        [HttpDelete("{id}")]
-        [Produces("application/json")]
+        [Route("api/[controller]/{id}")]
+        [HttpDelete]
         [Authorize(Roles = "Admin, MapEditor")]
         public async Task<IActionResult> Delete(Guid id)
         {

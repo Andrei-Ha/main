@@ -57,7 +57,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     if (DateTime.TryParseExact(text, formatDates, CultureInfo.InvariantCulture,
                             DateTimeStyles.None, out DateTime dateStart))
                     {
-                        _state.DateStart = dateStart;
+                        _state.StartDate = dateStart;
                         _state.TextMessage = "Would you like to add parking place?";
                         _state.Propositions = new() { "yes", "no" };
                         _state.NextStep = nameof(ParkingChoice);
@@ -71,23 +71,23 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 case BookingTypeEnum.Continuous:
                 {
                     //startDate is being selected
-                    if (_state.DateStart == default)
+                    if (_state.StartDate == default)
                     {
                         if (DateTime.TryParseExact(text, formatDates, CultureInfo.InvariantCulture, 
                                 DateTimeStyles.None, out DateTime dateStart))
                         {
-                            _state.DateStart = dateStart;
+                            _state.StartDate = dateStart;
                             _state.TextMessage = "Enter the End date in the format dd.mm.yyyy";
                         }
                         else _state.TextMessage = "Invalid format, try again";
                     }
                     //state when startDate was already selected
-                    else if (_state.DateStart != default)
+                    else if (_state.StartDate != default)
                     {
                         if (DateTime.TryParseExact(text, formatDates,
                                 CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateEnd))
                         {
-                            _state.DateEnd = dateEnd;
+                            _state.EndDate = dateEnd;
                             _state.TextMessage = "Would you like to add parking place?";
                             _state.Propositions = new() {"yes", "no"};
                             _state.NextStep = nameof(ParkingChoice);
@@ -99,12 +99,12 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 case BookingTypeEnum.Recurring:
                 {
                     //order of these if statements matter!!!
-                    if (_state.DateStart == default)
+                    if (_state.StartDate == default)
                     {
                         if (DateTime.TryParseExact(text, formatDates, CultureInfo.InvariantCulture, 
                                 DateTimeStyles.None, out DateTime dateStart))
                         {
-                            _state.DateStart = dateStart;
+                            _state.StartDate = dateStart;
                                 
                             //send buttons to user to specify type of frequency
                             List<string> frequencyTypes = new List<string>{"Daily" , "Weekly", "Monthly", "Yearly"};
@@ -180,12 +180,12 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             _state.Propositions = new List<string> {"yes", "no"};
                         }
                     }
-                    else if (_state.DateEnd == default && (bool) _state.IsEndDateGiven)
+                    else if (_state.EndDate == default && (bool) _state.IsEndDateGiven)
                     {
                         if (DateTime.TryParseExact(text, formatDates,
                                 CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateEnd))
                         {
-                            _state.DateEnd = dateEnd;
+                            _state.EndDate = dateEnd;
                             _state.TextMessage = "Would you like to specify count?";
                             _state.Propositions = new List<string> {"yes", "no"};
                         }

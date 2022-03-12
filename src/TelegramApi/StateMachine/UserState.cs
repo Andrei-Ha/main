@@ -31,9 +31,9 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public BookingTypeEnum BookingType { get; set; } = BookingTypeEnum.None;
 
-        public DateTime DateStart { get; set; } = default;
+        public DateTime StartDate { get; set; } = default;
 
-        public DateTime DateEnd { get; set; } = default;
+        public DateTime EndDate { get; set; } = default;
         
         public bool? IsEndDateGiven { get; set; }
 
@@ -53,6 +53,7 @@ namespace Exadel.OfficeBooking.TelegramApi
         public bool IsKitchenPresent { get; set; } = false;
 
         public bool IsMeetingRoomPresent { get; set; } = false;
+        
         public bool IsNextToWindow { get; set; } = false;
 
         public bool IsVIP { get; set; } = false;
@@ -97,18 +98,18 @@ namespace Exadel.OfficeBooking.TelegramApi
             sb.Append($"Booking type: <b>{BookingType}</b>\n");
             if (BookingType == BookingTypeEnum.OneDay)
             {
-                sb.Append($"Booking date: <b>{DateStart:dd.MM.yyyy}</b>\n");
+                sb.Append($"Booking date: <b>{StartDate:dd.MM.yyyy}</b>\n");
             }
             if (BookingType == BookingTypeEnum.Continuous)
             {
-                sb.Append($"Booking first day: <b>{DateStart:dd.MM.yyyy}</b> and last day: <b>{DateEnd:dd.MM.yyyy}</b>\n");
+                sb.Append($"Booking first day: <b>{StartDate:dd.MM.yyyy}</b> and last day: <b>{EndDate:dd.MM.yyyy}</b>\n");
             }
 
             if (BookingType == BookingTypeEnum.Recurring)
             {
-                string appendStr = $"Booking first day: {DateStart.ToString("dd.MM.yyyy")}";
+                string appendStr = $"Booking first day: {StartDate.ToString("dd.MM.yyyy")}";
                 if (IsEndDateGiven != null && (bool) IsEndDateGiven)
-                    appendStr += $"\nBooking last day: {DateEnd.ToString("dd.MM.yyyy")}";
+                    appendStr += $"\nBooking last day: {EndDate.ToString("dd.MM.yyyy")}";
                 appendStr += $"\nFrequency: {Frequency.ToString()}";
                 if (Frequency == RecurringFrequency.Weekly)
                     appendStr += $"\nWeekdays: {RecurringWeekDays}";
