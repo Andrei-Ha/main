@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -20,10 +21,20 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public static async Task EditInlineKbList(this TelegramBotClient bot, Update update, Dictionary<string, string> dictionary)
         {
-            await bot.EditMessageReplyMarkupAsync(
-                                                chatId: update.CallbackQuery.Message.Chat.Id,
-                                                messageId: update.CallbackQuery.Message.MessageId,
-                                                replyMarkup:CreateInlineKeyboardMarkup(dictionary));
+            try
+            {
+                await bot.EditMessageReplyMarkupAsync(
+                                                    chatId: update.CallbackQuery.Message.Chat.Id,
+                                                    messageId: update.CallbackQuery.Message.MessageId,
+                                                    replyMarkup: CreateInlineKeyboardMarkup(dictionary));
+            }
+            catch (Telegram.Bot.Exceptions.ApiRequestException ex)
+            {
+                await bot.AnswerCallbackQueryAsync(
+                            callbackQueryId: update.CallbackQuery.Id,
+                            text: $"You click too fast. Slow down please!");
+                Console.WriteLine("You click too fast. Slow down please!" + ex.Message);
+            }
         }
 
         public static async Task<int> DeleteInlineKeyboard(this TelegramBotClient bot, Update update)

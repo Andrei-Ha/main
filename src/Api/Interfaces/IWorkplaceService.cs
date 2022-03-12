@@ -8,7 +8,7 @@ namespace Exadel.OfficeBooking.Api.Interfaces
     {
         Task<WorkplaceGetDto[]> GetWorkplaces();
 
-        Task<WorkplaceGetDto[]> GetWorkplaces(WorkplaceFilterDto filterModel);
+        Task<WorkplaceGetDto[]> GetWorkplaces(WorkplaceFilterDto filterModel, Guid? officeId);
 
         Task<WorkplaceGetDto?> GetWorkplaceById(Guid id);
 

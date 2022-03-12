@@ -47,8 +47,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         UserId = _state.User.UserId,
                         OfficeId = _state.OfficeId,
-                        StartDate = _state.DateStart,
-                        EndDate = _state.DateEnd,
+                        StartDate = _state.StartDate,
+                        EndDate = _state.EndDate,
                         Count = _state.Count,
                         Interval = _state.Interval ?? 1,
                         RecurringWeekDays = _state.RecurringWeekDays ?? 0,
@@ -68,7 +68,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         UserId = _state.User.UserId,
                         OfficeId = _state.OfficeId,
-                        Date = _state.DateStart
+                        Date = _state.StartDate
                     };
 
                     var httpResponse = await _httpClient

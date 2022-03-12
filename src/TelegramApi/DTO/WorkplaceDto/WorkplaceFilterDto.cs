@@ -1,21 +1,22 @@
-﻿using System;
+﻿using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
+using System;
 using System.Text;
 
 namespace Exadel.OfficeBooking.TelegramApi.DTO.WorkplaceDto
 {
     public class WorkplaceFilterDto
     {
+        // out of UserState
         public string? Name { get; set; }
 
         public Guid? MapId { get; set; }
 
+        // out of UserState
         public WorkplaceTypesDto? Type { get; set; }
 
         public bool? IsBooked { get; set; }
 
         public bool? IsNextToWindow { get; set; }
-
-        public bool? IsVIP { get; set; }
 
         public bool? HasPC { get; set; }
 
@@ -27,48 +28,39 @@ namespace Exadel.OfficeBooking.TelegramApi.DTO.WorkplaceDto
 
         public bool? HasHeadset { get; set; }
 
+        //
+
+        // if true, then only one instance is returned!
+        public bool? IsOnlyFirst { get; set; }
+
+        public BookingTypeEnum BookingType { get; set; } = BookingTypeEnum.None;
+
+        //
+
+        public DateTime? StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
+
+        public int? Count { get; set; }
+
+        public int? Interval { get; set; } = 1;
+
+        public WeekDays? RecurringWeekDays { get; set; }
+
+        public RecurringFrequency? Frequency { get; set; }
+
         public string GetQueryString()
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            if (IsNextToWindow == true)
-            {
-                stringBuilder.Append($"{nameof(IsNextToWindow)}=true&");
-            }
-
-            if (IsVIP == true)
-            {
-                stringBuilder.Append($"{nameof(IsVIP)}=true&");
-            }
-
-            if (HasPC == true)
-            {
-                stringBuilder.Append($"{nameof(HasPC)}=true&");
-            }
-
-            if (HasMonitor == true)
-            {
-                stringBuilder.Append($"{nameof(HasMonitor)}=true&");
-            }
-
-            if (HasKeyboard == true)
-            {
-                stringBuilder.Append($"{nameof(HasKeyboard)}=true&");
-            }
-
-            if (HasMouse == true)
-            {
-                stringBuilder.Append($"{nameof(HasMouse)}=true&");
-            }
-
-            if (HasHeadset == true)
-            {
-                stringBuilder.Append($"{nameof(HasHeadset)}=true&");
-            }
-
-            if (MapId != null)
-            {
-                stringBuilder.Append($"{nameof(MapId)}={MapId}&");
-            }
+            StringBuilder stringBuilder = new();
+            stringBuilder.Append(IsNextToWindow == true ? $"{nameof(IsNextToWindow)}=true&" : string.Empty);
+            stringBuilder.Append(HasPC == true ? $"{nameof(HasPC)}=true&" : string.Empty);
+            stringBuilder.Append(HasMonitor == true ? $"{nameof(HasMonitor)}=true&" : string.Empty);
+            stringBuilder.Append(HasKeyboard == true ? $"{nameof(HasKeyboard)}=true&" : string.Empty);
+            stringBuilder.Append(HasMouse == true ? $"{nameof(HasMouse)}=true&" : string.Empty);
+            stringBuilder.Append(HasHeadset == true ? $"{nameof(HasHeadset)}=true&" : string.Empty);
+            stringBuilder.Append(MapId != null ? $"{nameof(MapId)}={MapId}&" : string.Empty);
+            
+            // needs to be implemented!!!
 
             return stringBuilder.ToString();
         }
