@@ -1,10 +1,12 @@
-﻿using Exadel.OfficeBooking.Api.DTO.WorkplaceDto;
+﻿using Exadel.OfficeBooking.Api.DTO.BookingDto;
+using Exadel.OfficeBooking.Api.DTO.WorkplaceDto;
 using Exadel.OfficeBooking.Api.Interfaces;
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.EF;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,10 +15,12 @@ namespace Exadel.OfficeBooking.Api.Services
     public class WorkplaceService : IWorkplaceService
     {
         private readonly AppDbContext _context;
+        private readonly IBookingService _bookingService;
 
-        public WorkplaceService(AppDbContext context)
+        public WorkplaceService(AppDbContext context, IBookingService bookingService)
         {
             _context = context;
+            _bookingService = bookingService;
         }
 
         public async Task<WorkplaceGetDto[]> GetWorkplaces()
@@ -27,25 +31,37 @@ namespace Exadel.OfficeBooking.Api.Services
 
         public async Task<WorkplaceGetDto[]> GetWorkplaces(WorkplaceFilterDto filterModel, Guid? officeId)
         {
-            var workplaces = _context.Workplaces.Include(w => w.Map).AsNoTracking();
+            var workplaces = _context.Workplaces
+                .Include(w => w.Map)
+                .Include(w => w.Bookings)
+                .AsNoTracking();
 
             if (officeId != null)
-            {
                 workplaces = workplaces.Where(x => x.Map.OfficeId == officeId);
+
+            if (filterModel.BookingType == BookingTypeEnum.OneDay)
+            {
+                workplaces = workplaces.Where(w => _bookingService
+                .IsWorkplaceAvailableForOneDayBooking(w, (DateTime)filterModel.StartDate));
+            }
+
+            if (filterModel.BookingType == BookingTypeEnum.Continous ||
+                filterModel.BookingType == BookingTypeEnum.Recuring)
+            {
+                List<DateTime> recurringDates = _bookingService.GetRecurringBookingDates(filterModel.Adapt<RecurrencePattern>());
+                
+                workplaces = workplaces.Where(w => _bookingService
+                .IsWorkplaceAvailableForRecurringBooking(w, recurringDates));
             }
 
             if (!string.IsNullOrEmpty(filterModel.Name))
                 workplaces = workplaces.Where(w => w.Name.Contains(filterModel.Name));
 
             if (filterModel.MapId != null)
-            {
                 workplaces = workplaces.Where(w => w.MapId == filterModel.MapId);
-            }
 
             if (filterModel.Type != null)
-            {
                 workplaces = workplaces.Where(w => w.Type.ToString() == filterModel.Type.ToString());
-            }
 
             if (filterModel.IsBooked != null)
                 workplaces = workplaces.Where(w => w.IsBooked == filterModel.IsBooked);
