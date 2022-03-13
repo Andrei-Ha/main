@@ -88,6 +88,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateEnd))
                         {
                             _state.EndDate = dateEnd;
+                            _state.IsRecurring = true;
                             _state.TextMessage = "Would you like to add parking place?";
                             _state.Propositions = new() {"yes", "no"};
                             _state.NextStep = nameof(ParkingChoice);
