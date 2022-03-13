@@ -9,6 +9,8 @@ namespace Exadel.OfficeBooking.TelegramApi.DTO.WorkplaceDto
         // out of UserState
         public string? Name { get; set; }
 
+        public Guid? OfficeId { get; set; }
+
         public Guid? MapId { get; set; }
 
         // out of UserState
@@ -31,7 +33,7 @@ namespace Exadel.OfficeBooking.TelegramApi.DTO.WorkplaceDto
         //
 
         // if true, then only one instance is returned!
-        public bool? IsOnlyFirst { get; set; }
+        public bool? IsOnlyFirstFree { get; set; }
 
         public BookingTypeEnum BookingType { get; set; } = BookingTypeEnum.None;
 

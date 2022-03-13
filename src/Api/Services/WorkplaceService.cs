@@ -29,15 +29,62 @@ namespace Exadel.OfficeBooking.Api.Services
             return workplaces.Adapt<WorkplaceGetDto[]>();
         }
 
-        public async Task<WorkplaceGetDto[]> GetWorkplaces(WorkplaceFilterDto filterModel, Guid? officeId)
+        public async Task<WorkplaceGetDto[]> GetWorkplaces(WorkplaceFilterDto filterModel)
         {
+            // return array with one first free workplace
+            if (filterModel.IsOnlyFirstFree == true)
+            {
+                if (filterModel.BookingType == BookingTypeEnum.OneDay)
+                {
+                    var officeMaps = await _context.Maps.AsNoTracking().Where(m => m.OfficeId == filterModel.OfficeId).ToArrayAsync();
+
+                    foreach (var officeMap in officeMaps)
+                    {
+                        var workplacess = await _context.Workplaces.Include(w => w.Bookings)
+                            .Where(w => w.MapId == officeMap.Id).ToListAsync();
+
+                        foreach (var workplace in workplacess)
+                        {
+                            //check if workplace is available at the StartDate
+                            if (!_bookingService.IsWorkplaceAvailableForOneDayBooking(workplace, (DateTime)filterModel.StartDate))
+                                continue;
+
+                            return workplace.Adapt<WorkplaceGetDto[]>();
+                        }
+                    }
+                }
+
+                if (filterModel.BookingType == BookingTypeEnum.Continous ||
+                    filterModel.BookingType == BookingTypeEnum.Recuring)
+                {
+                    List<DateTime> recurringDates = _bookingService.GetRecurringBookingDates(filterModel.Adapt<RecurrencePattern>());
+
+                    var officeMaps = await _context.Maps.AsNoTracking().Where(m => m.OfficeId == filterModel.OfficeId).ToArrayAsync();
+
+                    foreach (var officeMap in officeMaps)
+                    {
+                        var workplacess = await _context.Workplaces.Include(w => w.Bookings)
+                            .Where(w => w.MapId == officeMap.Id).ToListAsync();
+
+                        foreach (var workplace in workplacess)
+                        {
+                            //check if workplace is available at given dates
+                            if (!_bookingService.IsWorkplaceAvailableForRecurringBooking(workplace, recurringDates))
+                                continue;
+
+                            return workplace.Adapt<WorkplaceGetDto[]>();
+                        }
+                    }
+                }
+            }
+
             var workplaces = _context.Workplaces
                 .Include(w => w.Map)
                 .Include(w => w.Bookings)
                 .AsNoTracking();
 
-            if (officeId != null)
-                workplaces = workplaces.Where(x => x.Map.OfficeId == officeId);
+            if (filterModel.OfficeId != null)
+                workplaces = workplaces.Where(x => x.Map.OfficeId == filterModel.OfficeId);
 
             if (filterModel.BookingType == BookingTypeEnum.OneDay)
             {
