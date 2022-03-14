@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Exadel.OfficeBooking.Api.DTO;
 using Exadel.OfficeBooking.Api.DTO.BookingDto;
 using Exadel.OfficeBooking.Api.DTO.WorkplaceDto;
+using Exadel.OfficeBooking.Domain.OfficePlan;
 
 namespace Exadel.OfficeBooking.Api.Interfaces
 {
@@ -22,5 +24,11 @@ namespace Exadel.OfficeBooking.Api.Interfaces
         Task<ServiceResponse<GetBookingDto>> UpdateRecurringBooking(UpdateRecurringBookingDto bookingDto);
 
         Task<ServiceResponse<GetBookingDto[]>> DeleteBooking(Guid id);
+
+        bool IsWorkplaceAvailableForOneDayBooking(Workplace workplace, DateTime bookingDate);
+
+        bool IsWorkplaceAvailableForRecurringBooking(Workplace workplace, List<DateTime> recurringDates);
+
+        List<DateTime> GetRecurringBookingDates(RecurrencePattern booking);
     }
 }
