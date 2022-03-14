@@ -43,6 +43,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 {
                     _state.TextMessage = $"Ok. What do you want to do today?";
                     _state.Propositions = new() { "Change or Cancel a booking", "Book a workplace", "Nothing" };
+                    _state.Propositions.Add("Calendar");
                     _state.NextStep = nameof(ActionChoice);
                 }
                 // If the choice is "For other employee"

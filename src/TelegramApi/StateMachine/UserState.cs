@@ -76,6 +76,8 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public int CallbackMessageId { get; set; } = 0;
 
+        public DateTime CalendarDate { get; set; } = default;
+
         public Result GetResult()
         {
             return new Result() { TextMessage = TextMessage, Propositions = Propositions, IsSendMessage = CallbackMessageId == 0 };

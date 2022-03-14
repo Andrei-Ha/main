@@ -1,15 +1,54 @@
-﻿using System;
+﻿using Exadel.OfficeBooking.TelegramApi.Calendar;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Exadel.OfficeBooking.TelegramApi
 {
     public static class TelegramBotClientExtensions
     {
+        public static async Task<int> SendCalendar(this TelegramBotClient bot, Update update, DateTime date)
+        {
+            var calendarMarkup = Markup.Calendar(date, CultureInfo.GetCultureInfo("en-US").DateTimeFormat);
+            Message sendMess = await bot.SendTextMessageAsync(
+                                                        chatId: update.Message.Chat.Id,
+                                                        text: "Pick Date:",
+                                                        replyMarkup: calendarMarkup);
+            return sendMess.MessageId;
+        }
+
+        public static async Task EditCalendar(this TelegramBotClient bot, Update update, DateTime date)
+        {
+            try
+            {
+                var calendarMarkup = Markup.Calendar(date, CultureInfo.GetCultureInfo("en-US").DateTimeFormat);
+                await bot.EditMessageReplyMarkupAsync(
+                                                    chatId: update.CallbackQuery.Message.Chat.Id,
+                                                    messageId: update.CallbackQuery.Message.MessageId,
+                                                    replyMarkup: calendarMarkup);
+            }
+            catch (Telegram.Bot.Exceptions.ApiRequestException ex)
+            {
+                await bot.AnswerCallbackQueryAsync(
+                            callbackQueryId: update.CallbackQuery.Id,
+                            text: $"You click too fast. Slow down please!");
+                Console.WriteLine("You click too fast. Slow down please!" + ex.Message);
+            }
+        }
+
+        public static async Task EchoCallbackQuery(this TelegramBotClient bot, Update update)
+        {
+            await bot.AnswerCallbackQueryAsync(
+                            callbackQueryId: update.CallbackQuery.Id,
+                            text: update.CallbackQuery.Data);
+        }
+
         public static async Task<int> SendInlineKbList(this TelegramBotClient bot, Update update, string text, Dictionary<string, string> dictionary)
         {
             Message sendMess = await bot.SendTextMessageAsync(
