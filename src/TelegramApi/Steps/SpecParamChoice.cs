@@ -50,9 +50,9 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         StartDate = _state.StartDate,
                         EndDate = _state.EndDate,
                         Count = _state.Count,
-                        Interval = _state.Interval ?? 1,
-                        RecurringWeekDays = _state.RecurringWeekDays ?? 0,
-                        Frequency = _state.Frequency ?? 0
+                        Interval = 1,
+                        RecurringWeekDays = _state.RecurringWeekDays,
+                        Frequency = _state.Frequency
                     };
 
                     var httpResponseRecuring = await _httpClient

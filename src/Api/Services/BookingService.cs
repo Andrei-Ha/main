@@ -320,7 +320,7 @@ public class BookingService : IBookingService
         return true;
     }
 
-    private List<DateTime> GetRecurringBookingDates(RecurrencePattern booking)
+    public List<DateTime> GetRecurringBookingDates(RecurrencePattern booking)
     {
         List<DateTime> recurringDates = new();
 

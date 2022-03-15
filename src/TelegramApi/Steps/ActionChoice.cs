@@ -4,12 +4,13 @@ using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using Mapster;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
 
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
@@ -64,8 +65,17 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 // Calendar
                 else if (text == _state.Propositions[3])
                 {
+                    // test start
+                    _state.BookingType = BookingTypeEnum.Recurring;
+                    _state.StartDate = default; //DateTime.Today.AddDays(2);
+                    _state.EndDate = default; //DateTime.Today.AddMonths(2);
+                    _state.Count = 0;
+                    _state.Interval = 1;
+                    //_state.RecurringWeekDays = WeekDays.Sunday;
+                    //_state.Frequency = RecurringFrequency.Daily;
+                    // test end
                     _state.CalendarDate = DateTime.Today;
-                    _state.CallbackMessageId = await _bot.SendCalendar(update, _state.CalendarDate);
+                    _state.CallbackMessageId = await _bot.SendCalendar(update, _state.CalendarDate, _state.Adapt<RecurrencePattern>(), _state.BookingType);
                 }
             }
             // if Update.Type == Update.CallbackQuery
@@ -75,22 +85,88 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 {
                     await _bot.EchoCallbackQuery(update);
                     string[] key = update.CallbackQuery.Data.Split('/');
-                    Console.WriteLine(key[0]);
-                    Console.WriteLine(Constants.Close);
-                    if (key[0] == Constants.Close.Trim('/'))
-                    {
-                        Console.WriteLine("in if");
-                        _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
-                    }
-                    else if(key[0] == Constants.ChangeTo.Trim('/'))
-                    {
-                        if (DateTime.TryParse(key[1], out DateTime newDate))
-                        {
-                            _state.CalendarDate = newDate;
-                        }
+                    bool isDeleted = false;
 
-                        await _bot.EditCalendar(update, _state.CalendarDate);
+                    switch (key[0] + "/")
+                    {
+                        case Constants.PickDate:
+                            {
+                                _ = DateTime.TryParse(key[1], out DateTime selectedDate);
+                                if (_state.StartDate == default)
+                                {
+                                    _state.StartDate = selectedDate;
+                                }
+                                else
+                                {
+                                    if (_state.EndDate == default)
+                                    {
+                                        if (_state.BookingType == BookingTypeEnum.Recurring && _state.Count > 0)
+                                        {
+                                            _state.StartDate = selectedDate;
+                                        }
+                                        else
+                                        {
+                                            _state.EndDate = selectedDate < _state.StartDate ? _state.StartDate : selectedDate;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        _state.StartDate = selectedDate;
+                                        _state.EndDate = default;
+                                    }
+                                }
+                                break;
+                            }
+                        case Constants.ChangeTo:
+                            {
+                                if (DateTime.TryParse(key[1], out DateTime newDate))
+                                {
+                                    _state.CalendarDate = newDate;
+                                }
+                                break;
+                            }
+                        case Constants.DayOfWeek:
+                            {
+                                if (Enum.TryParse(key[1], out WeekDays weekDays))
+                                {
+                                    _state.RecurringWeekDays = weekDays;
+                                }
+                                break;
+                            }
+                        case Constants.Frequency:
+                            {
+                                if (Enum.TryParse(key[1], out RecurringFrequency frequency))
+                                {
+                                    _state.Frequency = frequency;
+                                }
+                                break;
+                            }
+                        case Constants.Interval:
+                            {
+                                if (int.TryParse(key[1], out int incr))
+                                {
+                                    _state.Interval += incr;
+                                }
+                                break;
+                            }
+                        case Constants.Count:
+                            {
+                                if (int.TryParse(key[1], out int incr))
+                                {
+                                    _state.Count += incr;
+                                    _state.EndDate = _state.Count > 0 ? default : _state.EndDate;
+                                }
+                                break;
+                            }
+                        case Constants.Close:
+                            {
+                                _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
+                                isDeleted = true;
+                                break;
+                            }
                     }
+                    if(!isDeleted)
+                        await _bot.EditCalendar(update, _state.CalendarDate, _state.Adapt<RecurrencePattern>(), _state.BookingType);
                 }
             }
 

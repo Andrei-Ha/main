@@ -8,7 +8,15 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
 
         public const string PickDate = "pck/";
 
+        public const string DayOfWeek = "day/";
+
         public const string Close = "close/";
+
+        public const string Count = "count/";
+
+        public const string Interval = "interval/";
+
+        public const string Frequency = "frequency/";
 
         public const string DateFormat = @"dd.MM.yyyy";
     }

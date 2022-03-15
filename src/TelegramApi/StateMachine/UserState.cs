@@ -39,12 +39,12 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public bool IsRecurring { get; set; }
 
-        public int? Count { get; set; }
+        public int Count { get; set; } = 0;
         public bool? IsCountGiven { get; set; }
-        public int? Interval { get; set; }
+        public int Interval { get; set; } = 1;
         public bool? IsIntervalGiven { get; set; }
-        public WeekDays? RecurringWeekDays { get; set; }
-        public RecurringFrequency? Frequency { get; set; }
+        public WeekDays RecurringWeekDays { get; set; } = 0;
+        public RecurringFrequency Frequency { get; set; } = 0;
         public bool? IsRecurringFrequencyWeekly { get; set; }
         public bool IsParkingPlace { get; set; } = false;
         

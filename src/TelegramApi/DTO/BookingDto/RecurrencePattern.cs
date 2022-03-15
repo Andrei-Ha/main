@@ -1,7 +1,7 @@
 ﻿using System;
 using Exadel.OfficeBooking.Domain.Bookings;
 
-namespace Exadel.OfficeBooking.Api.DTO.BookingDto;
+namespace Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
 
 public class RecurrencePattern
 {

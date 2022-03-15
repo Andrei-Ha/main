@@ -32,6 +32,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
         public async Task<IActionResult> Update([FromBody] Update update)
         {
             long chatId;
+            bool isMessage = false;
             switch (update.Type)
             {
                 case UpdateType.CallbackQuery:
@@ -46,6 +47,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
                             return Ok();
                         }
 
+                        isMessage = true;
                         chatId = update.Message.Chat.Id;
                         break;
                     }
@@ -58,7 +60,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
             Console.WriteLine(chatId);
 
             // ! This method tell the user that something is happening on the bot's side !
-            await _bot.SendChatActionAsync(chatId, ChatAction.Typing);
+            if (isMessage) 
+                await _bot.SendChatActionAsync(chatId, ChatAction.Typing);
             await _fsm.GetState(chatId);
             var result = await _fsm.Process(update);
 
