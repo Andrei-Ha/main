@@ -140,6 +140,8 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
+        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nYou succesfully Booked.\nOffice: {newBooking.Workplace.Map.Office.Address}\n Workplace: { newBooking.Workplace.Name}, Date: {newBooking.StartDate}");
+
         response.StatusCode = 201;
         var responseBooking = bookingDto.Adapt<GetOneDayBookingDto>();
         responseBooking.Id = newBooking.Id;
@@ -217,6 +219,7 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
+        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nYou succesfully Booked.\nOffice: {newBooking.Workplace.Map.Office.Address}\n Workplace: { newBooking.Workplace.Name}, Date: {newBooking.StartDate}");
         response.Data = newBooking.Adapt<GetRecurringBookingDto>();
         response.StatusCode = 209;
         return response;
