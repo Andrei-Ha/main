@@ -10,7 +10,7 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
         public int PlaceNumber { get; set; }
         public Guid OfficeId { get; set; }
 
-        public virtual  Office Office { get; set; } = new();
+        public virtual Office? Office { get; set; }
         
         public Booking? Booking { get; set; }
     }

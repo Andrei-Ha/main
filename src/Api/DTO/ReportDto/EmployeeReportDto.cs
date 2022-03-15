@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Exadel.OfficeBooking.Domain.Reports
+namespace Exadel.OfficeBooking.Api.DTO.ReportDto
 {
-    public class EmployeeReport
+    public class EmployeeReportDto
     {
         public string UserName { get; set; } = string.Empty;
 
@@ -11,6 +11,6 @@ namespace Exadel.OfficeBooking.Domain.Reports
 
         public DateTime ToDate { get; set; }
 
-        public List<EmployeeDailyReport> EmployeeDailyReportList { get; set; } = new();
+        public List<EmployeeDailyReportDto> EmployeeDailyReportList { get; set; } = new();
     }
 }
