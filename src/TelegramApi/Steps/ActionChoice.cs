@@ -75,7 +75,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     //_state.Frequency = RecurringFrequency.Daily;
                     // test end
                     _state.CalendarDate = DateTime.Today;
-                    _state.CallbackMessageId = await _bot.SendCalendar(update, _state.CalendarDate, _state.Adapt<RecurrencePattern>(), _state.BookingType);
+                    _state.CallbackMessageId = await _bot.SendCalendar(update, _state.CalendarDate, _state.AddTextToCalendar(), _state.Adapt<RecurrencePattern>());
                 }
             }
             // if Update.Type == Update.CallbackQuery
@@ -83,7 +83,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             {
                 if (_state.CallbackMessageId == update.CallbackQuery.Message.MessageId)
                 {
-                    await _bot.EchoCallbackQuery(update);
+                    //await _bot.EchoCallbackQuery(update);
                     string[] key = update.CallbackQuery.Data.Split('/');
                     bool isDeleted = false;
 
@@ -158,7 +158,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 }
                                 break;
                             }
-                        case Constants.Close:
+                        case Constants.Ok:
                             {
                                 _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
                                 isDeleted = true;
@@ -166,7 +166,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             }
                     }
                     if(!isDeleted)
-                        await _bot.EditCalendar(update, _state.CalendarDate, _state.Adapt<RecurrencePattern>(), _state.BookingType);
+                        await _bot.EditCalendar(update, _state.CalendarDate, _state.AddTextToCalendar(), _state.Adapt<RecurrencePattern>());
                 }
             }
 

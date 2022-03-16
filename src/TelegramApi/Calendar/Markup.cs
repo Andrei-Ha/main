@@ -8,21 +8,21 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
 {
     public static class Markup
     {
-        public static InlineKeyboardMarkup Calendar(in DateTime date, RecurrencePattern recurrPatern, BookingTypeEnum bookingType , DateTimeFormatInfo dtfi)
+        public static InlineKeyboardMarkup Calendar(in DateTime date, RecurrencePattern rp, DateTimeFormatInfo dtfi)
         {
             List<DateTime> hDites = new();
-            Console.WriteLine("count = " + recurrPatern.Count);
-            switch (bookingType)
+            Console.WriteLine("count = " + rp.Count);
+            switch (rp.BookingType)
             {
                 case BookingTypeEnum.OneDay:
                     {
-                        hDites.Add(recurrPatern.StartDate);
+                        hDites.Add(rp.StartDate);
                         break;
                     }
                 case BookingTypeEnum.Continuous:
                     {
-                        var startDate = recurrPatern.StartDate;
-                        var endDate = recurrPatern.EndDate == default ? startDate : recurrPatern.EndDate;
+                        var startDate = rp.StartDate;
+                        var endDate = rp.EndDate == default ? startDate : rp.EndDate;
                         while ( startDate <= endDate)
                         {
                             hDites.Add(startDate);
@@ -32,7 +32,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
                     }
                 case BookingTypeEnum.Recurring:
                     {
-                        hDites = GetRecurringBookingDates(recurrPatern);
+                        hDites = GetRecurringBookingDates(rp);
                         break;
                     }
                 default:
@@ -42,17 +42,17 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
             }
 
             var keyboardRows = new List<IEnumerable<InlineKeyboardButton>>();
-            if (bookingType == BookingTypeEnum.Recurring)
+            if (rp.BookingType == BookingTypeEnum.Recurring)
             {
-                keyboardRows.Add(Row.Freq(recurrPatern.Frequency));
-                keyboardRows.Add(Row.RecurrControls(recurrPatern.Count, recurrPatern.Interval));
+                keyboardRows.Add(Row.Freq(rp.Frequency));
+                keyboardRows.Add(Row.RecurrControls(rp.Count, rp.Interval));
             }
 
             keyboardRows.Add(Row.Date(date, dtfi));
-            keyboardRows.Add(Row.DayOfWeek((int)recurrPatern.RecurringWeekDays, recurrPatern.Frequency, dtfi));
+            keyboardRows.Add(Row.DayOfWeek((int)rp.RecurringWeekDays, rp.Frequency, dtfi));
             keyboardRows.AddRange(Row.Month(date, hDites, dtfi));
-            keyboardRows.Add(Row.Controls(date));
-            //keyboardRows.Add(Row.Close());
+            keyboardRows.Add(Row.Controls(date, rp));
+            keyboardRows.Add(Row.Back());
 
             return new InlineKeyboardMarkup(keyboardRows);
         }

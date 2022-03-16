@@ -11,7 +11,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
         public static IEnumerable<InlineKeyboardButton> Date(in DateTime date, DateTimeFormatInfo dtfi) =>
             new InlineKeyboardButton[]
             {
-            InlineKeyboardButton.WithCallbackData($"» {date.ToString("Y", dtfi)} «"," ")
+            InlineKeyboardButton.WithCallbackData($"{date.ToString("Y", dtfi)}"," ") // » «
             };
 
         public static IEnumerable<InlineKeyboardButton> DayOfWeek(int weekDays, RecurringFrequency frequency, DateTimeFormatInfo dtfi)
@@ -28,12 +28,13 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
                     string dayVal = dtfi.AbbreviatedDayNames[(firstDayOfWeek + i) % 7];
                     if ((weekDays & (dayOfWeek)) != 0)
                     {
-                        dayVal = dayVal[..1] + "✔";
+                        dayVal = dayVal[..1] + "☑"; //✔☑
                         dayKey = Constants.DayOfWeek + (weekDays & (~dayOfWeek));
                         //Console.WriteLine($"i = {i+1}, {~dayOfWeek}");
                     }
                     else
                     {
+                        dayVal = dayVal[..1] + "◻️"; //🔲
                         dayKey = Constants.DayOfWeek + (weekDays | dayOfWeek);
                     }
                     dayNames[i] = InlineKeyboardButton.WithCallbackData(dayVal, dayKey);
@@ -97,7 +98,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
                     {
                         if (hDates != null && hDates.Contains(date))
                         {
-                            dateVal += "*";
+                            dateVal = dateVal.Trim('[', ']');
+                            dateVal = "(" +dateVal + ")";
                         }
 
                         week[dayOfWeek] = InlineKeyboardButton.WithCallbackData(dateVal, dateKey);
@@ -113,44 +115,49 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
             return listOfWeek;
         }
 
-        public static IEnumerable<InlineKeyboardButton> Controls(in DateTime date) =>
+        public static IEnumerable<InlineKeyboardButton> Controls(in DateTime date, RecurrencePattern rp) =>
             new InlineKeyboardButton[]
             {
                 InlineKeyboardButton.WithCallbackData(
                     date.AddMonths(-1) < DateTime.Today ? " " : "<",
                     date.AddMonths(-1) < DateTime.Today ? " " : $"{Constants.ChangeTo}{date.AddMonths(-1).ToString(Constants.DateFormat)}"
                 ),
-                InlineKeyboardButton.WithCallbackData("[ Ok ]", Constants.Close + "true"),
+                rp.IsAllDataComplete() ? InlineKeyboardButton.WithCallbackData("[ Ok ]", Constants.Ok + "true") : " ",
                 InlineKeyboardButton.WithCallbackData(
                     date.AddMonths(1) > DateTime.Today.AddMonths(3) ? " " : ">",
                     date.AddMonths(1) > DateTime.Today.AddMonths(3) ? " " : $"{Constants.ChangeTo}{date.AddMonths(1).ToString(Constants.DateFormat)}"
                 ),
             };
+        public static IEnumerable<InlineKeyboardButton> Back() =>
+            new InlineKeyboardButton[]
+            {
+                InlineKeyboardButton.WithCallbackData("<< Back to \"Select booking type\"", Constants.Back + "true")
+            };
 
         public static IEnumerable<InlineKeyboardButton> Freq(RecurringFrequency recurringFrequency)
         {
-            string dailyVal = RecurringFrequency.Daily.ToString();
+            string dailyVal = "◯ " + RecurringFrequency.Daily.ToString();
             string dailyKey = Constants.Frequency + (int)RecurringFrequency.Daily;
-            string weeklyVal = RecurringFrequency.Weekly.ToString();
+            string weeklyVal = "◯ " + RecurringFrequency.Weekly.ToString();
             string weeklyKey = Constants.Frequency + (int)RecurringFrequency.Weekly;
-            string monthlyVal = RecurringFrequency.Monthly.ToString();
+            string monthlyVal = "◯ " + RecurringFrequency.Monthly.ToString();
             string monthlyKey = Constants.Frequency + (int)RecurringFrequency.Monthly;
 
             if (recurringFrequency == RecurringFrequency.Daily)
             {
-                dailyVal += "✔";
+                dailyVal = dailyVal.Replace("◯", "🔘"); //✔ ☑
                 dailyKey = " ";
             }
 
             if (recurringFrequency == RecurringFrequency.Weekly)
             {
-                weeklyVal += "✔";
+                weeklyVal = weeklyVal.Replace("◯", "🔘");
                 weeklyKey = " ";
             }
 
             if (recurringFrequency == RecurringFrequency.Monthly)
             {
-                monthlyVal += "✔";
+                monthlyVal = monthlyVal.Replace("◯", "🔘");
                 monthlyKey = " ";
             }
 
@@ -165,10 +172,10 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
         public static IEnumerable<InlineKeyboardButton> RecurrControls(int count, int interval) =>
             new InlineKeyboardButton[]
             {
-                interval == 1 ? " " : InlineKeyboardButton.WithCallbackData("Interval-", Constants.Interval + "-1"),
-                InlineKeyboardButton.WithCallbackData("Interval+", Constants.Interval + "1"),
-                count == 0 ? " " : InlineKeyboardButton.WithCallbackData("Count-", Constants.Count + "-1"),
-                InlineKeyboardButton.WithCallbackData("Count+", Constants.Count + "1")
+                interval == 1 ? " " : InlineKeyboardButton.WithCallbackData("Repeat ▼", Constants.Interval + "-1"),
+                InlineKeyboardButton.WithCallbackData("Repeat ▲", Constants.Interval + "1"),
+                count == 0 ? " " : InlineKeyboardButton.WithCallbackData("Occur ▼", Constants.Count + "-1"),
+                InlineKeyboardButton.WithCallbackData("Occur ▲", Constants.Count + "1")
             };
     }
 }

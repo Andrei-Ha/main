@@ -10,7 +10,9 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
 
         public const string DayOfWeek = "day/";
 
-        public const string Close = "close/";
+        public const string Ok = "ok/";
+
+        public const string Back = "back/";
 
         public const string Count = "count/";
 

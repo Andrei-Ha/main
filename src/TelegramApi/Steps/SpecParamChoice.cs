@@ -41,7 +41,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             {
                 _state.IsSpecifyWorkplace = false;
 
-                if (_state.IsRecurring)
+                if (_state.BookingType == BookingTypeEnum.Continuous || _state.BookingType == BookingTypeEnum.Recurring)
                 {
                     var recuringBooking = new GetFirstFreeWorkplaceForRecuringBookingDto()
                     {
