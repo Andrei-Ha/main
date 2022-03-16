@@ -51,7 +51,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
             return Created(uri, ParkingPlaceCreated);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("put/{id}")]
         [Authorize(Roles = "Admin, MapEditor")]
         public async Task<ActionResult<ParkingPlaceGetDto>> Update(Guid id, [FromBody] ParkingPlaceSetDto parking)
         {

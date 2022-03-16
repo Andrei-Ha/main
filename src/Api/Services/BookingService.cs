@@ -65,8 +65,8 @@ public class BookingService : IBookingService
 
         foreach (var officeMap in officeMaps)
         {
-            var workplaces = await _context.Workplaces
-                .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToListAsync();
+            var workplaces = await _context.Workplaces.Include(w => w.Bookings)
+                .Where(w => w.MapId == officeMap.Id).ToListAsync();
 
             foreach (var workplace in workplaces)
             {
@@ -93,8 +93,8 @@ public class BookingService : IBookingService
 
         foreach (var officeMap in officeMaps)
         {
-            var workplaces = await _context.Workplaces
-                .Include(w => w.Bookings).Where(w => w.MapId == officeMap.Id).ToListAsync();
+            var workplaces = await _context.Workplaces.Include(w => w.Bookings)
+                .Where(w => w.MapId == officeMap.Id).ToListAsync();
 
             foreach (var workplace in workplaces)
             {
@@ -139,6 +139,8 @@ public class BookingService : IBookingService
 
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
+
+        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nYou succesfully Booked.\nOffice: {newBooking.Workplace.Map.Office.Address}\n Workplace: { newBooking.Workplace.Name}, Date: {newBooking.StartDate}");
 
         response.StatusCode = 201;
         var responseBooking = bookingDto.Adapt<GetOneDayBookingDto>();
@@ -217,6 +219,7 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
+        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nYou succesfully Booked.\nOffice: {newBooking.Workplace.Map.Office.Address}\n Workplace: { newBooking.Workplace.Name}, Date: {newBooking.StartDate}");
         response.Data = newBooking.Adapt<GetRecurringBookingDto>();
         response.StatusCode = 209;
         return response;
@@ -268,41 +271,7 @@ public class BookingService : IBookingService
         return await GetAllBookings();
     }
 
-    private async Task<bool> HasRecurringBookingVacationConflict(User user, List<DateTime> recurringDates)
-    {
-        List<DateTime> vacationDates = await GetVacationDates(user);
-        return recurringDates.Intersect(vacationDates).Any();
-    }
-
-    private bool IsWorkplaceAvailableForRecurringBooking(Workplace workplace, List<DateTime> recurringDates)
-    {
-        foreach (var booking in workplace.Bookings)
-        {
-            if (booking.IsRecurring)
-            {
-                List<DateTime> curRecurringDates = GetRecurringBookingDates(booking.Adapt<RecurrencePattern>());
-                if (recurringDates.Intersect(curRecurringDates).Any()) return false;
-            }
-            else
-            {
-                if (recurringDates.BinarySearch(booking.StartDate) >= 0) return false;
-            }
-        }
-
-        return true;
-    }
-
-    private bool HasOneDayBookingVacationConflict(User user, DateTime bookingDate)
-    {
-        foreach (var vacation in user.Vacations)
-        {
-            for (var curDate = vacation.VacationStart; curDate <= vacation.VacationEnd; curDate = curDate.AddDays(1))
-                if (curDate == bookingDate) return true;
-        }
-        return false;
-    }
-
-    private bool IsWorkplaceAvailableForOneDayBooking(Workplace workplace, DateTime bookingDate)
+    public bool IsWorkplaceAvailableForOneDayBooking(Workplace workplace, DateTime bookingDate)
     {
         foreach (var booking in workplace.Bookings)
         {
@@ -314,6 +283,24 @@ public class BookingService : IBookingService
             else
             {
                 if (bookingDate == booking.StartDate) return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool IsWorkplaceAvailableForRecurringBooking(Workplace workplace, List<DateTime> recurringDates)
+    {
+        foreach (var booking in workplace.Bookings)
+        {
+            if (booking.IsRecurring)
+            {
+                List<DateTime> curRecurringDates = GetRecurringBookingDates(booking.Adapt<RecurrencePattern>());
+                if (recurringDates.Intersect(curRecurringDates).Any()) return false;
+            }
+            else
+            {
+                if (recurringDates.BinarySearch(booking.StartDate) >= 0) return false;
             }
         }
 
@@ -413,16 +400,20 @@ public class BookingService : IBookingService
         return recurringDates;
     }
 
-    private WeekDays GetDayOfWeek(DateTime date)
+    private bool HasOneDayBookingVacationConflict(User user, DateTime bookingDate)
     {
-        if (date.DayOfWeek == DayOfWeek.Sunday) return WeekDays.Sunday;
-        if (date.DayOfWeek == DayOfWeek.Monday) return WeekDays.Monday;
-        if (date.DayOfWeek == DayOfWeek.Tuesday) return WeekDays.Tuesday;
-        if (date.DayOfWeek == DayOfWeek.Wednesday) return WeekDays.Wednesday;
-        if (date.DayOfWeek == DayOfWeek.Thursday) return WeekDays.Thursday;
-        if (date.DayOfWeek == DayOfWeek.Friday) return WeekDays.Friday;
+        foreach (var vacation in user.Vacations)
+        {
+            for (var curDate = vacation.VacationStart; curDate <= vacation.VacationEnd; curDate = curDate.AddDays(1))
+                if (curDate == bookingDate) return true;
+        }
+        return false;
+    }
 
-        return WeekDays.Saturday;
+    private async Task<bool> HasRecurringBookingVacationConflict(User user, List<DateTime> recurringDates)
+    {
+        List<DateTime> vacationDates = await GetVacationDates(user);
+        return recurringDates.Intersect(vacationDates).Any();
     }
 
     private async Task<List<DateTime>> GetVacationDates(User user)
@@ -443,6 +434,18 @@ public class BookingService : IBookingService
             }
         }
         return vacationDates;
+    }
+
+    private WeekDays GetDayOfWeek(DateTime date)
+    {
+        if (date.DayOfWeek == DayOfWeek.Sunday) return WeekDays.Sunday;
+        if (date.DayOfWeek == DayOfWeek.Monday) return WeekDays.Monday;
+        if (date.DayOfWeek == DayOfWeek.Tuesday) return WeekDays.Tuesday;
+        if (date.DayOfWeek == DayOfWeek.Wednesday) return WeekDays.Wednesday;
+        if (date.DayOfWeek == DayOfWeek.Thursday) return WeekDays.Thursday;
+        if (date.DayOfWeek == DayOfWeek.Friday) return WeekDays.Friday;
+
+        return WeekDays.Saturday;
     }
 
     private ServiceResponse<T> ConflictResponse<T>(string message)

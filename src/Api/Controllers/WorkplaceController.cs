@@ -22,18 +22,20 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
         [Route("api/[controller]")]
         [HttpGet]
-        public async Task<WorkplaceGetDto[]> GetFiltered([FromQuery] WorkplaceFilterDto filterModel, Guid? officeId)
+        public async Task<WorkplaceGetDto[]> GetFiltered([FromQuery] WorkplaceFilterDto filterModel)
         {
-            var workplaces = await _workplaceService.GetWorkplaces(filterModel, officeId);
+            var workplaces = await _workplaceService.GetWorkplaces(filterModel);
 
             return workplaces;
         }
 
         [Route("api/Office/{officeId?}/[controller]")]
         [HttpGet]
-        public async Task<WorkplaceGetDto[]> GetFilteredInExactOffice ([FromQuery] WorkplaceFilterDto filterModel, Guid? officeId)
+        public async Task<WorkplaceGetDto[]> GetFilteredInExactOffice ([FromRoute] Guid officeId, [FromQuery] WorkplaceFilterDto filterModel)
         {
-            var workplaces = await _workplaceService.GetWorkplaces(filterModel, officeId);
+            filterModel.OfficeId = officeId;
+
+            var workplaces = await _workplaceService.GetWorkplaces(filterModel);
 
             return workplaces;
         }
@@ -53,7 +55,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         [Route("api/Map/{mapId}/[controller]")]
         [HttpPost]
         [Authorize(Roles ="Admin, MapEditor")]
-        public async Task<ActionResult<WorkplaceGetDto>> Create(WorkplaceSetDto workplace, Guid mapId)
+        public async Task<ActionResult<WorkplaceGetDto>> Create([FromRoute] Guid mapId, WorkplaceSetDto workplace)
         {
             workplace.MapId = mapId;
             Console.WriteLine("MapId = " + workplace.MapId);
