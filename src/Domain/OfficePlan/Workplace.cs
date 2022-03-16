@@ -26,7 +26,7 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
 
         public Guid MapId { get; set; }
 
-        public virtual Map Map { get; set; } = new();
+        public virtual Map? Map { get; set; }
 
         public List<Booking>? Bookings { get; set; }
     }

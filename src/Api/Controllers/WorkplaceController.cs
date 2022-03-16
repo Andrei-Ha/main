@@ -63,8 +63,6 @@ namespace Exadel.OfficeBooking.Api.Controllers
 
             var uri = new Uri($"api/Workplace/{workplaceCreated.Id}".ToLower(), UriKind.Relative);
 
-            //Why in the created record the MapId does not match the sent one???
-            //May be we need to get all Map with sent MapId and then save...
             return Created(uri, workplaceCreated);
         }
         
