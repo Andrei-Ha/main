@@ -32,7 +32,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             // Confirm
             if (text == _state.Propositions[0])
             {
-                if (_state.IsRecurring)
+                if (_state.BookingType == BookingTypeEnum.Continuous || _state.BookingType == BookingTypeEnum.Recurring)
                 {
                     AddRecurringBookingDto newBooking = new AddRecurringBookingDto
                     {
@@ -41,9 +41,9 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         StartDate = _state.StartDate,
                         EndDate = _state.EndDate,
                         Count = _state.Count,
-                        Interval = _state.Interval ?? 1,
-                        RecurringWeekDays = _state.RecurringWeekDays ?? 0,
-                        Frequency = _state.Frequency ?? RecurringFrequency.Daily
+                        Interval = 1,
+                        RecurringWeekDays = 0,
+                        Frequency = RecurringFrequency.Daily
                     };
                     var response = await _httpClient.PostWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
                         "booking/add/recurring", newBooking);
