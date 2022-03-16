@@ -10,7 +10,7 @@ using Telegram.Bot.Types;
 
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
-    public class BookingChoise : StateMachineStep
+    public class BookingChoice : StateMachineStep
     {
         public override async Task<UserState> Execute(Update update)
         {
