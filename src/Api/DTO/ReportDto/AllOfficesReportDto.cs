@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Exadel.OfficeBooking.Domain.Reports
+namespace Exadel.OfficeBooking.Api.DTO.ReportDto
 {
-    public class AllOfficesReport
+    public class AllOfficesReportDto
     {
         public DateTime FromDate { get; set; }
 
         public DateTime ToDate { get; set; }
 
-        public List<DailyReport> AllOfficesDailyReportList { get; set; } = new();
+        public List<OfficeReportDto> OfficesReportsList { get; set; } = new();
     }
 }

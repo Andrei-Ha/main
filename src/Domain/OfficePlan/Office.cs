@@ -14,7 +14,7 @@ namespace Exadel.OfficeBooking.Domain.OfficePlan
 
         public bool IsFreeParkingAvailable { get; set; }
 
-        public List<Map> Maps { get; set; } = new();
+        public List<Map>? Maps { get; set; }
 
         public List<ParkingPlace>? ParkingPlaces { get; set; }
     }

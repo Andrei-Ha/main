@@ -149,10 +149,10 @@ namespace Exadel.OfficeBooking.Api.Services
         public async Task<WorkplaceGetDto> CreateWorkplace(WorkplaceSetDto workplace)
         {
             var workplaceDomain = workplace.Adapt<Workplace>();
+
             await _context.Workplaces.AddAsync(workplaceDomain);
             await _context.SaveChangesAsync();
-            //Why in the created record the MapId does not match the sent one???
-            //May be we need to get all Map with sent MapId and then save...
+
             return workplaceDomain.Adapt<WorkplaceGetDto>();
         }
 
