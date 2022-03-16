@@ -1,4 +1,5 @@
-﻿using Exadel.OfficeBooking.TelegramApi.DTO;
+﻿using Exadel.OfficeBooking.TelegramApi.Calendar;
+using Exadel.OfficeBooking.TelegramApi.DTO;
 using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
 using Exadel.OfficeBooking.TelegramApi.DTO.PersonDto;
 using System;
@@ -35,17 +36,14 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public DateTime EndDate { get; set; } = default;
         
-        public bool? IsEndDateGiven { get; set; }
+        public int Count { get; set; } = 0;
 
-        public bool IsRecurring { get; set; }
+        public int Interval { get; set; } = 1;
 
-        public int? Count { get; set; }
-        public bool? IsCountGiven { get; set; }
-        public int? Interval { get; set; }
-        public bool? IsIntervalGiven { get; set; }
-        public WeekDays? RecurringWeekDays { get; set; }
-        public RecurringFrequency? Frequency { get; set; }
-        public bool? IsRecurringFrequencyWeekly { get; set; }
+        public WeekDays RecurringWeekDays { get; set; } = 0;
+
+        public RecurringFrequency Frequency { get; set; } = 0;
+
         public bool IsParkingPlace { get; set; } = false;
         
         public bool IsSpecifyWorkplace { get; set; } = false;
@@ -76,6 +74,8 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public int CallbackMessageId { get; set; } = 0;
 
+        public DateTime CalendarDate { get; set; } = default;
+
         public Result GetResult()
         {
             return new Result() { TextMessage = TextMessage, Propositions = Propositions, IsSendMessage = CallbackMessageId == 0 };
@@ -91,38 +91,15 @@ namespace Exadel.OfficeBooking.TelegramApi
         public string Summary()
         {
             StringBuilder sb = new();
-            sb.Append(GetFullName() + "\n");
-            sb.Append($"Email: {User.Email}" + "\n");
-            sb.Append($"Office: <b>{OfficeName} {City}</b>\n");
-            sb.Append($"Workplace : <b>{WorkplaceName}</b>\n");
-            sb.Append($"Booking type: <b>{BookingType}</b>\n");
-            if (BookingType == BookingTypeEnum.OneDay)
-            {
-                sb.Append($"Booking date: <b>{StartDate:dd.MM.yyyy}</b>\n");
-            }
-            if (BookingType == BookingTypeEnum.Continuous)
-            {
-                sb.Append($"Booking first day: <b>{StartDate:dd.MM.yyyy}</b> and last day: <b>{EndDate:dd.MM.yyyy}</b>\n");
-            }
-
-            if (BookingType == BookingTypeEnum.Recurring)
-            {
-                string appendStr = $"Booking first day: {StartDate.ToString("dd.MM.yyyy")}";
-                if (IsEndDateGiven != null && (bool) IsEndDateGiven)
-                    appendStr += $"\nBooking last day: {EndDate.ToString("dd.MM.yyyy")}";
-                appendStr += $"\nFrequency: {Frequency.ToString()}";
-                if (Frequency == RecurringFrequency.Weekly)
-                    appendStr += $"\nWeekdays: {RecurringWeekDays}";
-                if (IsIntervalGiven != null && (bool) IsIntervalGiven)
-                    appendStr += $"\nInterval is: {Interval}";
-                if (IsCountGiven != null && (bool) IsCountGiven)
-                    appendStr += $"\nCount is: {Count}";
-                
-                sb.Append(appendStr);
-            }
+            sb.AppendLine(GetFullName());
+            sb.AppendLine($"Email: {User.Email}");
+            sb.AppendLine($"Office: <b>{OfficeName} {City}</b>");
+            sb.AppendLine($"Workplace : {WorkplaceName.Bold()}");
+            sb.AppendLine($"Booking type: {BookingType.ToString().Bold()}");
+            sb.AppendLine(AddTextToCalendar(true));
             if (IsParkingPlace) 
             {
-                sb.Append($"Parking place <b>added</b>\n"); 
+                sb.AppendLine($"Parking place <b>added</b>"); 
             }
 
             return sb.ToString();
@@ -131,6 +108,122 @@ namespace Exadel.OfficeBooking.TelegramApi
         public string GetFullName() 
         {
             return $"<b>{User.LastName} {User.FirstName}</b>"; 
+        }
+
+        public void InitRecurrencePattern()
+        {
+            StartDate = default;
+            EndDate = default;
+            Count = 0;
+            Interval = 1;
+            RecurringWeekDays = 0;
+            Frequency = 0;
+        }
+
+        public string AddTextToCalendar(bool isToSummary = false)
+        {
+            StringBuilder sb = new();
+            switch (BookingType)
+            {
+                case BookingTypeEnum.OneDay:
+                    {
+                        if (StartDate == default)
+                        {
+                            sb.AppendLine("Select booking date!");
+                        }
+                        else
+                        {
+                            sb.AppendLine($"Selected booking date: {StartDate.ToString(Constants.DateFormat).Bold()}");
+                        }
+                        break;
+                    }
+                case BookingTypeEnum.Continuous:
+                    {
+                        if (StartDate == default)
+                        {
+                            sb.AppendLine("Select the <b>start</b> date of the booking!");
+                        }
+                        else
+                        {
+                            sb.AppendLine($"Selected booking <b>start</b> date: {StartDate.ToString(Constants.DateFormat).Bold()}");
+                            if (EndDate == default)
+                            {
+                                sb.AppendLine($"Select the <b>end</b> date of the booking!");
+                            }
+                            else
+                            {
+                                sb.AppendLine($"Selected booking <b>end</b> date: {EndDate.ToString(Constants.DateFormat).Bold()}");
+                            }
+                        }
+                        break;
+                    }
+                case BookingTypeEnum.Recurring:
+                    {
+                        if (StartDate == default)
+                        {
+                            sb.AppendLine("Select the <b>start</b> date of the booking!");
+                        }
+                        else
+                        {
+                            sb.AppendLine($"Selected booking <b>start</b> date: {StartDate.ToString(Constants.DateFormat).Bold()}");
+                            if (EndDate == default)
+                            {
+                                if (Count == 0)
+                                    sb.AppendLine($"Select the <b>end</b> date of the booking or increase occurrence!");
+                            }
+                            else
+                            {
+                                //sb.AppendLine($"Selected booking <b>end</b> date: {EndDate.ToString(Constants.DateFormat).Bold()}");
+                            }
+
+                            sb.AppendLine($"<b>Repeats</b> every {Interval.ToString().Bold()} {GetIntervalName().Bold()}");
+                            if (Frequency == RecurringFrequency.Weekly)
+                            {
+                                sb.AppendLine($"Repeats on<b>:</b>{(RecurringWeekDays == WeekDays.None ? " <i>pick the days!</i>" : GetSelectedDaysOfWeek().Bold())}");
+                            }
+
+                            if (Count > 0)
+                            {
+                                sb.AppendLine($"Ends after {Count.ToString().Bold()} <b>occurrence</b>");
+                                if (!isToSummary)
+                                    sb.AppendLine($"<i>! to be able to select the <b>end</b> date, set the number of <b>occurrence</b> to zero</i>");
+                            }
+                            else
+                            {
+                                if (EndDate != default)
+                                    sb.AppendLine($"Ending by date: {EndDate.ToString(Constants.DateFormat).Bold()}");
+                            }
+                        }
+                        break;
+                    }
+            }
+
+            return sb.ToString();
+        }
+
+        private string GetIntervalName()
+        {
+            return Frequency switch
+            {
+                RecurringFrequency.Daily => Interval == 1 ? "day" : "days",
+                RecurringFrequency.Weekly => Interval == 1 ? "week" : "weeks",
+                RecurringFrequency.Monthly => Interval == 1 ? "month" : "months",
+                RecurringFrequency.Yearly => Interval == 1 ? "year" : "years",
+                _ => "NotImplemented"
+            };
+        }
+
+        private string GetSelectedDaysOfWeek()
+        {
+            string str = string.Empty;
+            str += RecurringWeekDays.HasFlag(WeekDays.Sunday) ? $" {WeekDays.Sunday}," : string.Empty;
+            str += RecurringWeekDays.HasFlag(WeekDays.Monday) ? $" {WeekDays.Monday}," : string.Empty;
+            str += RecurringWeekDays.HasFlag(WeekDays.Tuesday) ? $" {WeekDays.Tuesday}," : string.Empty;
+            str += RecurringWeekDays.HasFlag(WeekDays.Wednesday) ? $" {WeekDays.Thursday}," : string.Empty;
+            str += RecurringWeekDays.HasFlag(WeekDays.Thursday) ? $" {WeekDays.Sunday}," : string.Empty;
+            str += RecurringWeekDays.HasFlag(WeekDays.Friday) ? $" {WeekDays.Friday}," : string.Empty;
+            str += RecurringWeekDays.HasFlag(WeekDays.Saturday) ? $" {WeekDays.Saturday}," : string.Empty;
+            return str.TrimEnd(',');
         }
     }    
 }
