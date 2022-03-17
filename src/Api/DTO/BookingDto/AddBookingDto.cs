@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Exadel.OfficeBooking.Domain.Bookings;
+using System;
 
 namespace Exadel.OfficeBooking.Api.DTO.BookingDto;
 
