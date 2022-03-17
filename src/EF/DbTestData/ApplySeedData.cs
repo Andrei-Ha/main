@@ -477,7 +477,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     FirstName = "Khamza",
                     LastName = "Davletov",
-                    Email = "KhamzaDavletov@fake.com",
+                    Email = "kdavletov@exadel.com",
                     EmploymentStart = DateTime.Now,
                     TelegramId = 223344,
                     Role = UserRole.Admin
