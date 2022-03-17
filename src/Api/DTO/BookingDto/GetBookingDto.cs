@@ -19,4 +19,6 @@ public class GetBookingDto
     public int Interval { get; set; } = 1;
     public WeekDays RecurringWeekDays { get; set; }
     public RecurringFrequency Frequency { get; set; }
+
+    public BookingTypeEnum BookingType { get; set; }
 }

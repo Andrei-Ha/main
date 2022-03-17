@@ -15,4 +15,7 @@ public class AddRecurringBookingDto
     public int Interval { get; set; } = 1;
     public WeekDays RecurringWeekDays { get; set; }
     public RecurringFrequency Frequency { get; set; }
+
+    public BookingTypeEnum BookingType { get; set; }
+    public string Summary { get; set; } = string.Empty;
 }
