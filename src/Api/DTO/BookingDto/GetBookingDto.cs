@@ -21,4 +21,8 @@ public class GetBookingDto
     public RecurringFrequency Frequency { get; set; }
 
     public BookingTypeEnum BookingType { get; set; }
+
+    public string WorkplaceName { get; set; } = string.Empty;
+    public int FloorNumber { get; set; }
+    public string OfficeName { get; set; } = string.Empty;
 }

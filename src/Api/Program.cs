@@ -62,7 +62,10 @@ var app = builder.Build();
 //custom adapter for Booking
 TypeAdapterConfig<Booking, GetBookingDto>.NewConfig()
     .Map(dest => dest.WorkplaceId, src => src.Workplace.Id)
-    .Map(dest => dest.UserId, src => src.User.Id);
+    .Map(dest => dest.UserId, src => src.User.Id)
+    .Map(dest => dest.WorkplaceName, src => src.Workplace.Name)
+    .Map(dest => dest.FloorNumber, src => src.Workplace.Map.FloorNumber)
+    .Map(dest => dest.OfficeName, src => $"{src.Workplace.Map.Office.Name} {src.Workplace.Map.Office.Address}" );
 
 
 // Configure the HTTP request pipeline.

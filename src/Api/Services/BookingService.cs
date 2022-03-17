@@ -30,7 +30,7 @@ public class BookingService : IBookingService
         {
             Data = await _context.Bookings
                 .Include(b => b.User)
-                .Include(b => b.Workplace)
+                .Include(b => b.Workplace).ThenInclude(w => w.Map).ThenInclude(o => o.Office)
                 .AsNoTracking()
                 .Select(b => b.Adapt<GetBookingDto>())
                 .ToArrayAsync()
@@ -129,18 +129,20 @@ public class BookingService : IBookingService
             return ConflictResponse<GetOneDayBookingDto>("The selected workplace has been booked by another user");
 
         //workplace is not booked, create newBooking
+        // what about ParkingPlace???
         Booking newBooking = new Booking
         {
             Id = new Guid(),
             User = user,
             Workplace = workplace,
-            StartDate = bookingDto.Date
+            StartDate = bookingDto.Date,
+            BookingType = bookingDto.BookingType
         };
 
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
-        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nYou succesfully Booked.\nOffice: {newBooking.Workplace.Map.Office.Address}\n Workplace: { newBooking.Workplace.Name}, Date: {newBooking.StartDate}");
+        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nYou succesfully Booked.\n");
 
         response.StatusCode = 201;
         var responseBooking = bookingDto.Adapt<GetOneDayBookingDto>();
@@ -196,8 +198,9 @@ public class BookingService : IBookingService
         User? user = await _context.Users
             .FirstOrDefaultAsync(u => u.Id == bookingDto.UserId);
 
-        if (bookingDto.EndDate <= bookingDto.StartDate)
-            return ConflictResponse<GetRecurringBookingDto>("Verify end date");
+        // check this condition if we need to use Count of repeats and EndDate = default
+        //if (bookingDto.EndDate <= bookingDto.StartDate)
+        //    return ConflictResponse<GetRecurringBookingDto>("Verify end date");
 
         List<DateTime> recurringDates = GetRecurringBookingDates(bookingDto.Adapt<RecurrencePattern>());
 
@@ -219,7 +222,7 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
-        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nYou succesfully Booked.\nOffice: {newBooking.Workplace.Map.Office.Address}\n Workplace: { newBooking.Workplace.Name}, Date: {newBooking.StartDate}");
+        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nYou succesfully Booked.\n");
         response.Data = newBooking.Adapt<GetRecurringBookingDto>();
         response.StatusCode = 209;
         return response;
