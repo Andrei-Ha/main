@@ -65,7 +65,8 @@ TypeAdapterConfig<Booking, GetBookingDto>.NewConfig()
     .Map(dest => dest.UserId, src => src.User.Id)
     .Map(dest => dest.WorkplaceName, src => src.Workplace.Name)
     .Map(dest => dest.FloorNumber, src => src.Workplace.Map.FloorNumber)
-    .Map(dest => dest.OfficeName, src => $"{src.Workplace.Map.Office.Name} {src.Workplace.Map.Office.Address}" );
+    .Map(dest => dest.OfficeName, src => $"{src.Workplace.Map.Office.Name} {src.Workplace.Map.Office.Address}" )
+    .Map(dest => dest.ParkingPlaceNumber, src => src.ParkingPlace.PlaceNumber);
 
 
 // Configure the HTTP request pipeline.

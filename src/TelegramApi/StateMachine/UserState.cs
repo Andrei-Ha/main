@@ -101,7 +101,7 @@ namespace Exadel.OfficeBooking.TelegramApi
             RecurringWeekDays = RecurringWeekDays,
             Frequency = Frequency,
             BookingType = BookingType,
-            Summary = Summary()
+            Summary = Summary().Replace("<b>", "").Replace("</b>", "")
         };
 
         public AddBookingDto AddBookingDto() => new()
@@ -110,7 +110,7 @@ namespace Exadel.OfficeBooking.TelegramApi
             WorkplaceId = WorkplaceId,
             Date = StartDate,
             BookingType = BookingType,
-            Summary = Summary()
+            Summary = Summary().Replace("<b>", "").Replace("</b>", "")
         };
 
         public string Summary()
