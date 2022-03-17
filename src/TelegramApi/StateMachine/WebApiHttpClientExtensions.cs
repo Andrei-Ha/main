@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Exadel.OfficeBooking.TelegramApi.StateMachine
 {
-    public static class WebApiHttpClientExtentions
+    public static class WebApiHttpClientExtensions
     {
         public static async Task<HttpResponse<T>?> GetWebApiModel<T>(this IHttpClientFactory factory, string relativeUri, string jwtToken = "")
         {

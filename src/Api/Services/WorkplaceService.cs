@@ -1,6 +1,7 @@
 ﻿using Exadel.OfficeBooking.Api.DTO.BookingDto;
 using Exadel.OfficeBooking.Api.DTO.WorkplaceDto;
 using Exadel.OfficeBooking.Api.Interfaces;
+using Exadel.OfficeBooking.Domain.Bookings;
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.EF;
 using Mapster;
@@ -54,8 +55,8 @@ namespace Exadel.OfficeBooking.Api.Services
                     }
                 }
 
-                if (filterModel.BookingType == BookingTypeEnum.Continous ||
-                    filterModel.BookingType == BookingTypeEnum.Recuring)
+                if (filterModel.BookingType == BookingTypeEnum.Continuous ||
+                    filterModel.BookingType == BookingTypeEnum.Recurring)
                 {
                     List<DateTime> recurringDates = _bookingService.GetRecurringBookingDates(filterModel.Adapt<RecurrencePattern>());
 
@@ -92,8 +93,8 @@ namespace Exadel.OfficeBooking.Api.Services
                 .IsWorkplaceAvailableForOneDayBooking(w, (DateTime)filterModel.StartDate));
             }
 
-            if (filterModel.BookingType == BookingTypeEnum.Continous ||
-                filterModel.BookingType == BookingTypeEnum.Recuring)
+            if (filterModel.BookingType == BookingTypeEnum.Continuous ||
+                filterModel.BookingType == BookingTypeEnum.Recurring)
             {
                 List<DateTime> recurringDates = _bookingService.GetRecurringBookingDates(filterModel.Adapt<RecurrencePattern>());
                 

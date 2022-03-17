@@ -1,4 +1,4 @@
-﻿namespace Exadel.OfficeBooking.TelegramApi.DTO.BookingDto
+﻿namespace Exadel.OfficeBooking.Domain.Bookings
 {
     public enum BookingTypeEnum
     {

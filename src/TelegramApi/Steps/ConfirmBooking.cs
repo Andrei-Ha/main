@@ -32,51 +32,27 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             // Confirm
             if (text == _state.Propositions[0])
             {
-                if (_state.BookingType == BookingTypeEnum.Continuous || _state.BookingType == BookingTypeEnum.Recurring)
+                string result = "A new booking has been created.\nAll details have been sent to you by email.\nBye!";
+                if (_state.IsRecurring())
                 {
-                    AddRecurringBookingDto newBooking = new AddRecurringBookingDto
-                    {
-                        UserId = _state.User.UserId,
-                        WorkplaceId = _state.WorkplaceId,
-                        StartDate = _state.StartDate,
-                        EndDate = _state.EndDate,
-                        Count = _state.Count,
-                        Interval = 1,
-                        RecurringWeekDays = 0,
-                        Frequency = RecurringFrequency.Daily
-                    };
                     var response = await _httpClient.PostWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
-                        "booking/add/recurring", newBooking);
-                    
+                        "booking/add/recurring", _state.AddRecurringBookingDto());
+
                     //temporary validation
-                    if (!response.Model.Success)
-                    {
-                        _state.TextMessage = response.Model.Message;
-                        _state.Propositions = new List<string>();
-                        _state.NextStep = "Finish";
-                        return _state;
-                    }
+                    if (response?.Model != null)
+                        _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                    else
+                        _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
                 }
                 else
                 {
-                    AddBookingDto newBooking = new AddBookingDto
-                    {
-                        UserId = _state.User.UserId,
-                        WorkplaceId = _state.WorkplaceId,
-                        Date = _state.StartDate
-                    };
                     var response = await _httpClient.PostWebApiModel<ServiceResponse<GetOneDayBookingDto>, AddBookingDto>(
-                        "booking/add/one-day", newBooking);
-                    if (!response.Model.Success)
-                    {
-                        _state.TextMessage = response.Model.Message;
-                        _state.Propositions = new List<string>();
-                        _state.NextStep = "Finish";
-                        return _state;
-                    }
+                        "booking/add/one-day", _state.AddBookingDto());
+                    if (response?.Model != null)
+                        _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                    else
+                        _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
                 }
-                
-                _state.TextMessage = "A new booking has been created.\nAll details have been sent to you by email.\nBye!";
             }
             // Cancel
             else if (text == _state.Propositions[1])

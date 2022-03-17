@@ -29,6 +29,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             // Change or Cancel a booking
             if (text == _state.Propositions[0]) 
             {
+                // need to iplement!
                 _state.SetResult();
             }
 

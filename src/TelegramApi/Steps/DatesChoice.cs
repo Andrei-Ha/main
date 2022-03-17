@@ -85,7 +85,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 {
                                     if (_state.EndDate == default)
                                     {
-                                        if (_state.BookingType == BookingTypeEnum.Recurring && _state.Count > 0)
+                                        if ((_state.BookingType == BookingTypeEnum.Recurring && _state.Count > 0) || _state.BookingType == BookingTypeEnum.OneDay)
                                         {
                                             _state.StartDate = selectedDate;
                                         }

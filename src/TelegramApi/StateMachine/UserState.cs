@@ -88,6 +88,31 @@ namespace Exadel.OfficeBooking.TelegramApi
             NextStep = nextStep;
         }
 
+        public bool IsRecurring() => BookingType == BookingTypeEnum.Continuous || BookingType == BookingTypeEnum.Recurring;
+
+        public AddRecurringBookingDto AddRecurringBookingDto() => new()
+        {
+            UserId = User.UserId,
+            WorkplaceId = WorkplaceId,
+            StartDate = StartDate,
+            EndDate = EndDate,
+            Count = Count,
+            Interval = Interval,
+            RecurringWeekDays = RecurringWeekDays,
+            Frequency = Frequency,
+            BookingType = BookingType,
+            Summary = Summary().Replace("<b>", "").Replace("</b>", "")
+        };
+
+        public AddBookingDto AddBookingDto() => new()
+        {
+            UserId = User.UserId,
+            WorkplaceId = WorkplaceId,
+            Date = StartDate,
+            BookingType = BookingType,
+            Summary = Summary().Replace("<b>", "").Replace("</b>", "")
+        };
+
         public string Summary()
         {
             StringBuilder sb = new();
@@ -96,7 +121,7 @@ namespace Exadel.OfficeBooking.TelegramApi
             sb.AppendLine($"Office: <b>{OfficeName} {City}</b>");
             sb.AppendLine($"Workplace : {WorkplaceName.Bold()}");
             sb.AppendLine($"Booking type: {BookingType.ToString().Bold()}");
-            sb.AppendLine(AddTextToCalendar(true));
+            sb.Append(AddTextToCalendar(true));
             if (IsParkingPlace) 
             {
                 sb.AppendLine($"Parking place <b>added</b>"); 

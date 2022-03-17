@@ -5,6 +5,7 @@ namespace Exadel.OfficeBooking.Domain.Bookings
     [Flags]
     public enum WeekDays
     {
+        None = 0,
         Sunday = 1,
         Monday = 1 << 1,
         Tuesday = 1 << 2,

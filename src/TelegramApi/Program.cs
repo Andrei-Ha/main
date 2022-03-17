@@ -30,6 +30,7 @@ builder.Services.AddScoped<StateMachineStep, ManageForChoice>();
 builder.Services.AddScoped<StateMachineStep, FloorChoice>();
 builder.Services.AddScoped<StateMachineStep, WorkplaceChoice>();
 builder.Services.AddScoped<StateMachineStep, ConfirmBooking>();
+builder.Services.AddScoped<StateMachineStep, BookingChoice>();
 builder.Services.AddScoped<StateDb>();
 builder.Services.AddHttpClient("WebAPI", c =>
 {
