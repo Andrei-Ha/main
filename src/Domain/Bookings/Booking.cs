@@ -22,5 +22,6 @@ namespace Exadel.OfficeBooking.Domain.Bookings
         public int Interval { get; set; } = 1;
         public RecurringFrequency Frequency { get; set; }
         public WeekDays RecurringWeekDays { get; set; }
+        public BookingTypeEnum BookingType { get; set; }
     }
 }

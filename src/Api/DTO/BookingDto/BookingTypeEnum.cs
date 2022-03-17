@@ -2,9 +2,9 @@
 {
     public enum BookingTypeEnum
     {
-        None,
-        OneDay,
-        Continous,
-        Recuring
+        None = 0,
+        OneDay = 1,
+        Continuous = 2,
+        Recurring = 3
     }
 }
