@@ -43,7 +43,7 @@ public class BookingService : IBookingService
     {
         Booking? booking = await _context.Bookings
             .Include(b => b.User)
-            .Include(b => b.Workplace)
+            .Include(b => b.Workplace).ThenInclude(w => w.Map).ThenInclude(o => o.Office)
             .AsNoTracking()
             .FirstOrDefaultAsync(b => b.Id == id);
         if (booking == null) return NotFoundResponse<GetBookingDto>("Requested booking doesn’t exist");
