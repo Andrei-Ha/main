@@ -76,7 +76,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         case Constants.PickDate:
                             {
-                                _ = DateTime.TryParse(key[1], out DateTime selectedDate);
+                                DateTime.TryParseExact(key[1], "dd'.'MM'.'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime selectedDate);
                                 if (_state.StartDate == default)
                                 {
                                     _state.StartDate = selectedDate;
