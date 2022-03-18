@@ -72,22 +72,48 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     }
                     else
                     {
-                        var dictionary = bookings.OrderBy(b => b.OfficeName).ThenBy(b => b.StartDate)
-                            .ToDictionary(k => $"booking:{k.Id}", v => $"{v.Summary}");
-                        //List<int> listOfIdMessages = await _bot.SendBookingList(update, "Select the booking:", dictionary);
-                        _state.CallbackMessageId = await _bot.SendBookingList(update, "Select the booking:", dictionary);
+                        var dictionary = bookings
+                            .OrderBy(b => b.OfficeName).ThenBy(b => b.StartDate)
+                            .ToDictionary(k => $"{k.Id}", v => $"{v.Summary}");
+                        var bookViewResponse = await _bot.SendBookingList(update, "Select the booking:", dictionary);
+                        _state.bookViews = bookViewResponse.BookViews;
+                        _state.CallbackMessageId = bookViewResponse.BackMessageId;
                     }
                 }
             }
             else // if Update.Type == CallbackQuery
             {
+                await _bot.EchoCallbackQuery(update);
                 string[] data = update.CallbackQuery.Data.Split(':');
                 switch (data[0])
                 {
+                    case "Check":
+                        {
+                            string[] key = data[1].Split('/');
+                            if (bool.TryParse(key[1], out bool isChecked))
+                            {
+                                _state.bookViews.ForEach(b => b.IsChecked = (b.BookingId == key[0]) ? isChecked : b.IsChecked);
+                                await _bot.UpdateBookinList(update, _state.bookViews.Where(b => b.BookingId == key[0]).ToList());
+                            }
+                            break;
+                        }
                     case "Back":
                         {
-                            _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
+                            var listId = _state.bookViews.Select(b => b.MessageId).OrderByDescending(o => o).ToList();
+                            _state.bookViews = new();
+                            //listId.Add(_state.CallbackMessageId);
+                            _state.CallbackMessageId = await _bot.DeleteBookinList(update, listId, _state.CallbackMessageId, true);
                             _state.TextMessage = "What else would you like to do?";
+                            break;
+                        }
+                    case "CheckAll":
+                        {
+                            if (bool.TryParse(data[1], out bool isAllChecked))
+                            {
+                                _state.bookViews.ForEach(b => b.IsChecked = isAllChecked);
+                                await _bot.UpdateBackAndCanselAllBookinList(update, _state.CallbackMessageId, isAllChecked);
+                            }
+                            await _bot.UpdateBookinList(update, _state.bookViews.OrderByDescending(b => b.MessageId).ToList());
                             break;
                         }
                 }

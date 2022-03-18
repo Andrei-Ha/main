@@ -1,5 +1,7 @@
 ﻿using Exadel.OfficeBooking.TelegramApi.Calendar;
+using Exadel.OfficeBooking.TelegramApi.DTO;
 using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
+using Exadel.OfficeBooking.TelegramApi.Tgm;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,20 +17,21 @@ namespace Exadel.OfficeBooking.TelegramApi
 {
     public static class TelegramBotClientExtensions
     {
-        public static async Task<int> SendBookingList(this TelegramBotClient bot, Update update, string text, Dictionary<string, string> dictionary)
+        public static async Task<BookViewResponse> SendBookingList(this TelegramBotClient bot, Update update, string text, Dictionary<string, string> dictionary)
         {
             _ = await Send(text);
-            List<int> listOfIdMessages = new();
+            List<BookView> bookViews = new();
             for (int i = 0; i < dictionary.Count; i++)
             {
                 string textBook = dictionary.ElementAt(i).Value;
+                string bookingId = dictionary.ElementAt(i).Key;
                 textBook = string.Join("\r\n", textBook.Split("\r\n")[2..]);
-                Message message = await Send($"{(i + 1).ToString().Bold()}.\r\n" + textBook, CreateEditRow());
-                listOfIdMessages.Add(message.MessageId);
+                Message message = await Send($"{(i + 1).ToString().Bold()}.\r\n" + textBook, InlineKbMarkups.CreateEditRow(bookingId, false));
+                bookViews.Add(new BookView { MessageId = message.MessageId, BookingId = bookingId, IsChecked = false});
             }
 
-            Message naviMessage = await Send("Check the boxes to cancel", CreateBackAndCancelAll());
-            return naviMessage.MessageId;
+            Message backMessage = await Send("Check the boxes to cancel", InlineKbMarkups.CreateBackAndCancelAll(false));
+            return new BookViewResponse { BookViews = bookViews, BackMessageId = backMessage.MessageId };
 
             async Task<Message> Send(string textMessage, InlineKeyboardMarkup? inlineKeyboard = null)
             {
@@ -37,6 +40,36 @@ namespace Exadel.OfficeBooking.TelegramApi
                                                       parseMode: ParseMode.Html,
                                                       replyMarkup: inlineKeyboard);
             }
+        }
+
+        public static async Task UpdateBookinList(this TelegramBotClient bot, Update update, List<BookView> bookViews)
+        {
+            foreach (var bookView in bookViews)
+            {
+                await bot.EditMessageReplyMarkupAsync(chatId: update.CallbackQuery.Message.Chat.Id,
+                                                      messageId: bookView.MessageId,
+                                                      replyMarkup: InlineKbMarkups.CreateEditRow(bookView.BookingId, bookView.IsChecked));
+            }
+        }
+
+        public static async Task UpdateBackAndCanselAllBookinList(this TelegramBotClient bot, Update update, int messageId, bool isAllChecked)
+        {
+                await bot.EditMessageReplyMarkupAsync(chatId: update.CallbackQuery.Message.Chat.Id,
+                                                      messageId: messageId,
+                                                      replyMarkup: InlineKbMarkups.CreateBackAndCancelAll(isAllChecked));
+        }
+
+        public static async Task<int> DeleteBookinList(this TelegramBotClient bot, Update update, List<int> identifires, int lastMessage, bool isOnlyButtons = false)
+        {
+            foreach(var id in identifires)
+            {
+                if (isOnlyButtons)
+                    await bot.EditMessageReplyMarkupAsync(chatId: update.CallbackQuery.Message.Chat.Id, messageId: id, replyMarkup: null);
+                else
+                    await bot.DeleteMessageAsync(chatId: update.CallbackQuery.Message.Chat.Id, messageId: id);
+            }
+            await bot.DeleteMessageAsync(chatId: update.CallbackQuery.Message.Chat.Id, messageId: lastMessage);
+            return 0;
         }
 
         public static async Task<int> SendCalendar(this TelegramBotClient bot, Update update, DateTime date, string text, RecurrencePattern recurrPatern)
@@ -123,32 +156,6 @@ namespace Exadel.OfficeBooking.TelegramApi
             InlineKeyboardButton[][] inlineKeyboardButtons = dictionary
                 .Select(d => new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(d.Value, d.Key )}).ToArray();
             return new InlineKeyboardMarkup(inlineKeyboardButtons);
-        }
-
-        private static InlineKeyboardMarkup CreateEditRow()
-        {
-            return new InlineKeyboardMarkup(new List<IEnumerable<InlineKeyboardButton>>
-            {
-                new InlineKeyboardButton[]
-                {
-                    "Change",
-                    "Cancel",
-                    "◻️"
-                }
-            });
-        }
-
-        private static InlineKeyboardMarkup CreateBackAndCancelAll()
-        {
-            return new InlineKeyboardMarkup(new List<IEnumerable<InlineKeyboardButton>>
-            {
-                new InlineKeyboardButton[]
-                {
-                    InlineKeyboardButton.WithCallbackData("<< Back", "Back:true"),
-                    InlineKeyboardButton.WithCallbackData("CheckAll", "CheckAll:true"),
-                    InlineKeyboardButton.WithCallbackData("Cancel all checked", "cancelAll:true")
-                }
-            });
         }
     }
 }

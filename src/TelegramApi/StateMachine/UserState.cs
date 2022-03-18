@@ -119,7 +119,7 @@ namespace Exadel.OfficeBooking.TelegramApi
             WorkplaceId = WorkplaceId,
             Date = StartDate,
             BookingType = BookingType,
-            Summary = Summary().Replace("<b>", "").Replace("</b>", "")
+            Summary = Summary()
         };
 
         public string Summary()
@@ -138,6 +138,7 @@ namespace Exadel.OfficeBooking.TelegramApi
 
             return sb.ToString();
         }
+
 
         public string GetFullName() 
         {
@@ -253,8 +254,8 @@ namespace Exadel.OfficeBooking.TelegramApi
             str += RecurringWeekDays.HasFlag(WeekDays.Sunday) ? $" {WeekDays.Sunday}," : string.Empty;
             str += RecurringWeekDays.HasFlag(WeekDays.Monday) ? $" {WeekDays.Monday}," : string.Empty;
             str += RecurringWeekDays.HasFlag(WeekDays.Tuesday) ? $" {WeekDays.Tuesday}," : string.Empty;
-            str += RecurringWeekDays.HasFlag(WeekDays.Wednesday) ? $" {WeekDays.Thursday}," : string.Empty;
-            str += RecurringWeekDays.HasFlag(WeekDays.Thursday) ? $" {WeekDays.Sunday}," : string.Empty;
+            str += RecurringWeekDays.HasFlag(WeekDays.Wednesday) ? $" {WeekDays.Wednesday}," : string.Empty;
+            str += RecurringWeekDays.HasFlag(WeekDays.Thursday) ? $" {WeekDays.Thursday}," : string.Empty;
             str += RecurringWeekDays.HasFlag(WeekDays.Friday) ? $" {WeekDays.Friday}," : string.Empty;
             str += RecurringWeekDays.HasFlag(WeekDays.Saturday) ? $" {WeekDays.Saturday}," : string.Empty;
             return str.TrimEnd(',');
