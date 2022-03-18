@@ -15,6 +15,30 @@ namespace Exadel.OfficeBooking.TelegramApi
 {
     public static class TelegramBotClientExtensions
     {
+        public static async Task<int> SendBookingList(this TelegramBotClient bot, Update update, string text, Dictionary<string, string> dictionary)
+        {
+            _ = await Send(text);
+            List<int> listOfIdMessages = new();
+            for (int i = 0; i < dictionary.Count; i++)
+            {
+                string textBook = dictionary.ElementAt(i).Value;
+                textBook = string.Join("\r\n", textBook.Split("\r\n")[2..]);
+                Message message = await Send($"{(i + 1).ToString().Bold()}.\r\n" + textBook, CreateEditRow());
+                listOfIdMessages.Add(message.MessageId);
+            }
+
+            Message naviMessage = await Send("Check the boxes to cancel", CreateBackAndCancelAll());
+            return naviMessage.MessageId;
+
+            async Task<Message> Send(string textMessage, InlineKeyboardMarkup? inlineKeyboard = null)
+            {
+                return await bot.SendTextMessageAsync(chatId: update.Message.Chat.Id,
+                                                      text: textMessage,
+                                                      parseMode: ParseMode.Html,
+                                                      replyMarkup: inlineKeyboard);
+            }
+        }
+
         public static async Task<int> SendCalendar(this TelegramBotClient bot, Update update, DateTime date, string text, RecurrencePattern recurrPatern)
         {
             var calendarMarkup = Markup.Calendar(date, recurrPatern, CultureInfo.GetCultureInfo("en-US").DateTimeFormat);
@@ -99,6 +123,32 @@ namespace Exadel.OfficeBooking.TelegramApi
             InlineKeyboardButton[][] inlineKeyboardButtons = dictionary
                 .Select(d => new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(d.Value, d.Key )}).ToArray();
             return new InlineKeyboardMarkup(inlineKeyboardButtons);
+        }
+
+        private static InlineKeyboardMarkup CreateEditRow()
+        {
+            return new InlineKeyboardMarkup(new List<IEnumerable<InlineKeyboardButton>>
+            {
+                new InlineKeyboardButton[]
+                {
+                    "Change",
+                    "Cancel",
+                    "◻️"
+                }
+            });
+        }
+
+        private static InlineKeyboardMarkup CreateBackAndCancelAll()
+        {
+            return new InlineKeyboardMarkup(new List<IEnumerable<InlineKeyboardButton>>
+            {
+                new InlineKeyboardButton[]
+                {
+                    InlineKeyboardButton.WithCallbackData("<< Back", "Back:true"),
+                    InlineKeyboardButton.WithCallbackData("CheckAll", "CheckAll:true"),
+                    InlineKeyboardButton.WithCallbackData("Cancel all checked", "cancelAll:true")
+                }
+            });
         }
     }
 }

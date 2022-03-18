@@ -28,7 +28,8 @@ public class BookingService : IBookingService
     {
         ServiceResponse<GetBookingDto[]> response = new()
         {
-            Data = await _context.Bookings.Include(p => p.ParkingPlace)
+            Data = await _context.Bookings
+            .Include(p => p.ParkingPlace)
                 .Include(b => b.User)
                 .Include(b => b.Workplace).ThenInclude(w => w.Map).ThenInclude(o => o.Office)
                 .AsNoTracking()
@@ -42,6 +43,7 @@ public class BookingService : IBookingService
     public async Task<ServiceResponse<GetBookingDto>> GetBookingById(Guid id)
     {
         Booking? booking = await _context.Bookings
+            .Include(p => p.ParkingPlace)
             .Include(b => b.User)
             .Include(b => b.Workplace).ThenInclude(w => w.Map).ThenInclude(o => o.Office)
             .AsNoTracking()

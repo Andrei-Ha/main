@@ -76,9 +76,18 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public DateTime CalendarDate { get; set; } = default;
 
+        public List<BookView> bookViews { get; set; } = new();
+
         public Result GetResult()
         {
             return new Result() { TextMessage = TextMessage, Propositions = Propositions, IsSendMessage = CallbackMessageId == 0 };
+        }
+
+        public void SetByeAndFinish()
+        {
+            TextMessage = "Bye! See you later";
+            Propositions = new();
+            NextStep = "Finish";
         }
 
         public void SetResult(string textMessage = "Not implemented yet", List<string>? propositions = default, string nextStep = "Finish")
@@ -101,7 +110,7 @@ namespace Exadel.OfficeBooking.TelegramApi
             RecurringWeekDays = RecurringWeekDays,
             Frequency = Frequency,
             BookingType = BookingType,
-            Summary = Summary().Replace("<b>", "").Replace("</b>", "")
+            Summary = Summary()
         };
 
         public AddBookingDto AddBookingDto() => new()
@@ -158,7 +167,7 @@ namespace Exadel.OfficeBooking.TelegramApi
                         }
                         else
                         {
-                            sb.AppendLine($"Selected booking date: {StartDate.ToString(Constants.DateFormat).Bold()}");
+                            sb.AppendLine($"Booking date: {StartDate.ToString(Constants.DateFormat).Bold()}");
                         }
                         break;
                     }
@@ -170,14 +179,14 @@ namespace Exadel.OfficeBooking.TelegramApi
                         }
                         else
                         {
-                            sb.AppendLine($"Selected booking <b>start</b> date: {StartDate.ToString(Constants.DateFormat).Bold()}");
+                            sb.AppendLine($"Booking <b>start</b> date: {StartDate.ToString(Constants.DateFormat).Bold()}");
                             if (EndDate == default)
                             {
                                 sb.AppendLine($"Select the <b>end</b> date of the booking!");
                             }
                             else
                             {
-                                sb.AppendLine($"Selected booking <b>end</b> date: {EndDate.ToString(Constants.DateFormat).Bold()}");
+                                sb.AppendLine($"Booking <b>end</b> date: {EndDate.ToString(Constants.DateFormat).Bold()}");
                             }
                         }
                         break;
@@ -190,7 +199,7 @@ namespace Exadel.OfficeBooking.TelegramApi
                         }
                         else
                         {
-                            sb.AppendLine($"Selected booking <b>start</b> date: {StartDate.ToString(Constants.DateFormat).Bold()}");
+                            sb.AppendLine($"Booking <b>start</b> date: {StartDate.ToString(Constants.DateFormat).Bold()}");
                             if (EndDate == default)
                             {
                                 if (Count == 0)
