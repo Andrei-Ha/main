@@ -28,7 +28,8 @@ public class BookingService : IBookingService
     {
         ServiceResponse<GetBookingDto[]> response = new()
         {
-            Data = await _context.Bookings.Include(p => p.ParkingPlace)
+            Data = await _context.Bookings
+            .Include(p => p.ParkingPlace)
                 .Include(b => b.User)
                 .Include(b => b.Workplace).ThenInclude(w => w.Map).ThenInclude(o => o.Office)
                 .AsNoTracking()
@@ -42,6 +43,7 @@ public class BookingService : IBookingService
     public async Task<ServiceResponse<GetBookingDto>> GetBookingById(Guid id)
     {
         Booking? booking = await _context.Bookings
+            .Include(p => p.ParkingPlace)
             .Include(b => b.User)
             .Include(b => b.Workplace).ThenInclude(w => w.Map).ThenInclude(o => o.Office)
             .AsNoTracking()
@@ -143,7 +145,7 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
-        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary}");
+        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
 
         response.StatusCode = 201;
         var responseBooking = bookingDto.Adapt<GetOneDayBookingDto>();
@@ -223,7 +225,7 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
-        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary}");
+        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
         response.Data = newBooking.Adapt<GetRecurringBookingDto>();
         response.StatusCode = 209;
         return response;
