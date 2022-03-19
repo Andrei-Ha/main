@@ -157,6 +157,7 @@ namespace Exadel.OfficeBooking.TelegramApi
             Interval = 1;
             RecurringWeekDays = 0;
             Frequency = 0;
+            CalendarDate = DateTime.Today;
         }
 
         public string AddTextToCalendar(bool isToSummary = false)
@@ -240,7 +241,29 @@ namespace Exadel.OfficeBooking.TelegramApi
             return sb.ToString();
         }
 
-        private string GetIntervalName()
+        public string AddTextToCalendarForReport(bool isToSummary = false)
+        {
+            StringBuilder sb = new();
+            if (StartDate == default)
+            {
+                sb.AppendLine("Select the <b>start</b> date for the report!");
+            }
+            else
+            {
+                sb.AppendLine($"Selected <b>start</b> date: {StartDate.ToString(Constants.DateFormat).Bold()}");
+                if (EndDate == default)
+                {
+                    sb.AppendLine($"Select the <b>end</b> date for the report!");
+                }
+                else
+                {
+                    sb.AppendLine($"Selected <b>end</b> date: {EndDate.ToString(Constants.DateFormat).Bold()}");
+                }
+            }
+            return sb.ToString();
+        }
+
+            private string GetIntervalName()
         {
             return Frequency switch
             {

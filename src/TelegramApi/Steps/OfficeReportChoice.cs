@@ -52,6 +52,10 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     _state.TextMessage = $"\nStatusCode: {httpResponse?.StatusCode.ToString()}";
                 }
             }
+            else if (text == _state.Propositions[2])
+            {
+                _state.SetByeAndFinish();
+            }
 
             return _state;
         }

@@ -8,7 +8,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
 {
     public static class Markup
     {
-        public static InlineKeyboardMarkup Calendar(in DateTime date, RecurrencePattern rp, DateTimeFormatInfo dtfi)
+        public static InlineKeyboardMarkup Calendar(in DateTime date, RecurrencePattern rp, DateTimeFormatInfo dtfi, bool isBackButtonHidden = false )
         {
             List<DateTime> hDites = new();
             Console.WriteLine("count = " + rp.Count);
@@ -52,7 +52,10 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
             keyboardRows.Add(Row.DayOfWeek((int)rp.RecurringWeekDays, rp.Frequency, dtfi));
             keyboardRows.AddRange(Row.Month(date, hDites, dtfi));
             keyboardRows.Add(Row.Controls(date, rp));
-            keyboardRows.Add(Row.Back());
+            if (!isBackButtonHidden)
+            {
+                keyboardRows.Add(Row.Back());
+            }
 
             return new InlineKeyboardMarkup(keyboardRows);
         }

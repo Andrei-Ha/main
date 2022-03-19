@@ -74,9 +74,9 @@ namespace Exadel.OfficeBooking.TelegramApi
             return 0;
         }
 
-        public static async Task<int> SendCalendar(this TelegramBotClient bot, Update update, DateTime date, string text, RecurrencePattern recurrPatern)
+        public static async Task<int> SendCalendar(this TelegramBotClient bot, Update update, DateTime date, string text, RecurrencePattern recurrPatern, bool isBackButtonHidden = false)
         {
-            var calendarMarkup = Markup.Calendar(date, recurrPatern, CultureInfo.GetCultureInfo("en-US").DateTimeFormat);
+            var calendarMarkup = Markup.Calendar(date, recurrPatern, CultureInfo.GetCultureInfo("en-US").DateTimeFormat, isBackButtonHidden);
             Message sendMess = await bot.SendTextMessageAsync(
                                                         chatId: update.Message.Chat.Id,
                                                         text: text,
@@ -85,11 +85,11 @@ namespace Exadel.OfficeBooking.TelegramApi
             return sendMess.MessageId;
         }
 
-        public static async Task EditCalendar(this TelegramBotClient bot, Update update, DateTime date, string text, RecurrencePattern recurrPatern)
+        public static async Task EditCalendar(this TelegramBotClient bot, Update update, DateTime date, string text, RecurrencePattern recurrPatern, bool isBackButtonHidden = false)
         {
             try
             {
-                var calendarMarkup = Markup.Calendar(date, recurrPatern, CultureInfo.GetCultureInfo("en-US").DateTimeFormat);
+                var calendarMarkup = Markup.Calendar(date, recurrPatern, CultureInfo.GetCultureInfo("en-US").DateTimeFormat, isBackButtonHidden);
                 await bot.EditMessageTextAsync(
                                                     chatId: update.CallbackQuery.Message.Chat.Id,
                                                     messageId: update.CallbackQuery.Message.MessageId,
