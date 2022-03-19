@@ -32,6 +32,11 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 
         public override async Task<UserState> Execute(Update update)
         {
+            if (_state.IsOfficeReportSelected)
+            {
+                _state.BookingType = BookingTypeEnum.Continuous;
+            }
+
             if (update.Type == UpdateType.Message)
             {
                 string? text = update.Message?.Text;
