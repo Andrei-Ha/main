@@ -42,7 +42,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 if (text == _state.Propositions[0])
                 {
                     _state.TextMessage = $"Ok. What do you want to do today?";
-                    _state.Propositions = new() { "Change or Cancel a booking", "Book a workplace", "Nothing" };
+                    _state.Propositions = new() { "Book a workplace", "Nothing", "Change or Cancel a booking" };
                     _state.NextStep = nameof(ActionChoice);
                 }
                 // If the choice is "For other employee"
@@ -53,6 +53,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     if (httpResponse?.Model != null)
                     {
                         var dictionary = httpResponse.Model
+                            .Where(u => u.Role != UserRole.Admin)
                             .OrderBy(m => m.LastName)
                             .ToDictionary(k => $"{k.UserId}", v => $"{ v.LastName } { v.FirstName }");
                         _state.CallbackMessageId = await _bot.SendInlineKbList(update, "Select the employee:", dictionary);
@@ -81,7 +82,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         _state.User.Email = loginUserDto.Email;
                         // !!! Token and role aren't changed
                         _state.TextMessage = $"You have selected employee with the name: <b>{_state.GetFullName()}</b>.\n What would you like to do on his behalf?";
-                        _state.Propositions = new() { "Change or Cancel a booking", "Book a workplace", "Nothing" };
+                        _state.Propositions = new() { "Book a workplace", "Nothing", "Change or Cancel a booking" };
                         _state.NextStep = nameof(ActionChoice);
                     }
                 }
