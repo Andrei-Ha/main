@@ -76,7 +76,9 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public DateTime CalendarDate { get; set; } = default;
 
-        public List<BookView> bookViews { get; set; } = new();
+        public List<BookView> BookViews { get; set; } = new();
+
+        public Guid BookingId { get; set; } = default;
 
         public Result GetResult()
         {

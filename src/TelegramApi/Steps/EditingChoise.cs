@@ -10,7 +10,7 @@ using Telegram.Bot.Types;
 
 namespace Exadel.OfficeBooking.TelegramApi.Steps
 {
-    public class temp____ : StateMachineStep
+    public class EditingChoise : StateMachineStep
     {
         public override async Task<UserState> Execute(Update update)
         {
@@ -20,13 +20,18 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 return _state;
             }
 
-            // yes, I want to make one
+            // I want to change office
             if (text == _state.Propositions[0])
             {
-
+                _state.SetByeAndFinish();
             }
-            // no, thanks
+            // I want to change workplace in the same office
             else if (text == _state.Propositions[1])
+            {
+                _state.SetByeAndFinish();
+            }
+            // I want to change my booking dates
+            else if (text == _state.Propositions[2])
             {
                 _state.SetByeAndFinish();
             }

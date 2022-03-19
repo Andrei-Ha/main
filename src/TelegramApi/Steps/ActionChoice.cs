@@ -76,44 +76,115 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             .OrderBy(b => b.OfficeName).ThenBy(b => b.StartDate)
                             .ToDictionary(k => $"{k.Id}", v => $"{v.Summary}");
                         var bookViewResponse = await _bot.SendBookingList(update, "Select the booking:", dictionary);
-                        _state.bookViews = bookViewResponse.BookViews;
+                        _state.BookViews = bookViewResponse.BookViews;
                         _state.CallbackMessageId = bookViewResponse.BackMessageId;
                     }
                 }
             }
             else // if Update.Type == CallbackQuery
             {
-                await _bot.EchoCallbackQuery(update);
+                //await _bot.EchoCallbackQuery(update);
                 string[] data = update.CallbackQuery.Data.Split(':');
                 switch (data[0])
                 {
+                    case "Change":
+                        {
+                            if (Guid.TryParse(data[1], out Guid bookingId))
+                            {
+                                var bookView = _state.BookViews.Where(b => b.BookingId == data[1]).FirstOrDefault();
+                                if (bookView != null)
+                                {
+                                    _state.BookViews.Remove(bookView);
+                                    _state.CallbackMessageId = await _bot.DeleteBookinList
+                                        (
+                                            update,
+                                            _state.BookViews.Select(m => m.MessageId).OrderByDescending(m => m).ToList(),
+                                            _state.CallbackMessageId
+                                        );
+                                    await _bot.DeleteBookinList(update, new List<int> { bookView.MessageId }, 0, true);
+                                    _state.BookingId = bookingId;
+                                    _state.TextMessage = "What would you like to change?";
+                                    _state.Propositions = new()
+                                    {
+                                        "I want to change office",
+                                        "I want to change workplace in the same office",
+                                        "I want to change my booking dates"
+                                    };
+                                    _state.NextStep = nameof(EditingChoise);
+                                }
+                            }
+                            break;
+                        }
+                    case "Cancel":
+                        {
+                            if (Guid.TryParse(data[1], out Guid bookingId))
+                            {
+                                // Need to implement deletion of booking by bookingId
+                                if (true)// If booking endpoint returned OK
+                                {
+                                    var bookViewToDel = _state.BookViews.Where(b => b.BookingId == data[1]).FirstOrDefault();
+                                    if (bookViewToDel != null)
+                                    {
+                                        _state.BookViews.Remove(bookViewToDel);
+                                        await _bot.DeleteBookinList(update, new List<int> { bookViewToDel.MessageId });
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    case "CancelChecked":
+                        {
+                            var BookViewsToDel = _state.BookViews.Where(b => b.IsChecked == true).ToList();
+                            _state.BookViews.RemoveAll(b => b.IsChecked == true);
+                            if (BookViewsToDel.Any())
+                            {
+                                string guidsToDel = BookViewsToDel.Select(g => g.BookingId).Aggregate((i, j) => $"{i};" + j);
+                                Console.WriteLine($"QueryString = {guidsToDel}");
+                                // Need to implement multiple deletion of booking by string(Join Guids with separator ';') 
+                                if (true) // If booking endpoint returned OK
+                                {
+                                    await _bot
+                                        .DeleteBookinList(update, BookViewsToDel.Select(m => m.MessageId).OrderByDescending(m => m).ToList());
+                                }
+                            }
+                            break;
+                        }
                     case "Check":
                         {
                             string[] key = data[1].Split('/');
                             if (bool.TryParse(key[1], out bool isChecked))
                             {
-                                _state.bookViews.ForEach(b => b.IsChecked = (b.BookingId == key[0]) ? isChecked : b.IsChecked);
-                                await _bot.UpdateBookinList(update, _state.bookViews.Where(b => b.BookingId == key[0]).ToList());
+                                _state.BookViews.ForEach(b => b.IsChecked = (b.BookingId == key[0]) ? isChecked : b.IsChecked);
+                                await _bot.UpdateBookinList(update, _state.BookViews.Where(b => b.BookingId == key[0]).ToList());
                             }
-                            break;
-                        }
-                    case "Back":
-                        {
-                            var listId = _state.bookViews.Select(b => b.MessageId).OrderByDescending(o => o).ToList();
-                            _state.bookViews = new();
-                            //listId.Add(_state.CallbackMessageId);
-                            _state.CallbackMessageId = await _bot.DeleteBookinList(update, listId, _state.CallbackMessageId, true);
-                            _state.TextMessage = "What else would you like to do?";
                             break;
                         }
                     case "CheckAll":
                         {
+                            List<BookView> BookViewsToChange = new();
                             if (bool.TryParse(data[1], out bool isAllChecked))
                             {
-                                _state.bookViews.ForEach(b => b.IsChecked = isAllChecked);
+                                for(int i = 0; i < _state.BookViews.Count; i++)
+                                {
+                                    if(_state.BookViews[i].IsChecked != isAllChecked)
+                                    {
+                                        _state.BookViews[i].IsChecked = isAllChecked;
+                                        BookViewsToChange.Add(_state.BookViews[i]);
+                                    }
+                                }
+                                //_state.BookViews.ForEach(b => b.IsChecked = isAllChecked);
                                 await _bot.UpdateBackAndCanselAllBookinList(update, _state.CallbackMessageId, isAllChecked);
                             }
-                            await _bot.UpdateBookinList(update, _state.bookViews.OrderByDescending(b => b.MessageId).ToList());
+
+                            await _bot.UpdateBookinList(update, BookViewsToChange.OrderByDescending(b => b.MessageId).ToList());
+                            break;
+                        }
+                    case "Back":
+                        {
+                            var listId = _state.BookViews.Select(b => b.MessageId).OrderByDescending(o => o).ToList();
+                            _state.BookViews = new();
+                            _state.CallbackMessageId = await _bot.DeleteBookinList(update, listId, _state.CallbackMessageId, true);
+                            _state.TextMessage = "What else would you like to do?";
                             break;
                         }
                 }

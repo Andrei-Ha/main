@@ -151,7 +151,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             }
                         case Constants.Back:
                             {
-                                await _bot.DeleteInlineKeyboardWithText(update);
+                                _state.CallbackMessageId = await _bot.DeleteInlineKeyboardWithText(update);
+                                //_state.TextMessage = "Select your booking type again:";
                                 return _state;
                             }
                     }

@@ -59,7 +59,7 @@ namespace Exadel.OfficeBooking.TelegramApi
                                                       replyMarkup: InlineKbMarkups.CreateBackAndCancelAll(isAllChecked));
         }
 
-        public static async Task<int> DeleteBookinList(this TelegramBotClient bot, Update update, List<int> identifires, int lastMessage, bool isOnlyButtons = false)
+        public static async Task<int> DeleteBookinList(this TelegramBotClient bot, Update update, List<int> identifires, int lastMessage = 0, bool isOnlyButtons = false)
         {
             foreach(var id in identifires)
             {
@@ -68,7 +68,9 @@ namespace Exadel.OfficeBooking.TelegramApi
                 else
                     await bot.DeleteMessageAsync(chatId: update.CallbackQuery.Message.Chat.Id, messageId: id);
             }
-            await bot.DeleteMessageAsync(chatId: update.CallbackQuery.Message.Chat.Id, messageId: lastMessage);
+
+            if(lastMessage != 0)
+                await bot.DeleteMessageAsync(chatId: update.CallbackQuery.Message.Chat.Id, messageId: lastMessage);
             return 0;
         }
 
@@ -147,7 +149,7 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public static async Task<int> DeleteInlineKeyboardWithText(this TelegramBotClient bot, Update update)
         {
-            await bot.EditMessageTextAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Message.MessageId, text: "-");
+            await bot.DeleteMessageAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Message.MessageId);
             return default;
         }
 
