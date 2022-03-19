@@ -36,6 +36,12 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 {
                     _state.OfficeId= office.Id;
                     _state.OfficeName = text!;
+                    if (_state.IsOfficeReportSelected)
+                    {
+                        _state.TextMessage = "Select dates:";
+                        _state.Propositions = new() {  };
+                        //_state.CallbackMessageId = await _bot.SendCalendar(update, _state.CalendarDate, _state.AddTextToCalendar(), _state.Adapt<RecurrencePattern>());
+                    }
                     _state.TextMessage = "Select booking type:";
                     _state.Propositions = new() {"One day", "Continuous", "Recurring"};
                     _state.NextStep = nameof(DatesChoice);
