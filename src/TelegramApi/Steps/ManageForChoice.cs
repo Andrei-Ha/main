@@ -53,6 +53,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     if (httpResponse?.Model != null)
                     {
                         var dictionary = httpResponse.Model
+                            .Where(u => u.Role != UserRole.Admin)
                             .OrderBy(m => m.LastName)
                             .ToDictionary(k => $"{k.UserId}", v => $"{ v.LastName } { v.FirstName }");
                         _state.CallbackMessageId = await _bot.SendInlineKbList(update, "Select the employee:", dictionary);
