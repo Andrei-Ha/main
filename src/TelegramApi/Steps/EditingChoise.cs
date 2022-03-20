@@ -40,13 +40,16 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 else
                 {
                     _state.TextMessage = $"\nStatusCode: {httpResponse?.StatusCode.ToString()}";
-                }
+                } 
             }
             // I want to change workplace in the same office
             else if (text == _state.Propositions[1])
             {
                 _state.EditTypeEnum = EditTypeEnum.WorkplaceChange;
-                _state.SetByeAndFinish();
+                _state.IsSpecifyWorkplace = true;
+                _state.TextMessage = "Would you like to choose the exact floor?";
+                _state.Propositions = new() { "yes", "no" };
+                _state.NextStep = nameof(FloorChoice);
             }
             // I want to change my booking dates
             else if (text == _state.Propositions[2])
