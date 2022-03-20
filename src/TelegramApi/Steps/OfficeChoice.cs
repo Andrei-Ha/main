@@ -117,7 +117,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         return _state;
                     }
                 }
-                // https://localhost:7110/api/Report?id=c2798436-f780-4f27-b36b-9bbdd1810e95&fromDate=2022-03-18&toDate=2022-03-19
+
                 if (isOkClicked)
                 {
                     var httpResponse = await _httpClient.GetWebApiModel<OfficeReportDto>($"report?" +
