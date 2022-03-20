@@ -123,7 +123,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     // обнуляем введеные ранее данные
                     _state.InitRecurrencePattern();
                     _state.IsOfficeReportSelected = false;
-
+                    _state.BookingType = BookingTypeEnum.None;
                 }
                 else
                 {
