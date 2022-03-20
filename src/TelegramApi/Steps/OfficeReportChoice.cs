@@ -38,7 +38,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             else if (text == _state.Propositions[1])
             {
                 _state.IsOfficeReportSelected = true;
-                //_state.BookingType = BookingTypeEnum.Continuous;
                 var httpResponse = await _httpClient.GetWebApiModel<IEnumerable<OfficeGetDto>>("office", _state.User.Token);
                 IEnumerable<OfficeGetDto>? offices = httpResponse?.Model;
                 if (offices != null)
