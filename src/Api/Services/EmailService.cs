@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Exadel.OfficeBooking.Api.Interfaces;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,11 +9,18 @@ using System.Threading.Tasks;
 
 namespace Exadel.OfficeBooking.Api.Services
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
-      
-        public static void SendEmailTo(string receiver, string body)
+        private readonly IConfiguration _configuration;
+        private bool _emailOn;
+        public EmailService(IConfiguration configuration)
         {
+            _configuration = configuration;
+        }
+        public  void SendEmailTo(string receiver, string body)
+        {
+            _emailOn = bool.Parse(_configuration["EmailOptions:SendEmail"]);
+            if (!_emailOn) return;
 
             MailMessage mail = new MailMessage("Team3InfoBot@gmail.com", receiver);
             mail.Subject = "Booking info";
