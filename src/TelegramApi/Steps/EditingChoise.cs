@@ -48,14 +48,20 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 _state.EditTypeEnum = EditTypeEnum.WorkplaceChange;
                 _state.IsSpecifyWorkplace = true;
                 _state.TextMessage = "Would you like to choose the exact floor?";
-                _state.Propositions = new() { "yes", "no" };
+                _state.Propositions = new()
+                {
+                    "yes, I want to choose the exact floor",
+                    "no, I want to select floor attributes"
+                };
                 _state.NextStep = nameof(FloorChoice);
             }
             // I want to change my booking dates
             else if (text == _state.Propositions[2])
             {
                 _state.EditTypeEnum = EditTypeEnum.DatesChange;
-                _state.SetByeAndFinish();
+                _state.TextMessage = "Select booking type:";
+                _state.Propositions = new() { "One day", "Continuous", "Recurring" };
+                _state.NextStep = nameof(DatesChoice);
             }
  
             return _state;

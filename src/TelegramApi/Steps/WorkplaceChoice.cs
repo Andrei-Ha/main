@@ -184,61 +184,65 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             var dictionary = new Dictionary<string, string>();
             if (_state.IsNextToWindow)
             {
-                dictionary.Add("Next to window:false", "Next to window ✔");
+                dictionary.Add("Next to window:false", "Next to window ☑");
             }
             else
             {
-                dictionary.Add("Next to window:true", "Next to window");
+                dictionary.Add("Next to window:true", "Next to window ◻️");
             }
 
             if (_state.HasPC)
             {
-                dictionary.Add("HasPC:false", "HasPC ✔");
+                dictionary.Add("HasPC:false", "HasPC ☑");
             }
             else
             {
-                dictionary.Add("HasPC:true", "HasPC");
+                dictionary.Add("HasPC:true", "HasPC ◻️");
             }
 
             if (_state.HasMonitor)
             {
-                dictionary.Add("HasMonitor:false", "HasMonitor ✔");
+                dictionary.Add("HasMonitor:false", "HasMonitor ☑");
             }
             else
             {
-                dictionary.Add("HasMonitor:true", "HasMonitor");
+                dictionary.Add("HasMonitor:true", "HasMonitor ◻️");
             }
 
             if (_state.HasKeyboard)
             {
-                dictionary.Add("HasKeyboard:false", "HasKeyboard ✔");
+                dictionary.Add("HasKeyboard:false", "HasKeyboard ☑");
             }
             else
             {
-                dictionary.Add("HasKeyboard:true", "HasKeyboard");
+                dictionary.Add("HasKeyboard:true", "HasKeyboard ◻️");
             }
 
             if (_state.HasMouse)
             {
-                dictionary.Add("HasMouse:false", "HasMouse ✔");
+                dictionary.Add("HasMouse:false", "HasMouse ☑");
             }
             else
             {
-                dictionary.Add("HasMouse:true", "HasMouse");
+                dictionary.Add("HasMouse:true", "HasMouse ◻️");
             }
 
             if (_state.HasHeadset)
             {
-                dictionary.Add("HasHeadset:false", "HasHeadset ✔");
+                dictionary.Add("HasHeadset:false", "HasHeadset ☑");
             }
             else
             {
-                dictionary.Add("HasHeadset:true", "HasHeadset");
+                dictionary.Add("HasHeadset:true", "HasHeadset ◻️");
             }
 
             dictionary.Add("OK:true", "[ OK ]");
             dictionary.Add("Back:true", "<< Back");
             return dictionary;
         }
+        // window 🪟,PC 💻, Monitor 🖥, keyboard  ⌨️, mouse 🖰 , headset 🎧, kitchen 🍽, meeting room 🚪
+        // 𝟎 𝟏 𝟐 𝟑 𝟒 𝟓 𝟔 𝟕 𝟖 𝟗 
+        // up ☝⬆, edit ✏, ok 🆗, cancel 🗙
+        // https://unicode-table.com/en/1D7D9/
     }
 }

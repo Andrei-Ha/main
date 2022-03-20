@@ -60,7 +60,28 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 // if this is a edited booking
                 else
                 {
-                    _state.TextMessage = "here we have to update our booking";
+                    string result = "A booking has been <b>edited</b>.\nAll details have been sent to you by email.\nBye!";
+                    if (_state.IsRecurring())
+                    {
+                        var response = await _httpClient.PutWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
+                            $"booking/update/recurring/{_state.BookingId}", _state.AddRecurringBookingDto());
+
+                        //temporary validation
+                        if (response?.Model != null)
+                            _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                        else
+                            _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                    }
+                    else
+                    {
+                        Console.WriteLine($"booking/update/one-day/{_state.BookingId}");
+                        var response = await _httpClient.PutWebApiModel<ServiceResponse<GetOneDayBookingDto>, AddBookingDto>(
+                            $"booking/update/one-day/{_state.BookingId}", _state.AddBookingDto());
+                        if (response?.Model != null)
+                            _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                        else
+                            _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                    }
                 }
             }
             // Cancel

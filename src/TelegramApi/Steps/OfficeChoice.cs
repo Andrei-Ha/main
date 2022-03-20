@@ -119,12 +119,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         isOkClicked = true;
                         break;
                     }
-
-                    case Constants.Back:
-                    {
-                        _state.CallbackMessageId = await _bot.DeleteInlineKeyboardWithText(update);
-                        return _state;
-                    }
                 }
 
                 if (isOkClicked)

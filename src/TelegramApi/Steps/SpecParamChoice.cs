@@ -33,7 +33,11 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             {
                 _state.IsSpecifyWorkplace = true;
                 _state.TextMessage = "Would you like to choose the exact floor?";
-                _state.Propositions = new() { "yes", "no" };
+                _state.Propositions = new()
+                {
+                    "yes, I want to choose the exact floor",
+                    "no, I want to select floor attributes"
+                };
                 _state.NextStep = nameof(FloorChoice);
             }
             // If the choice is "No, I can take any available workplace"

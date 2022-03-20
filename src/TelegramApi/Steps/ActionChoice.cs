@@ -110,6 +110,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                                 _state.BookViews.Select(m => m.MessageId).OrderByDescending(m => m).ToList(),
                                                 _state.CallbackMessageId
                                             );
+                                        _state.BookViews = new();
                                         await _bot.DeleteBookinList(update, new List<int> { bookView.MessageId }, 0, true);
                                         _state.BookingId = bookingId;
                                         _state.TextMessage = "What would you like to change?";

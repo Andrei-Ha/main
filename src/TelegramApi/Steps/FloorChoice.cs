@@ -69,9 +69,17 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 {
                     _state.MapId = result;
                     _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
+                    if (int.TryParse(data[0], out int floorNumber))
+                    {
+                        _state.FloorNumber = floorNumber;
+                    }
                     _state.TextMessage = $"You have selected floor: <b>{data[0]}</b>.\n";
                     _state.TextMessage += "Would you like to choose the exact workplace?";
-                    _state.Propositions = new() { "yes", "no" };
+                    _state.Propositions = new()
+                    {
+                        "yes, I want to choose the exact workplace",
+                        "no, I want to select workplace attributes"
+                    };
                     _state.NextStep = nameof(WorkplaceChoice);
 
                 }
@@ -101,7 +109,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 break;
                             }
                         // [ OK ]
-                        default:
+                        case "OK":
                             {
                                 _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
                                 var dictionary = GetList();
@@ -122,8 +130,12 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 else
                                 {
                                     _state.TextMessage += $"No floors with given attributes!";
-                                    _state.TextMessage = "Would you like to choose the exact floor?";
-                                    _state.Propositions = new() { "yes", "no" };
+                                    _state.TextMessage += "Would you like to choose the exact floor?";
+                                    _state.Propositions = new()
+                                    {
+                                        "yes, I want to choose the exact floor",
+                                        "no, I want to select floor attributes"
+                                    };
                                     _state.NextStep = nameof(FloorChoice);
                                 }
 
@@ -140,20 +152,20 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             var dictionary = new Dictionary<string, string>();
            if (_state.IsKitchenPresent)
             {
-                dictionary.Add("Kitchen:false", "Kitchen ✔");
+                dictionary.Add("Kitchen:false", "Kitchen ☑");
             }
             else
             {
-                dictionary.Add("Kitchen:true", "Kitchen");
+                dictionary.Add("Kitchen:true", "Kitchen ◻️");
             }
 
             if (_state.IsMeetingRoomPresent)
             {
-                dictionary.Add("Meeting room:false", "Meeting room ✔");
+                dictionary.Add("Meeting room:false", "Meeting room ☑");
             }
             else
             {
-                dictionary.Add("Meeting room:true", "Meeting room");
+                dictionary.Add("Meeting room:true", "Meeting room ◻️");
             }
 
             dictionary.Add("OK:true", "[ OK ]");
