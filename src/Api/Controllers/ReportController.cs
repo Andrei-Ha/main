@@ -19,7 +19,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<OfficeReportDto>> GetOfficeReportByIdFromDateToDate(Guid id, DateTime fromDate, DateTime toDate)
         {
-            if (toDate <= fromDate)
+            if (toDate < fromDate)
                 return BadRequest(new { message = "Wrong date range" });
 
             var officeReport = await _reportService.GetOfficeReportByIdFromDateToDate(id, fromDate, toDate);

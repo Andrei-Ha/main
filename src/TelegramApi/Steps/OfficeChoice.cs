@@ -1,6 +1,7 @@
 ﻿using Exadel.OfficeBooking.TelegramApi.Calendar;
 using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
 using Exadel.OfficeBooking.TelegramApi.DTO.OfficeDto;
+using Exadel.OfficeBooking.TelegramApi.DTO.ReportDto;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using Mapster;
 using System;
@@ -9,6 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -71,56 +73,84 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 switch (key[0] + "/")
                 {
                     case Constants.PickDate:
+                    {
+                        DateTime.TryParseExact(key[1], "dd'.'MM'.'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime selectedDate);
+                        if (_state.StartDate == default)
                         {
-                            DateTime.TryParseExact(key[1], "dd'.'MM'.'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime selectedDate);
-                            if (_state.StartDate == default)
+                            _state.StartDate = selectedDate;
+                        }
+                        else
+                        {
+                            if (_state.EndDate == default)
                             {
-                                _state.StartDate = selectedDate;
+
+                                _state.EndDate = selectedDate < _state.StartDate ? _state.StartDate : selectedDate;
                             }
                             else
                             {
-                                if (_state.EndDate == default)
-                                {
+                                _state.StartDate = selectedDate;
+                                _state.EndDate = default;
+                            }
+                        }
+                        break;
+                    }
 
-                                    _state.EndDate = selectedDate < _state.StartDate ? _state.StartDate : selectedDate;
-                                }
-                                else
-                                {
-                                    _state.StartDate = selectedDate;
-                                    _state.EndDate = default;
-                                }
-                            }
-                            break;
-                        }
                     case Constants.ChangeTo:
+                    {
+                        if (DateTime.TryParse(key[1], out DateTime newDate))
                         {
-                            if (DateTime.TryParse(key[1], out DateTime newDate))
-                            {
-                                _state.CalendarDate = newDate;
-                            }
-                            break;
+                            _state.CalendarDate = newDate;
                         }
+                        break;
+                    }
+
                     case Constants.Ok:
-                        {
-                            _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
-                            isOkClicked = true;
-                            break;
-                        }
+                    {
+                        _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
+                        isOkClicked = true;
+                        break;
+                    }
+
                     case Constants.Back:
-                        {
-                            _state.CallbackMessageId = await _bot.DeleteInlineKeyboardWithText(update);
-                            return _state;
-                        }
+                    {
+                        _state.CallbackMessageId = await _bot.DeleteInlineKeyboardWithText(update);
+                        return _state;
+                    }
                 }
+
                 if (isOkClicked)
                 {
-                    // здесь у тебя уже есть все данные для формирования отчета
-                    // делай запрос к БД и выводи в TextMessage
-                    _state.TextMessage = "здесь можно отобразить все данные отчета";
+                    var httpResponse = await _httpClient.GetWebApiModel<OfficeReportDto>($"report?" +
+                        $"id={_state.OfficeId}&" +
+                        $"fromdate={_state.StartDate:yyyy-MM-dd}&" +
+                        $"todate={_state.EndDate:yyyy-MM-dd}", _state.User.Token);
+
+
+                    if (httpResponse?.Model != null)
+                    {
+                        var sb = new StringBuilder();
+                        sb.AppendLine($"Office workload report: <b>{_state.OfficeName} {_state.City}</b>");
+                        sb.AppendLine($"From date: {_state.StartDate.ToString(Constants.DateFormat).Bold()}");
+                        sb.AppendLine($"To date: {_state.EndDate.ToString(Constants.DateFormat).Bold()}");
+                        sb.AppendLine($"\n<b>Date / Free / TotalAmount</b>");
+
+                        var officeReport = httpResponse.Model;
+
+                        foreach (var dailyReport in officeReport.OfficeDailyReportList)
+                        {
+
+                            sb.AppendLine($"{dailyReport.CurrentDate.ToString(Constants.DateFormat)} / " +
+                                $"{dailyReport.FreeWorkplaces} / {dailyReport.TotalAmountOfWorkplaces}");
+                        }
+
+                        _state.TextMessage = sb.ToString();
+                    }
+
                     _state.TextMessage += "\n\n<b>Please choose your next action!</b>";
                     _state.Propositions = new() { "Manage workplaces", "Get office report" , "Nothing" };
                     _state.NextStep = nameof(OfficeReportChoice);
-                    // обнуляем введеные ранее данные
+
+                    // reset data, entered before
                     _state.InitRecurrencePattern();
                     _state.IsOfficeReportSelected = false;
                     _state.BookingType = BookingTypeEnum.None;
