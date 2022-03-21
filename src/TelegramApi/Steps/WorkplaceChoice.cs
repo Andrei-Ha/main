@@ -67,7 +67,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             {
                 string[] data = update.CallbackQuery.Data.Split(':');
 
-                // if CallbackQuery received from "exact floor"
+                // if CallbackQuery received from "exact workplace"
                 if (Guid.TryParse(data[1], out Guid result))
                 {
                     _state.WorkplaceId = result;
@@ -150,9 +150,10 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 _state.TextMessage += _state.HasKeyboard ? $"{dictionary.ElementAt(3).Value}\n" : "";
                                 _state.TextMessage += _state.HasMouse ? $"{dictionary.ElementAt(4).Value}\n" : "";
                                 _state.TextMessage += _state.HasHeadset ? $"{dictionary.ElementAt(5).Value}\n" : "";
-
-                                Console.WriteLine($"workplace?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}");
-                                var httpResponse = await _http.GetWebApiModel<IEnumerable<WorkplaceGetDto>>($"workplace?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}");
+                                WorkplaceFilterDto workplaceFilterDto = _state.Adapt<WorkplaceFilterDto>();
+                                workplaceFilterDto.IsOnlyFirstFree = true;
+                                Console.WriteLine($"workplace?{workplaceFilterDto.GetQueryString()}");
+                                var httpResponse = await _http.GetWebApiModel<IEnumerable<WorkplaceGetDto>>($"workplace?{workplaceFilterDto.GetQueryString()}");
                                 if (httpResponse?.Model != null/* && httpResponse?.Model.Count() != 0*/)
                                 {
                                     var workplace = httpResponse.Model.FirstOrDefault();

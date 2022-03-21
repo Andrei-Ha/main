@@ -1,4 +1,5 @@
 ﻿using Exadel.OfficeBooking.TelegramApi.Calendar;
+using Exadel.OfficeBooking.TelegramApi.DTO;
 using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using Mapster;
@@ -167,9 +168,40 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         else
                         {
                             //This should be a request to the web API to check if our place can be booked for the new dates
-                            _state.TextMessage = "This should be a request to the web API to check if our place can be booked for the new dates...\nBye!";
-                            _state.Propositions = new();
-                            _state.NextStep = "Finish";
+                            //string result = "Booking can be made!";
+                            //if (_state.IsRecurring())
+                            //{
+                            //    var response = await _httpClient.PutWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
+                            //        $"booking/update/recurring/{_state.BookingId}", _state.AddRecurringBookingDto());
+
+                            //    //temporary validation
+                            //    if (response?.Model != null)
+                            //        _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                            //    else
+                            //        _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                            //}
+                            //else
+                            //{
+                            //    Console.WriteLine($"booking/update/one-day/{_state.BookingId}");
+                            //    var response = await _httpClient.PutWebApiModel<ServiceResponse<GetOneDayBookingDto>, AddBookingDto>(
+                            //        $"booking/update/one-day/{_state.BookingId}", _state.AddBookingDto());
+                            //    if (response?.Model != null)
+                            //        _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                            //    else
+                            //        _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                            //}
+
+
+                            _state.TextMessage = _state.Summary() + "\nConfirm the booking?";
+                            if (_state.EditTypeEnum != EditTypeEnum.DatesChange)
+                            {
+                                _state.TextMessage += "\nThis is edited booking(from DatesChoise).";
+                            }
+                            _state.Propositions = new() { "confirm", "cancel" };
+                            _state.NextStep = nameof(ConfirmBooking);
+                            //_state.TextMessage = "This should be a request to the web API to check if our place can be booked for the new dates...\nBye!";
+                            //_state.Propositions = new();
+                            //_state.NextStep = "Finish";
                         }
                     }
                     else

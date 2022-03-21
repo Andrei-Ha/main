@@ -137,6 +137,7 @@ namespace Exadel.OfficeBooking.TelegramApi
             sb.AppendLine(GetFullName());
             sb.AppendLine($"Email: {User.Email}");
             sb.AppendLine($"Office: <b>{OfficeName} {City}</b>");
+            sb.AppendLine($"Floor number : {FloorName.Bold()}");
             sb.AppendLine($"Workplace : {WorkplaceName.Bold()}");
             sb.AppendLine($"Booking type: {BookingType.ToString().Bold()}");
             sb.Append(AddTextToCalendar(true));
