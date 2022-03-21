@@ -32,11 +32,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 
         public override async Task<UserState> Execute(Update update)
         {
-            if (_state.IsOfficeReportSelected)
-            {
-                _state.BookingType = BookingTypeEnum.Continuous;
-            }
-
             if (update.Type == UpdateType.Message)
             {
                 string? text = update.Message?.Text;
@@ -75,7 +70,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 {
                     //await _bot.EchoCallbackQuery(update);
                     string[] key = update.CallbackQuery.Data.Split('/');
-                    bool isDeleted = false;
+                    bool isOkClicked = false;
 
                     switch (key[0] + "/")
                     {
@@ -151,7 +146,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         case Constants.Ok:
                             {
                                 _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
-                                isDeleted = true;
+                                isOkClicked = true;
                                 break;
                             }
                         case Constants.Back:
@@ -161,12 +156,21 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 return _state;
                             }
                     }
-                    if (isDeleted)
+                    if (isOkClicked)
                     {
-                        _state.TextMessage = "Would you like to add parking place?";
-                        _state.Propositions = new() { "yes", "no" };
-                        _state.NextStep = nameof(ParkingChoice);
-
+                        if (_state.EditTypeEnum != EditTypeEnum.DatesChange)
+                        {
+                            _state.TextMessage = "Would you like to add parking place?";
+                            _state.Propositions = new() { "yes", "no" };
+                            _state.NextStep = nameof(ParkingChoice);
+                        }
+                        else
+                        {
+                            //This should be a request to the web API to check if our place can be booked for the new dates
+                            _state.TextMessage = "This should be a request to the web API to check if our place can be booked for the new dates...\nBye!";
+                            _state.Propositions = new();
+                            _state.NextStep = "Finish";
+                        }
                     }
                     else
                     {

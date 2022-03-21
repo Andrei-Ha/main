@@ -35,7 +35,7 @@ namespace Exadel.OfficeBooking.Api.DTO.WorkplaceDto
         // if true, then only one instance is returned!
         public bool? IsOnlyFirstFree { get; set; }
 
-        public BookingTypeEnum BookingType { get; set; } = BookingTypeEnum.None;
+        public BookingTypeEnum? BookingType { get; set; }
 
         //
 

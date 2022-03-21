@@ -18,10 +18,11 @@ namespace Exadel.OfficeBooking.Api.Services;
 public class BookingService : IBookingService
 {
     private readonly AppDbContext _context;
-
-    public BookingService(AppDbContext context)
+    private readonly IEmailService _email;
+    public BookingService(AppDbContext context, IEmailService email)
     {
         _context = context;
+        _email = email;
     }
 
     public async Task<ServiceResponse<GetBookingDto[]>> GetAllBookings()
@@ -145,7 +146,7 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
-        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
+        _email.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
 
         response.StatusCode = 201;
         var responseBooking = bookingDto.Adapt<GetOneDayBookingDto>();
@@ -155,14 +156,14 @@ public class BookingService : IBookingService
         return response;
     }
 
-    public async Task<ServiceResponse<GetOneDayBookingDto>> UpdateBooking(UpdateBookingDto bookingDto)
+    public async Task<ServiceResponse<GetOneDayBookingDto>> UpdateBooking(Guid id, AddBookingDto bookingDto)
     {
         ServiceResponse<GetOneDayBookingDto> response = new();
 
         Booking? booking = await _context.Bookings
             .Include(b => b.User)
             .Include(b => b.Workplace)
-            .FirstOrDefaultAsync(b => b.Id == bookingDto.Id);
+            .FirstOrDefaultAsync(b => b.Id == id);
         if (booking == null) return NotFoundResponse<GetOneDayBookingDto>("Requested booking doesn’t exist");
 
         Workplace? workplace = await _context.Workplaces
@@ -182,6 +183,8 @@ public class BookingService : IBookingService
         //update properties and save changes
         booking.StartDate = bookingDto.Date;
         booking.Workplace = workplace;
+        booking.BookingType = bookingDto.BookingType;
+        booking.Summary = bookingDto.Summary;
 
         _context.Bookings.Update(booking);
         await _context.SaveChangesAsync();
@@ -225,23 +228,23 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
-        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
+        _email.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
         response.Data = newBooking.Adapt<GetRecurringBookingDto>();
         response.StatusCode = 209;
         return response;
     }
 
-    public async Task<ServiceResponse<GetBookingDto>> UpdateRecurringBooking(UpdateRecurringBookingDto bookingDto)
+    public async Task<ServiceResponse<GetRecurringBookingDto>> UpdateRecurringBooking(Guid id, AddRecurringBookingDto bookingDto)
     {
-        ServiceResponse<GetBookingDto> response = new();
+        ServiceResponse<GetRecurringBookingDto> response = new();
 
-        Booking? booking = await _context.Bookings
-            .FirstOrDefaultAsync(b => b.Id == bookingDto.Id);
-        if (booking == null) return NotFoundResponse<GetBookingDto>("Requested booking doesn’t exist");
-
+        Booking? booking = await _context.Bookings.Include(b => b.Workplace)
+            .FirstOrDefaultAsync(b => b.Id == id);
+        if (booking == null) return NotFoundResponse<GetRecurringBookingDto>("Requested booking doesn’t exist");
+        Console.WriteLine("wp_Id = " + booking.Workplace.Id);
         Workplace? workplace = await _context.Workplaces
             .Include(w => w.Bookings)
-            .FirstOrDefaultAsync(w => w == booking.Workplace);
+            .FirstOrDefaultAsync(w => w.Id == bookingDto.WorkplaceId);
         User? user = await _context.Users
             .FirstOrDefaultAsync(u => u == booking.User);
 
@@ -249,20 +252,21 @@ public class BookingService : IBookingService
 
         //check vacation and workplace conflicts
         if (await HasRecurringBookingVacationConflict(user, recurringDates))
-            return ConflictResponse<GetBookingDto>("Cannot select date on vacation days.");
+            return ConflictResponse<GetRecurringBookingDto>("Cannot select date on vacation days.");
 
         if (!IsWorkplaceAvailableForRecurringBooking(workplace, recurringDates))
-            return ConflictResponse<GetBookingDto>("The selected workplace has been booked by another user");
+            return ConflictResponse<GetRecurringBookingDto>("The selected workplace has been booked by another user");
 
         //update properties and save changes
-        booking = bookingDto.Adapt<Booking>();
+        //booking = bookingDto.Adapt<Booking>();
+        bookingDto.Adapt(booking);
         booking.Workplace = workplace;
         booking.User = user;
 
         _context.Bookings.Update(booking);
         await _context.SaveChangesAsync();
 
-        response.Data = booking.Adapt<GetBookingDto>();
+        response.Data = booking.Adapt<GetRecurringBookingDto>();
         return response;
     }
 

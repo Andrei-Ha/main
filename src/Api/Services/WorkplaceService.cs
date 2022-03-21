@@ -47,10 +47,8 @@ namespace Exadel.OfficeBooking.Api.Services
                         foreach (var workplace in workplacess)
                         {
                             //check if workplace is available at the StartDate
-                            if (!_bookingService.IsWorkplaceAvailableForOneDayBooking(workplace, (DateTime)filterModel.StartDate))
-                                continue;
-
-                            return workplace.Adapt<WorkplaceGetDto[]>();
+                            if (_bookingService.IsWorkplaceAvailableForOneDayBooking(workplace, (DateTime)filterModel.StartDate))
+                                return new WorkplaceGetDto[] { workplace.Adapt<WorkplaceGetDto>() };
                         }
                     }
                 }
@@ -70,10 +68,8 @@ namespace Exadel.OfficeBooking.Api.Services
                         foreach (var workplace in workplacess)
                         {
                             //check if workplace is available at given dates
-                            if (!_bookingService.IsWorkplaceAvailableForRecurringBooking(workplace, recurringDates))
-                                continue;
-
-                            return workplace.Adapt<WorkplaceGetDto[]>();
+                            if (_bookingService.IsWorkplaceAvailableForRecurringBooking(workplace, recurringDates))
+                                return new WorkplaceGetDto[] { workplace.Adapt<WorkplaceGetDto>() };
                         }
                     }
                 }
@@ -109,7 +105,7 @@ namespace Exadel.OfficeBooking.Api.Services
                 workplaces = workplaces.Where(w => w.MapId == filterModel.MapId);
 
             if (filterModel.Type != null)
-                workplaces = workplaces.Where(w => w.Type.ToString() == filterModel.Type.ToString());
+                workplaces = workplaces.Where(w => w.Type == (WorkplaceTypes)filterModel.Type);   
 
             if (filterModel.IsBooked != null)
                 workplaces = workplaces.Where(w => w.IsBooked == filterModel.IsBooked);

@@ -25,6 +25,7 @@ public class GetBookingDto
 
     public string WorkplaceName { get; set; } = string.Empty;
     public int FloorNumber { get; set; }
+    public Guid OfficeId { get; set; } = default;
     public string OfficeName { get; set; } = string.Empty;
     public int? ParkingPlaceNumber { get; set; }
 }

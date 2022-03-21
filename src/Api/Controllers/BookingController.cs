@@ -20,14 +20,14 @@ public class BookingController : ControllerBase
     {
         _bookingService = bookingService;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetBookings()
     {
         var response = await _bookingService.GetAllBookings();
         return Ok(response);
     }
-    
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetBookingById(Guid id)
     {
@@ -65,7 +65,7 @@ public class BookingController : ControllerBase
         var response = await _bookingService.CreateBooking(bookingDto);
         if (response.StatusCode == 409)
             return Conflict(response);
-        
+
         return Ok(response);
     }
 
@@ -75,14 +75,14 @@ public class BookingController : ControllerBase
         var response = await _bookingService.CreateRecurringBooking(bookingDto);
         if (response.StatusCode == 409)
             return Conflict(response);
-        
+
         return Ok(response);
     }
 
-    [HttpPut("update/one-day")]
-    public async Task<IActionResult> UpdateBooking(UpdateBookingDto bookingDto)
+    [HttpPut("update/one-day/{id}")]
+    public async Task<IActionResult> UpdateBooking([FromRoute] Guid id, [FromBody] AddBookingDto bookingDto)
     {
-        var response = await _bookingService.UpdateBooking(bookingDto);
+        var response = await _bookingService.UpdateBooking(id, bookingDto);
         if (response.StatusCode == 409)
             return Conflict(response);
         if (response.StatusCode == 404)
@@ -91,10 +91,10 @@ public class BookingController : ControllerBase
         return Ok(response);
     }
     
-    [HttpPut("update/recurring")]
-    public async Task<IActionResult> UpdateRecurringBooking(UpdateRecurringBookingDto bookingDto)
+    [HttpPut("update/recurring/{id}")]
+    public async Task<IActionResult> UpdateRecurringBooking(Guid id, AddRecurringBookingDto bookingDto)
     {
-        var response = await _bookingService.UpdateRecurringBooking(bookingDto);
+        var response = await _bookingService.UpdateRecurringBooking(id, bookingDto);
         if (response.StatusCode == 409)
             return Conflict(response);
         if (response.StatusCode == 404)

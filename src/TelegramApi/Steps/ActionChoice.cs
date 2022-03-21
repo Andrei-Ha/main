@@ -2,6 +2,7 @@
 using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
 using Exadel.OfficeBooking.TelegramApi.DTO.OfficeDto;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
+using Mapster;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,23 +95,33 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 var bookView = _state.BookViews.Where(b => b.BookingId == data[1]).FirstOrDefault();
                                 if (bookView != null)
                                 {
-                                    _state.BookViews.Remove(bookView);
-                                    _state.CallbackMessageId = await _bot.DeleteBookinList
-                                        (
-                                            update,
-                                            _state.BookViews.Select(m => m.MessageId).OrderByDescending(m => m).ToList(),
-                                            _state.CallbackMessageId
-                                        );
-                                    await _bot.DeleteBookinList(update, new List<int> { bookView.MessageId }, 0, true);
-                                    _state.BookingId = bookingId;
-                                    _state.TextMessage = "What would you like to change?";
-                                    _state.Propositions = new()
+                                    var httpResponse = await _httpClient.GetWebApiModel<ServiceResponse<GetBookingDto>>($"booking/{bookingId}", _state.User.Token);
+                                    if (httpResponse == null || httpResponse.Model == null)
+                                        return _state;
+                                    GetBookingDto? booking = httpResponse.Model.Success ? httpResponse.Model.Data : null;
+                                    if (booking != null)
                                     {
-                                        "I want to change office",
-                                        "I want to change workplace in the same office",
-                                        "I want to change my booking dates"
-                                    };
-                                    _state.NextStep = nameof(EditingChoise);
+                                        booking.MapDateIntoState(ref _state);
+                                        Console.WriteLine(_state.TextMessage);
+                                        _state.BookViews.Remove(bookView);
+                                        _state.CallbackMessageId = await _bot.DeleteBookinList
+                                            (
+                                                update,
+                                                _state.BookViews.Select(m => m.MessageId).OrderByDescending(m => m).ToList(),
+                                                _state.CallbackMessageId
+                                            );
+                                        _state.BookViews = new();
+                                        await _bot.DeleteBookinList(update, new List<int> { bookView.MessageId }, 0, true);
+                                        _state.BookingId = bookingId;
+                                        _state.TextMessage = "What would you like to change?";
+                                        _state.Propositions = new()
+                                        {
+                                            "I want to change office",
+                                            "I want to change workplace in the same office",
+                                            "I want to change my booking dates"
+                                        };
+                                        _state.NextStep = nameof(EditingChoise);
+                                    }
                                 }
                             }
                             break;
