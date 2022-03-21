@@ -12,8 +12,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Tgm
             {
                 new InlineKeyboardButton[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Change",$"Change:{bookingId}"),
-                    InlineKeyboardButton.WithCallbackData("Cancel", $"Cancel:{bookingId}"),
+                    InlineKeyboardButton.WithCallbackData("Change ☝",$"Change:{bookingId}"),
+                    InlineKeyboardButton.WithCallbackData("Cancel ✖", $"Cancel:{bookingId}"),
                     InlineKeyboardButton.WithCallbackData(isChecked ? "☑" : "◻️",isChecked ? $"Check:{bookingId}/false" : $"Check:{bookingId}/true")
                 }
             });

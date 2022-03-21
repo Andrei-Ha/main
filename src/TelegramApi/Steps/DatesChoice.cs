@@ -158,10 +158,19 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     }
                     if (isOkClicked)
                     {
-                        _state.TextMessage = "Would you like to add parking place?";
-                        _state.Propositions = new() { "yes", "no" };
-                        _state.NextStep = nameof(ParkingChoice);
-
+                        if (_state.EditTypeEnum != EditTypeEnum.DatesChange)
+                        {
+                            _state.TextMessage = "Would you like to add parking place?";
+                            _state.Propositions = new() { "yes", "no" };
+                            _state.NextStep = nameof(ParkingChoice);
+                        }
+                        else
+                        {
+                            //This should be a request to the web API to check if our place can be booked for the new dates
+                            _state.TextMessage = "This should be a request to the web API to check if our place can be booked for the new dates...\nBye!";
+                            _state.Propositions = new();
+                            _state.NextStep = "Finish";
+                        }
                     }
                     else
                     {

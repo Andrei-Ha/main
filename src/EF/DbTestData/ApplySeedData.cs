@@ -469,7 +469,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                       Email = "majidovanvar30.11.2002@gmail.com",
                       EmploymentStart = DateTime.Now,
                       TelegramId = 534430877,
-                      Role = UserRole.Admin
+                      Role = UserRole.Manager
 
                   },
                 new User
@@ -480,7 +480,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Email = "kdavletov@exadel.com",
                     EmploymentStart = DateTime.Now,
                     TelegramId = 223344,
-                    Role = UserRole.Admin
+                    Role = UserRole.Manager
                 },
                 new User
                 {
@@ -490,7 +490,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Email = "AnvarkhonKhamzaev@fake.com",
                     EmploymentStart = DateTime.Now,
                     TelegramId = 445566,
-                    Role = UserRole.Admin
+                    Role = UserRole.Manager
                 },
 
                 new User
@@ -521,7 +521,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Email = "asgoreglyad@gmail.com",
                     EmploymentStart = DateTime.Now,
                     TelegramId = 1651658270,
-                    Role = UserRole.Admin
+                    Role = UserRole.Manager
                 },
                 new User
                 {
@@ -531,7 +531,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Email = "sherashera777@gmail.com",
                     EmploymentStart = DateTime.Now,
                     TelegramId = 5046701077,
-                    Role = UserRole.Admin
+                    Role = UserRole.Manager
                 }
                 );
         }

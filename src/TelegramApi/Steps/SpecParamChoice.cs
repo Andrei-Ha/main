@@ -33,7 +33,11 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             {
                 _state.IsSpecifyWorkplace = true;
                 _state.TextMessage = "Would you like to choose the exact floor?";
-                _state.Propositions = new() { "yes", "no" };
+                _state.Propositions = new()
+                {
+                    "yes, I want to choose the exact floor",
+                    "no, I want to select floor attributes"
+                };
                 _state.NextStep = nameof(FloorChoice);
             }
             // If the choice is "No, I can take any available workplace"
@@ -80,6 +84,10 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 }
 
                 _state.TextMessage = _state.Summary() + "\nConfirm the booking?";
+                if (_state.EditTypeEnum != EditTypeEnum.None)
+                {
+                    _state.TextMessage += "\nThis is edited booking(from SpecParamChoise).";
+                }
                 _state.Propositions = new() { "confirm", "cancel" };
                 _state.NextStep = nameof(ConfirmBooking);
             }

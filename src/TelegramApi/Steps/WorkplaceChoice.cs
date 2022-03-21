@@ -43,14 +43,14 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         var dictionary = httpResponse.Model
                             .OrderBy(m => m.Name)
-                            .ToDictionary(k => $"{k.Name }:{k.Id}", v => $"{ v.Name }");
+                            .ToDictionary(k => $"{k.Name}:{k.Id}", v => $"{ v.GetNameWithAttributes()}");
                         dictionary.Add("Back:true", "<< Back");
                         _state.CallbackMessageId = await _bot.SendInlineKbList(update, "Select the workplace:", dictionary);
                     }
                     else
                     {
                         // this map don't contain any workplaces
-                        _state.TextMessage = "This floor don't contain any workplaces";
+                        _state.TextMessage = "This floor don't contain any workplaces. Bye!";
                         _state.Propositions = new();
                         _state.NextStep = "Finish";
                     }
@@ -76,6 +76,10 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     _state.TextMessage = $"You have selected workplace: <b>{data[0]}</b>.\n";
 
                     _state.TextMessage += "\n" + _state.Summary() + "\nConfirm the booking?";
+                    if (_state.EditTypeEnum != EditTypeEnum.None)
+                    {
+                        _state.TextMessage += "\nThis is edited booking(from WorkplaceChoise).";
+                    }
                     _state.Propositions = new() { "confirm", "cancel" };
                     _state.NextStep = nameof(ConfirmBooking);
 
@@ -135,7 +139,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 break;
                             }
                         // OK
-                        default:
+                        case "OK":
                             {
                                 _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
                                 var dictionary = GetList();
@@ -153,8 +157,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 {
                                     var workplace = httpResponse.Model.FirstOrDefault();
                                     _state.WorkplaceId = workplace != null ? workplace.Id : default;
-                                    _state.WorkplaceName = workplace != null ? workplace.Name : default;
-                                    _state.TextMessage += $"We have chosen the <b>{(workplace != null ? workplace.Name : default)}</b> workplace for you\n";
+                                    _state.WorkplaceName = workplace != null ? workplace.GetNameWithAttributes() : string.Empty;
+                                    _state.TextMessage += $"We have chosen the <b>{(workplace != null ? workplace.GetNameWithAttributes() : default)}</b> workplace for you\n";
                                     _state.TextMessage += "\n" + _state.Summary() + "\nConfirm the booking?";
                                     _state.Propositions = new() { "confirm", "cancel" };
                                     _state.NextStep = nameof(ConfirmBooking);
@@ -180,61 +184,65 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             var dictionary = new Dictionary<string, string>();
             if (_state.IsNextToWindow)
             {
-                dictionary.Add("Next to window:false", "Next to window ✔");
+                dictionary.Add("Next to window:false", "🪟 Next to window  ☑");
             }
             else
             {
-                dictionary.Add("Next to window:true", "Next to window");
+                dictionary.Add("Next to window:true", "🪟 Next to window  ◻️");
             }
 
             if (_state.HasPC)
             {
-                dictionary.Add("HasPC:false", "HasPC ✔");
+                dictionary.Add("HasPC:false", "💻 HasPC                     ☑");
             }
             else
             {
-                dictionary.Add("HasPC:true", "HasPC");
+                dictionary.Add("HasPC:true", "💻 HasPC                     ◻️");
             }
 
             if (_state.HasMonitor)
             {
-                dictionary.Add("HasMonitor:false", "HasMonitor ✔");
+                dictionary.Add("HasMonitor:false", "🖥 HasMonitor         ☑");
             }
             else
             {
-                dictionary.Add("HasMonitor:true", "HasMonitor");
+                dictionary.Add("HasMonitor:true", "🖥 HasMonitor         ◻️");
             }
 
             if (_state.HasKeyboard)
             {
-                dictionary.Add("HasKeyboard:false", "HasKeyboard ✔");
+                dictionary.Add("HasKeyboard:false", "⌨️ HasKeyboard      ☑");
             }
             else
             {
-                dictionary.Add("HasKeyboard:true", "HasKeyboard");
+                dictionary.Add("HasKeyboard:true", "⌨️ HasKeyboard      ◻️");
             }
 
             if (_state.HasMouse)
             {
-                dictionary.Add("HasMouse:false", "HasMouse ✔");
+                dictionary.Add("HasMouse:false", "🐭 HasMouse             ☑");
             }
             else
             {
-                dictionary.Add("HasMouse:true", "HasMouse");
+                dictionary.Add("HasMouse:true", "🐭 HasMouse             ◻️");
             }
 
             if (_state.HasHeadset)
             {
-                dictionary.Add("HasHeadset:false", "HasHeadset ✔");
+                dictionary.Add("HasHeadset:false", "🎧 HasHeadset         ☑");
             }
             else
             {
-                dictionary.Add("HasHeadset:true", "HasHeadset");
+                dictionary.Add("HasHeadset:true", "🎧 HasHeadset         ◻️");
             }
 
             dictionary.Add("OK:true", "[ OK ]");
             dictionary.Add("Back:true", "<< Back");
             return dictionary;
         }
+        // window 🪟,PC 💻, Monitor 🖥, keyboard  ⌨️, mouse 🖰 🐭, headset 🎧, kitchen 🍽, meeting room 🚪
+        // 𝟎 𝟏 𝟐 𝟑 𝟒 𝟓 𝟔 𝟕 𝟖 𝟗 
+        // up ☝⬆, edit ✏, ok 🆗, cancel 🗙
+        // https://unicode-table.com/en/1D7D9/
     }
 }

@@ -24,6 +24,25 @@ public class GetBookingDto
 
     public string WorkplaceName { get; set; } = string.Empty;
     public int FloorNumber { get; set; }
+    public Guid OfficeId { get; set; } = default;
     public string OfficeName { get; set; } = string.Empty;
     public int? ParkingPlaceNumber { get; set; }
+
+    public void MapDateIntoState(ref UserState state)
+    {
+        state.WorkplaceId = WorkplaceId;
+        // ??? ParkingPlaceId
+        state.StartDate = StartDate;
+        state.EndDate = EndDate ?? default;
+        state.Count = Count ?? 0;
+        state.Interval = Interval;
+        state.RecurringWeekDays = RecurringWeekDays;
+        state.Frequency = Frequency;
+        state.BookingType = BookingType;
+        state.WorkplaceName = WorkplaceName;
+        state.OfficeId = OfficeId;
+        state.OfficeName = OfficeName;
+        state.FloorName = FloorNumber.ToString();
+        //parkingPlaceNumber?
+    }
 }

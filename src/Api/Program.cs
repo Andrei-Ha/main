@@ -62,6 +62,7 @@ var app = builder.Build();
 //custom adapter for Booking
 TypeAdapterConfig<Booking, GetBookingDto>.NewConfig()
     .Map(dest => dest.WorkplaceId, src => src.Workplace.Id)
+    .Map(dest => dest.OfficeId, src => src.Workplace.Map.OfficeId)
     .Map(dest => dest.UserId, src => src.User.Id)
     .Map(dest => dest.WorkplaceName, src => src.Workplace.Name)
     .Map(dest => dest.FloorNumber, src => src.Workplace.Map.FloorNumber)
