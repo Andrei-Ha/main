@@ -102,11 +102,11 @@ public class BookingController : ControllerBase
         return Ok(response);
     }
 
-    [HttpDelete("delete/{id}")]
+    [HttpDelete("delete/{ids}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteBooking(Guid id)
+    public async Task<IActionResult> DeleteBooking(string ids)
     {
-        var response = await _bookingService.DeleteBooking(id);
+        var response = await _bookingService.DeleteBooking(ids);
         if (response.StatusCode == 404)
             return NotFound(response);
         return Ok(response);
