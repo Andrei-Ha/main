@@ -48,7 +48,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     else
                     {
                         // this office don't contain any maps
-                        _state.TextMessage = "This office don't contain any maps";
+                        _state.TextMessage = "This office don't contain any maps. Bye!";
                         _state.NextStep = "Finish";
                     }
                 }
