@@ -56,7 +56,7 @@ builder.Services.AddScoped<IMapService, MapService>();
 builder.Services.AddScoped<IWorkplaceService, WorkplaceService>();
 builder.Services.AddScoped<IParkingPlaceService, ParkingPlaceService>();
 builder.Services.AddScoped<IReportService, ReportService>();
-
+builder.Services.AddScoped<IEmailService, EmailService>();
 var app = builder.Build();
 
 //custom adapter for Booking
