@@ -32,26 +32,56 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             // Confirm
             if (text == _state.Propositions[0])
             {
-                string result = "A new booking has been created.\nAll details have been sent to you by email.\nBye!";
-                if (_state.IsRecurring())
+                // if this is a new booking
+                if (_state.EditTypeEnum == EditTypeEnum.None)
                 {
-                    var response = await _httpClient.PostWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
-                        "booking/add/recurring", _state.AddRecurringBookingDto());
+                    string result = "A new booking has been created.\nAll details have been sent to you by email.\nBye!";
+                    if (_state.IsRecurring())
+                    {
+                        var response = await _httpClient.PostWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
+                            "booking/add/recurring", _state.AddRecurringBookingDto());
 
-                    //temporary validation
-                    if (response?.Model != null)
-                        _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                        //temporary validation
+                        if (response?.Model != null)
+                            _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                        else
+                            _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                    }
                     else
-                        _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                    {
+                        var response = await _httpClient.PostWebApiModel<ServiceResponse<GetOneDayBookingDto>, AddBookingDto>(
+                            "booking/add/one-day", _state.AddBookingDto());
+                        if (response?.Model != null)
+                            _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                        else
+                            _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                    }
                 }
+                // if this is a edited booking
                 else
                 {
-                    var response = await _httpClient.PostWebApiModel<ServiceResponse<GetOneDayBookingDto>, AddBookingDto>(
-                        "booking/add/one-day", _state.AddBookingDto());
-                    if (response?.Model != null)
-                        _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                    string result = "A booking has been <b>edited</b>.\nAll details have been sent to you by email.\nBye!";
+                    if (_state.IsRecurring())
+                    {
+                        var response = await _httpClient.PutWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
+                            $"booking/update/recurring/{_state.BookingId}", _state.AddRecurringBookingDto());
+
+                        //temporary validation
+                        if (response?.Model != null)
+                            _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                        else
+                            _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                    }
                     else
-                        _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                    {
+                        Console.WriteLine($"booking/update/one-day/{_state.BookingId}");
+                        var response = await _httpClient.PutWebApiModel<ServiceResponse<GetOneDayBookingDto>, AddBookingDto>(
+                            $"booking/update/one-day/{_state.BookingId}", _state.AddBookingDto());
+                        if (response?.Model != null)
+                            _state.TextMessage = response.Model.Success ? result : response.Model.Message;
+                        else
+                            _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                    }
                 }
             }
             // Cancel

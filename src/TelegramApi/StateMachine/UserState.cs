@@ -2,6 +2,7 @@
 using Exadel.OfficeBooking.TelegramApi.DTO;
 using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
 using Exadel.OfficeBooking.TelegramApi.DTO.PersonDto;
+using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,6 +22,8 @@ namespace Exadel.OfficeBooking.TelegramApi
         public string City { get; set; }  = string.Empty;
 
         public string OfficeName { get; set; } = string.Empty;
+
+        public string FloorName { get; set; } = string.Empty;
 
         public string WorkplaceName { get; set; } = string.Empty;
 
@@ -81,6 +84,8 @@ namespace Exadel.OfficeBooking.TelegramApi
         public Guid BookingId { get; set; } = default;
 
         public bool IsOfficeReportSelected { get; set; } = false;
+
+        public EditTypeEnum EditTypeEnum { get; set; } = EditTypeEnum.None;
 
         public Result GetResult()
         {

@@ -48,6 +48,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         _state.OfficeId = office.Id;
                         _state.OfficeName = text!;
+                        // if we came to this step to generate a report
                         if (_state.IsOfficeReportSelected)
                         {
                             _state.BookingType = BookingTypeEnum.Continuous;
@@ -55,6 +56,14 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             _state.CallbackMessageId = await _bot.SendCalendar
                                 (update, _state.CalendarDate, _state.AddTextToCalendarForReport(), _state.Adapt<RecurrencePattern>(), true);
                         }
+                        //if we came to this step to change office
+                        else if (_state.EditTypeEnum == EditTypeEnum.OfficeChange)
+                        {
+                            _state.TextMessage = "Would you like to add parking place?";
+                            _state.Propositions = new() { "yes", "no" };
+                            _state.NextStep = nameof(ParkingChoice);
+                        }
+                        //if we came to this step to create new booking
                         else
                         {
                             _state.TextMessage = "Select booking type:";
@@ -110,12 +119,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         isOkClicked = true;
                         break;
                     }
-
-                    case Constants.Back:
-                    {
-                        _state.CallbackMessageId = await _bot.DeleteInlineKeyboardWithText(update);
-                        return _state;
-                    }
                 }
 
                 if (isOkClicked)
@@ -153,6 +156,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     // reset data, entered before
                     _state.InitRecurrencePattern();
                     _state.IsOfficeReportSelected = false;
+                    _state.BookingType = BookingTypeEnum.None;
                 }
                 else
                 {
