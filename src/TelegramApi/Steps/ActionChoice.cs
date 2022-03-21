@@ -130,8 +130,11 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         {
                             if (Guid.TryParse(data[1], out Guid bookingId))
                             {
-                                // Need to implement deletion of booking by bookingId
-                                if (true)// If booking endpoint returned OK
+                                //delete one booking
+                                var responseDelete = await _httpClient.DeleteWebApiModel<ServiceResponse<GetBookingDto[]>>
+                                        ($"booking/delete/{bookingId.ToString()}", _state.User.Token);
+                                
+                                if (responseDelete?.Model != null && responseDelete.Model.Success)// If booking endpoint returned OK
                                 {
                                     var bookViewToDel = _state.BookViews.Where(b => b.BookingId == data[1]).FirstOrDefault();
                                     if (bookViewToDel != null)
@@ -150,9 +153,11 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             if (BookViewsToDel.Any())
                             {
                                 string guidsToDel = BookViewsToDel.Select(g => g.BookingId).Aggregate((i, j) => $"{i};" + j);
-                                Console.WriteLine($"QueryString = {guidsToDel}");
-                                // Need to implement multiple deletion of booking by string(Join Guids with separator ';') 
-                                if (true) // If booking endpoint returned OK
+                                //delete all bookings with given ids
+                                var responseDelete = await _httpClient.DeleteWebApiModel<ServiceResponse<GetBookingDto[]>>
+                                    ($"booking/delete/{guidsToDel}", _state.User.Token);
+
+                                if (responseDelete?.Model != null && responseDelete.Model.Success) // If booking endpoint returned OK
                                 {
                                     await _bot
                                         .DeleteBookinList(update, BookViewsToDel.Select(m => m.MessageId).OrderByDescending(m => m).ToList());
