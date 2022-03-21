@@ -23,7 +23,7 @@ namespace Exadel.OfficeBooking.Api.Interfaces
         
         Task<ServiceResponse<GetBookingDto>> UpdateRecurringBooking(UpdateRecurringBookingDto bookingDto);
 
-        Task<ServiceResponse<GetBookingDto[]>> DeleteBooking(Guid id);
+        Task<ServiceResponse<GetBookingDto[]>> DeleteBooking(string ids);
 
         bool IsWorkplaceAvailableForOneDayBooking(Workplace workplace, DateTime bookingDate);
 

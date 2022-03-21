@@ -266,13 +266,31 @@ public class BookingService : IBookingService
         return response;
     }
 
-    public async Task<ServiceResponse<GetBookingDto[]>> DeleteBooking(Guid id)
+    public async Task<ServiceResponse<GetBookingDto[]>> DeleteBooking(string ids)
     {
-        Booking? booking = await _context.Bookings.FirstOrDefaultAsync(b => b.Id == id);
-        if (booking == null) return NotFoundResponse<GetBookingDto[]>("Requested booking doesn’t exist");
+        Guid[] guidIds = ids.Split(";").Select(id => {
+            Guid.TryParse(id, out Guid guidResult);
+            return guidResult;
+        }).ToArray();
 
-        _context.Bookings.Remove(booking);
+        Booking? userBooking = await _context.Bookings.Include(b => b.User).FirstOrDefaultAsync(b => b.Id == guidIds[0]);
+        if (userBooking == null) return NotFoundResponse<GetBookingDto[]>("Requested booking with id " + guidIds[0] + " doesn’t exist");
+
+        _context.Bookings.Remove(userBooking);
+
+        for (int i = 1; i < guidIds.Length; i++)
+        {
+            Guid id = guidIds[i];
+            Booking? booking = await _context.Bookings.FirstOrDefaultAsync(b => b.Id == id);
+            if (booking == null) return NotFoundResponse<GetBookingDto[]>("Requested booking with id " + id + " doesn’t exist");
+
+            _context.Bookings.Remove(booking);
+        }
         await _context.SaveChangesAsync();
+
+        //send email
+        string summary = $"Booking with ids:{ids} were deleted.";
+        EmailService.SendEmailTo(userBooking.User.Email, $"Hello {userBooking.User.FirstName}\nSummary:{summary}");
 
         return await GetAllBookings();
     }
