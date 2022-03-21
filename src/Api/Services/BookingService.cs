@@ -289,8 +289,8 @@ public class BookingService : IBookingService
         await _context.SaveChangesAsync();
 
         //send email
-        string summary = $"Booking with ids:{ids} were deleted.";
-        EmailService.SendEmailTo(userBooking.User.Email, $"Hello {userBooking.User.FirstName}\nSummary:{summary}");
+        //string summary = $"Booking with ids:{ids} were deleted.";
+        //EmailService.SendEmailTo(userBooking.User.Email, $"Hello {userBooking.User.FirstName}\nSummary:{summary}");
 
         return await GetAllBookings();
     }
