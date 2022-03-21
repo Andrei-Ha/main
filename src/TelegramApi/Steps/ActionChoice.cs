@@ -121,7 +121,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             {
                                 //delete one booking
                                 var responseDelete = await _httpClient.DeleteWebApiModel<ServiceResponse<GetBookingDto[]>>
-                                        ($"booking/delete/{bookingId.ToString()}");
+                                        ($"booking/delete/{bookingId.ToString()}", _state.User.Token);
                                 
                                 if (responseDelete?.Model != null && responseDelete.Model.Success)// If booking endpoint returned OK
                                 {
@@ -144,7 +144,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 string guidsToDel = BookViewsToDel.Select(g => g.BookingId).Aggregate((i, j) => $"{i};" + j);
                                 //delete all bookings with given ids
                                 var responseDelete = await _httpClient.DeleteWebApiModel<ServiceResponse<GetBookingDto[]>>
-                                    ($"booking/delete/{guidsToDel}");
+                                    ($"booking/delete/{guidsToDel}", _state.User.Token);
 
                                 if (responseDelete?.Model != null && responseDelete.Model.Success) // If booking endpoint returned OK
                                 {
