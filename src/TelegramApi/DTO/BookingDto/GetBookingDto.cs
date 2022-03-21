@@ -42,7 +42,7 @@ public class GetBookingDto
         state.WorkplaceName = WorkplaceName;
         state.OfficeId = OfficeId;
         state.OfficeName = OfficeName;
-        state.FloorNumber = FloorNumber;
+        state.FloorName = FloorNumber.ToString();
         //parkingPlaceNumber?
     }
 }

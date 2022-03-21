@@ -23,7 +23,7 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public string OfficeName { get; set; } = string.Empty;
 
-        public int FloorNumber { get; set; } = 0;
+        public string FloorName { get; set; } = string.Empty;
 
         public string WorkplaceName { get; set; } = string.Empty;
 
