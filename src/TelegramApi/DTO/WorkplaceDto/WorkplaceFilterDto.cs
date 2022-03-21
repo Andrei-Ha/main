@@ -16,8 +16,6 @@ namespace Exadel.OfficeBooking.TelegramApi.DTO.WorkplaceDto
         // out of UserState
         public WorkplaceTypesDto? Type { get; set; }
 
-        public bool? IsBooked { get; set; }
-
         public bool? IsNextToWindow { get; set; }
 
         public bool? HasPC { get; set; }
