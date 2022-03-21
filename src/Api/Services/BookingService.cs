@@ -18,10 +18,11 @@ namespace Exadel.OfficeBooking.Api.Services;
 public class BookingService : IBookingService
 {
     private readonly AppDbContext _context;
-
-    public BookingService(AppDbContext context)
+    private readonly IEmailService _email;
+    public BookingService(AppDbContext context, IEmailService email)
     {
         _context = context;
+        _email = email;
     }
 
     public async Task<ServiceResponse<GetBookingDto[]>> GetAllBookings()
@@ -145,7 +146,7 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
-        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
+        _email.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
 
         response.StatusCode = 201;
         var responseBooking = bookingDto.Adapt<GetOneDayBookingDto>();
@@ -225,7 +226,7 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
-        EmailService.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
+        _email.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
         response.Data = newBooking.Adapt<GetRecurringBookingDto>();
         response.StatusCode = 209;
         return response;
