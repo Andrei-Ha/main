@@ -50,6 +50,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     else
                     {
                         // this map don't contain any workplaces
+                        // Go to choose floor!!!
                         _state.TextMessage = "This floor don't contain any workplaces. Bye!";
                         _state.Propositions = new();
                         _state.NextStep = "Finish";
