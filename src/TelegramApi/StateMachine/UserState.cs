@@ -16,8 +16,6 @@ namespace Exadel.OfficeBooking.TelegramApi
         public long TelegramId { get; set; } = 0;
 
         public LoginUserDto User { get; set; } = new();
-
-        public bool IsBookForOther = false;
         
         public string City { get; set; }  = string.Empty;
 
