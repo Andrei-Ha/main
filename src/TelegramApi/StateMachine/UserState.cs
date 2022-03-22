@@ -6,6 +6,9 @@ using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Linq;
 
 namespace Exadel.OfficeBooking.TelegramApi
 {
@@ -129,6 +132,29 @@ namespace Exadel.OfficeBooking.TelegramApi
             Summary = Summary()
         };
 
+        public bool IsBookingForOther(out string name)
+        {
+            name = string.Empty;
+            var stream = User.Token;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            if (jsonToken is JwtSecurityToken tokenS)
+            {
+                var tokenUserId = tokenS.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+                if (Guid.TryParse(tokenUserId, out Guid realUserId))
+                {
+                    if (realUserId != User.UserId)
+                    {
+                        name += tokenS.Claims.First(c => c.Type == ClaimTypes.Surname).Value;
+                        name += " " + tokenS.Claims.First(c => c.Type == ClaimTypes.GivenName).Value;
+                        name += " (" + tokenS.Claims.First(c => c.Type == ClaimTypes.Role).Value + ")";
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public string Summary()
         {
             StringBuilder sb = new();
@@ -143,7 +169,10 @@ namespace Exadel.OfficeBooking.TelegramApi
             {
                 sb.AppendLine($"Parking place <b>added</b>"); 
             }
-
+            if (IsBookingForOther(out string RealBookerName))
+            {
+                sb.AppendLine($"Booking made by: <b>{RealBookerName}</b>");
+            }
             return sb.ToString();
         }
 
