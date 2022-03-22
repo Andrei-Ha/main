@@ -172,7 +172,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             if (_state.IsRecurring())
                             {
                                 var response = await _httpClient.PutWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
-                                    $"booking/update/recurring/{_state.BookingId}?onlyCheck=true", _state.AddRecurringBookingDto());
+                                    $"booking/update/recurring/{_state.BookingId}?onlyCheck=true", _state.AddRecurringBookingDto(), _state.User.Token);
 
                                 if (response?.Model != null)
                                     success = response.Model.Success;
@@ -180,7 +180,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             else
                             {
                                 var response = await _httpClient.PutWebApiModel<ServiceResponse<GetOneDayBookingDto>, AddBookingDto>(
-                                    $"booking/update/one-day/{_state.BookingId}?onlyCheck=true", _state.AddBookingDto());
+                                    $"booking/update/one-day/{_state.BookingId}?onlyCheck=true", _state.AddBookingDto(), _state.User.Token);
                                 if (response?.Model != null)
                                     success = response.Model.Success;
                             }

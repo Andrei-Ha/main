@@ -39,7 +39,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     if (_state.IsRecurring())
                     {
                         var response = await _httpClient.PostWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
-                            "booking/add/recurring", _state.AddRecurringBookingDto());
+                            "booking/add/recurring", _state.AddRecurringBookingDto(), _state.User.Token);
 
                         //temporary validation
                         if (response?.Model != null)
@@ -50,7 +50,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     else
                     {
                         var response = await _httpClient.PostWebApiModel<ServiceResponse<GetOneDayBookingDto>, AddBookingDto>(
-                            "booking/add/one-day", _state.AddBookingDto());
+                            "booking/add/one-day", _state.AddBookingDto(), _state.User.Token);
                         if (response?.Model != null)
                             _state.TextMessage = response.Model.Success ? result : response.Model.Message;
                         else
@@ -64,7 +64,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     if (_state.IsRecurring())
                     {
                         var response = await _httpClient.PutWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
-                            $"booking/update/recurring/{_state.BookingId}", _state.AddRecurringBookingDto());
+                            $"booking/update/recurring/{_state.BookingId}", _state.AddRecurringBookingDto(), _state.User.Token);
 
                         //temporary validation
                         if (response?.Model != null)
@@ -76,7 +76,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         Console.WriteLine($"booking/update/one-day/{_state.BookingId}");
                         var response = await _httpClient.PutWebApiModel<ServiceResponse<GetOneDayBookingDto>, AddBookingDto>(
-                            $"booking/update/one-day/{_state.BookingId}", _state.AddBookingDto());
+                            $"booking/update/one-day/{_state.BookingId}", _state.AddBookingDto(), _state.User.Token);
                         if (response?.Model != null)
                             _state.TextMessage = response.Model.Success ? result : response.Model.Message;
                         else
