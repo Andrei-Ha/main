@@ -80,9 +80,9 @@ public class BookingController : ControllerBase
     }
 
     [HttpPut("update/one-day/{id}")]
-    public async Task<IActionResult> UpdateBooking([FromRoute] Guid id, [FromBody] AddBookingDto bookingDto)
+    public async Task<IActionResult> UpdateBooking([FromRoute] Guid id, [FromBody] AddBookingDto bookingDto, [FromQuery] bool onlyCheck = false)
     {
-        var response = await _bookingService.UpdateBooking(id, bookingDto);
+        var response = await _bookingService.UpdateBooking(id, bookingDto, onlyCheck);
         if (response.StatusCode == 409)
             return Conflict(response);
         if (response.StatusCode == 404)
@@ -92,9 +92,9 @@ public class BookingController : ControllerBase
     }
     
     [HttpPut("update/recurring/{id}")]
-    public async Task<IActionResult> UpdateRecurringBooking(Guid id, AddRecurringBookingDto bookingDto)
+    public async Task<IActionResult> UpdateRecurringBooking(Guid id, AddRecurringBookingDto bookingDto, [FromQuery] bool onlyCheck = false)
     {
-        var response = await _bookingService.UpdateRecurringBooking(id, bookingDto);
+        var response = await _bookingService.UpdateRecurringBooking(id, bookingDto, onlyCheck);
         if (response.StatusCode == 409)
             return Conflict(response);
         if (response.StatusCode == 404)

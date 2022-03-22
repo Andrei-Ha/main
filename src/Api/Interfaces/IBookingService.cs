@@ -17,11 +17,11 @@ namespace Exadel.OfficeBooking.Api.Interfaces
 
         Task<ServiceResponse<GetOneDayBookingDto>> CreateBooking(AddBookingDto bookingDto);
 
-        Task<ServiceResponse<GetOneDayBookingDto>> UpdateBooking(Guid id, AddBookingDto bookingDto);
+        Task<ServiceResponse<GetOneDayBookingDto>> UpdateBooking(Guid id, AddBookingDto bookingDto, bool OnlyCheck);
 
         Task<ServiceResponse<GetRecurringBookingDto>> CreateRecurringBooking(AddRecurringBookingDto bookingDto);
         
-        Task<ServiceResponse<GetRecurringBookingDto>> UpdateRecurringBooking(Guid id, AddRecurringBookingDto bookingDto);
+        Task<ServiceResponse<GetRecurringBookingDto>> UpdateRecurringBooking(Guid id, AddRecurringBookingDto bookingDto, bool OnlyCheck);
 
         Task<ServiceResponse<GetBookingDto[]>> DeleteBooking(string ids);
 

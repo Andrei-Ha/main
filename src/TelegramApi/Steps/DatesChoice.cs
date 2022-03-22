@@ -168,40 +168,42 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         else
                         {
                             //This should be a request to the web API to check if our place can be booked for the new dates
-                            //string result = "Booking can be made!";
-                            //if (_state.IsRecurring())
-                            //{
-                            //    var response = await _httpClient.PutWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
-                            //        $"booking/update/recurring/{_state.BookingId}", _state.AddRecurringBookingDto());
-
-                            //    //temporary validation
-                            //    if (response?.Model != null)
-                            //        _state.TextMessage = response.Model.Success ? result : response.Model.Message;
-                            //    else
-                            //        _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
-                            //}
-                            //else
-                            //{
-                            //    Console.WriteLine($"booking/update/one-day/{_state.BookingId}");
-                            //    var response = await _httpClient.PutWebApiModel<ServiceResponse<GetOneDayBookingDto>, AddBookingDto>(
-                            //        $"booking/update/one-day/{_state.BookingId}", _state.AddBookingDto());
-                            //    if (response?.Model != null)
-                            //        _state.TextMessage = response.Model.Success ? result : response.Model.Message;
-                            //    else
-                            //        _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
-                            //}
-
-
-                            _state.TextMessage = _state.Summary() + "\nConfirm the booking?";
-                            if (_state.EditTypeEnum != EditTypeEnum.DatesChange)
+                            bool success = false;
+                            if (_state.IsRecurring())
                             {
-                                _state.TextMessage += "\nThis is edited booking(from DatesChoise).";
+                                var response = await _httpClient.PutWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
+                                    $"booking/update/recurring/{_state.BookingId}?onlyCheck=true", _state.AddRecurringBookingDto());
+
+                                if (response?.Model != null)
+                                    success = response.Model.Success;
                             }
-                            _state.Propositions = new() { "confirm", "cancel" };
-                            _state.NextStep = nameof(ConfirmBooking);
-                            //_state.TextMessage = "This should be a request to the web API to check if our place can be booked for the new dates...\nBye!";
-                            //_state.Propositions = new();
-                            //_state.NextStep = "Finish";
+                            else
+                            {
+                                var response = await _httpClient.PutWebApiModel<ServiceResponse<GetOneDayBookingDto>, AddBookingDto>(
+                                    $"booking/update/one-day/{_state.BookingId}?onlyCheck=true", _state.AddBookingDto());
+                                if (response?.Model != null)
+                                    success = response.Model.Success;
+                            }
+
+                            if (success)
+                            {
+                                _state.TextMessage = _state.Summary() + "\nConfirm the booking?";
+                                if (_state.EditTypeEnum != EditTypeEnum.DatesChange)
+                                {
+                                    _state.TextMessage += "\nThis is edited booking(from DatesChoise).";
+                                }
+                                _state.Propositions = new() { "confirm", "cancel" };
+                                _state.NextStep = nameof(ConfirmBooking);
+                            }
+                            else
+                            {
+                                _state.TextMessage = "The requested dates are not available for booking.\n";
+                                _state.TextMessage += "To end the dialogue and exit - send me <b>/Finish</b>\n";
+                                _state.TextMessage += "or try again\n";
+                                _state.TextMessage += "Select booking type:";
+                                _state.Propositions = new() { "One day", "Continuous", "Recurring" };
+                                _state.NextStep = nameof(DatesChoice);
+                            }
                         }
                     }
                     else

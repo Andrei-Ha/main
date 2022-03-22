@@ -156,7 +156,7 @@ public class BookingService : IBookingService
         return response;
     }
 
-    public async Task<ServiceResponse<GetOneDayBookingDto>> UpdateBooking(Guid id, AddBookingDto bookingDto)
+    public async Task<ServiceResponse<GetOneDayBookingDto>> UpdateBooking(Guid id, AddBookingDto bookingDto, bool OnlyCheck)
     {
         ServiceResponse<GetOneDayBookingDto> response = new();
 
@@ -177,7 +177,11 @@ public class BookingService : IBookingService
         if (HasOneDayBookingVacationConflict(user, bookingDto.Date))
             return ConflictResponse<GetOneDayBookingDto>("Cannot select date on vacation days.");
 
-        if (!IsWorkplaceAvailableForOneDayBooking(workplace, bookingDto.Date))
+        Workplace? workplaceToCheck = await _context.Workplaces.AsNoTracking()
+            .FirstOrDefaultAsync(w => w.Id == bookingDto.WorkplaceId);
+        workplaceToCheck.Bookings = workplace.Bookings.Where(b => b.Id != id).ToList();
+
+        if (!IsWorkplaceAvailableForOneDayBooking(workplaceToCheck, bookingDto.Date))
             return ConflictResponse<GetOneDayBookingDto>("The selected workplace has been booked by another user");
 
         //update properties and save changes
@@ -187,7 +191,10 @@ public class BookingService : IBookingService
         booking.Summary = bookingDto.Summary;
 
         _context.Bookings.Update(booking);
-        await _context.SaveChangesAsync();
+        if (!OnlyCheck)
+        {
+            await _context.SaveChangesAsync();
+        }
 
         response.Data = booking.Adapt<GetOneDayBookingDto>();
         response.Data.Date = booking.StartDate;
@@ -234,7 +241,7 @@ public class BookingService : IBookingService
         return response;
     }
 
-    public async Task<ServiceResponse<GetRecurringBookingDto>> UpdateRecurringBooking(Guid id, AddRecurringBookingDto bookingDto)
+    public async Task<ServiceResponse<GetRecurringBookingDto>> UpdateRecurringBooking(Guid id, AddRecurringBookingDto bookingDto, bool OnlyCheck)
     {
         ServiceResponse<GetRecurringBookingDto> response = new();
 
@@ -254,7 +261,11 @@ public class BookingService : IBookingService
         if (await HasRecurringBookingVacationConflict(user, recurringDates))
             return ConflictResponse<GetRecurringBookingDto>("Cannot select date on vacation days.");
 
-        if (!IsWorkplaceAvailableForRecurringBooking(workplace, recurringDates))
+        Workplace? workplaceToCheck = await _context.Workplaces.AsNoTracking()
+            .FirstOrDefaultAsync(w => w.Id == bookingDto.WorkplaceId);
+        workplaceToCheck.Bookings = workplace.Bookings.Where(b => b.Id != id).ToList();
+
+        if (!IsWorkplaceAvailableForRecurringBooking(workplaceToCheck, recurringDates))
             return ConflictResponse<GetRecurringBookingDto>("The selected workplace has been booked by another user");
 
         //update properties and save changes
@@ -264,7 +275,10 @@ public class BookingService : IBookingService
         booking.User = user;
 
         _context.Bookings.Update(booking);
-        await _context.SaveChangesAsync();
+        if (!OnlyCheck)
+        {
+            await _context.SaveChangesAsync();
+        }
 
         response.Data = booking.Adapt<GetRecurringBookingDto>();
         return response;
