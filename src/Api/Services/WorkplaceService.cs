@@ -83,21 +83,6 @@ namespace Exadel.OfficeBooking.Api.Services
             if (filterModel.OfficeId != null)
                 workplaces = workplaces.Where(x => x.Map.OfficeId == filterModel.OfficeId);
 
-            if (filterModel.BookingType == BookingTypeEnum.OneDay)
-            {
-                workplaces = workplaces.Where(w => _bookingService
-                .IsWorkplaceAvailableForOneDayBooking(w, (DateTime)filterModel.StartDate));
-            }
-
-            if (filterModel.BookingType == BookingTypeEnum.Continuous ||
-                filterModel.BookingType == BookingTypeEnum.Recurring)
-            {
-                List<DateTime> recurringDates = _bookingService.GetRecurringBookingDates(filterModel.Adapt<RecurrencePattern>());
-                
-                workplaces = workplaces.Where(w => _bookingService
-                .IsWorkplaceAvailableForRecurringBooking(w, recurringDates));
-            }
-
             if (!string.IsNullOrEmpty(filterModel.Name))
                 workplaces = workplaces.Where(w => w.Name.Contains(filterModel.Name));
 
@@ -105,10 +90,7 @@ namespace Exadel.OfficeBooking.Api.Services
                 workplaces = workplaces.Where(w => w.MapId == filterModel.MapId);
 
             if (filterModel.Type != null)
-                workplaces = workplaces.Where(w => w.Type == (WorkplaceTypes)filterModel.Type);   
-
-            if (filterModel.IsBooked != null)
-                workplaces = workplaces.Where(w => w.IsBooked == filterModel.IsBooked);
+                workplaces = workplaces.Where(w => w.Type == (WorkplaceTypes)filterModel.Type);
 
             if (filterModel.IsNextToWindow != null)
                 workplaces = workplaces.Where(w => w.IsNextToWindow == filterModel.IsNextToWindow);
@@ -128,9 +110,25 @@ namespace Exadel.OfficeBooking.Api.Services
             if (filterModel.HasHeadset != null)
                 workplaces = workplaces.Where(w => w.HasHeadset == filterModel.HasHeadset);
 
-            var workplacesList = await workplaces.ToArrayAsync();
+            var workplacesArray = await workplaces.ToArrayAsync();
 
-            return workplacesList.Adapt<WorkplaceGetDto[]>();
+            if (filterModel.BookingType == BookingTypeEnum.OneDay &&
+                filterModel.StartDate != null)
+            {
+                workplacesArray = workplacesArray.Where(w => _bookingService
+                .IsWorkplaceAvailableForOneDayBooking(w, (DateTime)filterModel.StartDate)).ToArray();
+            }
+
+            if (filterModel.BookingType == BookingTypeEnum.Continuous ||
+                filterModel.BookingType == BookingTypeEnum.Recurring)
+            {
+                List<DateTime> recurringDates = _bookingService.GetRecurringBookingDates(filterModel.Adapt<RecurrencePattern>());
+
+                workplacesArray = workplacesArray.Where(w => _bookingService
+                .IsWorkplaceAvailableForRecurringBooking(w, recurringDates)).ToArray();
+            }
+
+            return workplacesArray.Adapt<WorkplaceGetDto[]>();
         }
 
         public async Task<WorkplaceGetDto?> GetWorkplaceById(Guid id)
