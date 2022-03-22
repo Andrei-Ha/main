@@ -48,7 +48,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 // If the choice is "For other employee"
                 else if (text == _state.Propositions[1])
                 {
-                    _state.IsBookForOther = true;
                     var httpResponse = await _http.GetWebApiModel<IEnumerable<LoginUserDto>>("login");
                     if (httpResponse?.Model != null)
                     {

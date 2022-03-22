@@ -98,8 +98,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Calendar
                     {
                         if (hDates != null && hDates.Contains(date))
                         {
-                            dateVal = dateVal.Trim('[', ']');
-                            dateVal = "(" +dateVal + ")";
+                            //dateVal = dateVal.Trim('[', ']');
+                            dateVal = "(" + Bold.StringToBold(dateVal) + ")";
                         }
 
                         week[dayOfWeek] = InlineKeyboardButton.WithCallbackData(dateVal, dateKey);

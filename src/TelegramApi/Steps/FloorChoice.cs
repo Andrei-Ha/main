@@ -117,7 +117,9 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 var httpResponse = await _http.GetWebApiModel<IEnumerable<MapGetDto>>($"map?{_state.Adapt<MapFilterDto>().GetQueryString()}");
                                 if (httpResponse?.Model != null)
                                 {
-                                    var floor = httpResponse.Model.FirstOrDefault();
+                                    var floor = httpResponse.Model
+                                        .OrderBy(f => (f.IsKitchenPresent ? 1 : 0) + (f.IsMeetingRoomPresent ? 1 : 0))
+                                        .FirstOrDefault();
                                     _state.MapId = floor != null ? floor.Id : default;
                                     _state.FloorName = floor != null ? floor.GetNameWithAttributes() : string.Empty;
                                     _state.TextMessage += $"We have chosen the floor: <b>{(floor != null ? floor.GetNameWithAttributes() : default)}</b> for you\n";
