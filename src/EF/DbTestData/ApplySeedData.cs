@@ -241,7 +241,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = true,
-                    IsBooked = false,
                     Name = "1",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapTb
@@ -255,7 +254,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = true,
-                    IsBooked = false,
                     Name = "2",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapTb
@@ -270,7 +268,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
-                    IsBooked = false,
                     Name = "3",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapTb
@@ -284,7 +281,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = true,
-                    IsBooked = false,
                     Name = "77",
                     Type = WorkplaceTypes.Administrative,
                     MapId = mapTk
@@ -299,7 +295,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
-                    IsBooked = true,
                     Name = "301",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
@@ -313,7 +308,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
-                    IsBooked = true,
                     Name = "302",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
@@ -327,7 +321,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
-                    IsBooked = true,
                     Name = "303",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
@@ -341,7 +334,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
-                    IsBooked = true,
                     Name = "304",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
@@ -355,7 +347,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
-                    IsBooked = true,
                     Name = "305",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
@@ -369,7 +360,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = true,
-                    IsBooked = true,
                     Name = "333",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
@@ -383,7 +373,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = false,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
-                    IsBooked = true,
                     Name = "401",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin4
@@ -397,7 +386,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
-                    IsBooked = true,
                     Name = "402",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin4
@@ -411,7 +399,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
-                    IsBooked = true,
                     Name = "403",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin4
@@ -425,7 +412,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
-                    IsBooked = true,
                     Name = "501",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin5
@@ -439,7 +425,6 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = true,
-                    IsBooked = true,
                     Name = "502",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin5
@@ -453,8 +438,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasPC = true,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = true,
-                    IsBooked = false,
-                    Name = "Slava Ukraina",
+                    Name = "SU",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapOde
                 }
@@ -508,7 +492,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     FirstName = "Vasili",
                     LastName = "",
-                    Email = "Vmalkou.vasili@gmail.com",
+                    Email = "malkou.vasili@gmail.com",
                     EmploymentStart = DateTime.Now,
                     TelegramId = 957365793,
                     Role = UserRole.Admin

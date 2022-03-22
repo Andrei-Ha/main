@@ -301,6 +301,8 @@ public class BookingService : IBookingService
 
     public bool IsWorkplaceAvailableForOneDayBooking(Workplace workplace, DateTime bookingDate)
     {
+        if(workplace.Bookings == null) return true;
+
         foreach (var booking in workplace.Bookings)
         {
             if (booking.IsRecurring)
@@ -319,6 +321,8 @@ public class BookingService : IBookingService
 
     public bool IsWorkplaceAvailableForRecurringBooking(Workplace workplace, List<DateTime> recurringDates)
     {
+        if (workplace.Bookings == null) return true;
+
         foreach (var booking in workplace.Bookings)
         {
             if (booking.IsRecurring)
