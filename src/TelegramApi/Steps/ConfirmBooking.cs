@@ -32,11 +32,11 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             // Confirm
             if (text == _state.Propositions[0])
             {
+                string failure = "<b>Booking failed!</b>\nSorry, this workspace is no longer available for your dates.\n<b>Bye!</b>";
                 // if this is a new booking
                 if (_state.EditTypeEnum == EditTypeEnum.None)
                 {
-                    string result = "A new booking has been created.\nAll details have been sent to you by email.\nBye!";
-                    string
+                    string result = "A <b>new booking</b> has been <b>created</b>.\nAll details have been sent to you by email.\n<b>Bye!</b>";
                     if (_state.IsRecurring())
                     {
                         var response = await _httpClient.PostWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
@@ -46,7 +46,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         if (response?.Model != null)
                             _state.TextMessage = response.Model.Success ? result : response.Model.Message;
                         else
-                            _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                            _state.TextMessage = failure;
                     }
                     else
                     {
@@ -55,13 +55,13 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         if (response?.Model != null)
                             _state.TextMessage = response.Model.Success ? result : response.Model.Message;
                         else
-                            _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                            _state.TextMessage = failure;
                     }
                 }
                 // if this is a edited booking
                 else
                 {
-                    string result = "A booking has been <b>edited</b>.\nAll details have been sent to you by email.\nBye!";
+                    string result = "A booking has been <b>edited</b>.\nAll details have been sent to you by email.\n<b>Bye!</b>";
                     if (_state.IsRecurring())
                     {
                         var response = await _httpClient.PutWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(
@@ -71,7 +71,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         if (response?.Model != null)
                             _state.TextMessage = response.Model.Success ? result : response.Model.Message;
                         else
-                            _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                            _state.TextMessage = failure;
                     }
                     else
                     {
@@ -81,14 +81,14 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         if (response?.Model != null)
                             _state.TextMessage = response.Model.Success ? result : response.Model.Message;
                         else
-                            _state.TextMessage = "ServiceResponse or ServiceResponse.Model is null...";
+                            _state.TextMessage = failure;
                     }
                 }
             }
             // Cancel
             else if (text == _state.Propositions[1])
             {
-                _state.TextMessage = "You have canceled your booking.\nBye!";
+                _state.TextMessage = "You have <b>canceled</b> your booking.\n<b>Bye!</b>";
             }
 
             _state.Propositions = new();
