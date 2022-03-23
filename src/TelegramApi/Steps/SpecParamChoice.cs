@@ -1,6 +1,9 @@
 ﻿using Exadel.OfficeBooking.TelegramApi.DTO.BookingDto;
+using Exadel.OfficeBooking.TelegramApi.DTO.MapDto;
 using Exadel.OfficeBooking.TelegramApi.DTO.WorkplaceDto;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
+using Mapster;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
@@ -31,7 +34,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             // If the choice is "Yes, I have special preferences"
             if (text == _state.Propositions[0])
             {
-                _state.IsSpecifyWorkplace = true;
+                _state.IsOnlyFirstFree = false;
                 _state.TextMessage = "Would you like to choose the exact floor?";
                 _state.Propositions = new()
                 {
@@ -43,44 +46,27 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             // If the choice is "No, I can take any available workplace"
             else if (text == _state.Propositions[1])
             {
-                _state.IsSpecifyWorkplace = false;
+                _state.IsOnlyFirstFree = true;
 
-                if (_state.BookingType == BookingTypeEnum.Continuous || _state.BookingType == BookingTypeEnum.Recurring)
+                var httpResponseWorkplace = await _httpClient.GetWebApiModel<WorkplaceGetDto[]>(
+                    $"workplace?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}",
+                    _state.User.Token);
+
+                if (httpResponseWorkplace?.Model != null)
                 {
-                    var recuringBooking = new GetFirstFreeWorkplaceForRecuringBookingDto()
+                    var httpResponseMap = await _httpClient.GetWebApiModel<MapGetDto>(
+                    $"map/{httpResponseWorkplace.Model[0].MapId}",
+                    _state.User.Token);
+
+                    if (httpResponseMap?.Model != null)
                     {
-                        UserId = _state.User.UserId,
-                        OfficeId = _state.OfficeId,
-                        StartDate = _state.StartDate,
-                        EndDate = _state.EndDate,
-                        Count = _state.Count,
-                        Interval = 1,
-                        RecurringWeekDays = _state.RecurringWeekDays,
-                        Frequency = _state.Frequency
-                    };
+                        _state.MapId = httpResponseMap.Model.Id;
+                        _state.FloorName = httpResponseMap.Model.GetNameWithAttributes();
+                    }
+                    
+                    _state.WorkplaceId = httpResponseWorkplace.Model[0].Id;
+                    _state.WorkplaceName = httpResponseWorkplace.Model[0].GetNameWithAttributes();
 
-                    var httpResponseRecuring = await _httpClient
-                        .PostWebApiModel<WorkplaceGetDto, GetFirstFreeWorkplaceForRecuringBookingDto>(
-                        "booking/get/recuringfirstfree", recuringBooking);
-
-                    _state.WorkplaceId = httpResponseRecuring.Model.Id;
-                    _state.WorkplaceName = httpResponseRecuring.Model.Name;
-                }
-                else
-                {
-                    var booking = new GetFirstFreeWorkplaceForBookingDto()
-                    {
-                        UserId = _state.User.UserId,
-                        OfficeId = _state.OfficeId,
-                        Date = _state.StartDate
-                    };
-
-                    var httpResponse = await _httpClient
-                        .PostWebApiModel<WorkplaceGetDto, GetFirstFreeWorkplaceForBookingDto>(
-                        "booking/get/firstfree", booking);
-
-                    _state.WorkplaceId = httpResponse.Model.Id;
-                    _state.WorkplaceName = httpResponse.Model.Name;
                 }
 
                 _state.TextMessage = _state.Summary() + "\nConfirm the booking?";

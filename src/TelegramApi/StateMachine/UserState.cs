@@ -50,7 +50,7 @@ namespace Exadel.OfficeBooking.TelegramApi
 
         public bool IsParkingPlace { get; set; } = false;
         
-        public bool IsSpecifyWorkplace { get; set; } = false;
+        public bool IsOnlyFirstFree { get; set; } = false;
 
         public bool IsKitchenPresent { get; set; } = false;
 
