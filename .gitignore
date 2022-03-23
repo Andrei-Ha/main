@@ -11,6 +11,3 @@
 src/Api/appsettings.local.json
 src/TelegramApi/appsettings.local.json
 *.user
-
-# Migrations folder
-Migrations/
