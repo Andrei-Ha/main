@@ -44,7 +44,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         var dictionary = httpResponse.Model
                             .OrderBy(m => m.Name)
-                            .ToDictionary(k => $"{k.Name}:{k.Id}", v => $"{ v.GetNameWithAttributes()}");
+                            .ToDictionary(k => $"{k.Name}:{k.Id}", v => $"{ v.GetNameWithAttributes(isForButton: true)}");
                         dictionary.Add("Back:true", "<< Back");
                         dictionary.Add("BackToFloor:true", "<< back to floor selection");
                         if (dictionary.Count < 3)
