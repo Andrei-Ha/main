@@ -253,7 +253,7 @@ public class BookingService : IBookingService
     {
         ServiceResponse<GetRecurringBookingDto> response = new();
 
-        Booking? booking = await _context.Bookings.Include(b => b.Workplace)
+        Booking? booking = await _context.Bookings.Include(b => b.Workplace).Include(b => b.User)
             .FirstOrDefaultAsync(b => b.Id == id);
         if (booking == null) return NotFoundResponse<GetRecurringBookingDto>("Requested booking doesn’t exist");
 

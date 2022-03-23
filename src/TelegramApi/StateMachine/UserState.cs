@@ -172,7 +172,7 @@ namespace Exadel.OfficeBooking.TelegramApi
                 sb.AppendLine($"Parking place: {ParkingPlace.Bold()}"); 
             }
 
-            sb.AppendLine($"<i>booking time: {DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")}</i>");
+            sb.AppendLine($"<i>booking creation time: {DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")}</i>");
             if (IsBookingForOther(out string RealBookerName))
             {
                 sb.AppendLine($"Booking made by: <b>{RealBookerName}</b>");
