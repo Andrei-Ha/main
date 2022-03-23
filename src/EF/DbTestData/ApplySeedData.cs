@@ -599,7 +599,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     LastName = "Davletov",
                     Email = "kdavletov@exadel.com",
                     EmploymentStart = DateTime.Now,
-                    TelegramId = 223344,
+                    TelegramId = 194740354,
                     Role = UserRole.Manager
                 },
                 new User
@@ -607,9 +607,9 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     Id = Guid.NewGuid(),
                     FirstName = "Anvarkhon",
                     LastName = "Khamzaev",
-                    Email = "AnvarkhonKhamzaev@fake.com",
+                    Email = "anvarkhon.khamzaev@gmail.com",
                     EmploymentStart = DateTime.Now,
-                    TelegramId = 445566,
+                    TelegramId = 112046934,
                     Role = UserRole.Manager
                 },
 
