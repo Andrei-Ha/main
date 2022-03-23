@@ -10,6 +10,7 @@ using Exadel.OfficeBooking.Domain.Bookings;
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.Domain.Person;
 using Exadel.OfficeBooking.EF;
+using Exadel.OfficeBooking.TelegramApi;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 
@@ -146,7 +147,8 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
-        _email.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
+        _email.SendEmailTo(newBooking.User.Email,
+            $"Hello {newBooking.User.FirstName}\nYour booking was succesful!\nSummary:\n{bookingDto.Summary.DelBoldTags()}");
 
         response.StatusCode = 201;
         var responseBooking = bookingDto.Adapt<GetOneDayBookingDto>();
@@ -165,6 +167,8 @@ public class BookingService : IBookingService
             .Include(b => b.Workplace)
             .FirstOrDefaultAsync(b => b.Id == id);
         if (booking == null) return NotFoundResponse<GetOneDayBookingDto>("Requested booking doesn’t exist");
+
+        string oldSummary = booking.Summary;
 
         Workplace? workplace = await _context.Workplaces
             .Include(w => w.Bookings)
@@ -194,6 +198,8 @@ public class BookingService : IBookingService
         if (!OnlyCheck)
         {
             await _context.SaveChangesAsync();
+            _email.SendEmailTo(booking.User.Email,
+            $"Hello {booking.User.FirstName}\nYou changed your booking from\nSummary:\n{oldSummary.DelBoldTags()}\nto\nSummary:\n{booking.Summary.DelBoldTags()}");
         }
 
         response.Data = booking.Adapt<GetOneDayBookingDto>();
@@ -235,7 +241,9 @@ public class BookingService : IBookingService
         await _context.Bookings.AddAsync(newBooking);
         await _context.SaveChangesAsync();
 
-        _email.SendEmailTo(newBooking.User.Email, $"Hello {newBooking.User.FirstName}\nSummary:{bookingDto.Summary.Replace("<b>", "").Replace("</b>", "")}");
+        _email.SendEmailTo(newBooking.User.Email,
+            $"Hello {newBooking.User.FirstName}\nYour booking was succesful!\nSummary:\n{bookingDto.Summary.DelBoldTags()}");
+
         response.Data = newBooking.Adapt<GetRecurringBookingDto>();
         response.StatusCode = 209;
         return response;
@@ -248,6 +256,9 @@ public class BookingService : IBookingService
         Booking? booking = await _context.Bookings.Include(b => b.Workplace)
             .FirstOrDefaultAsync(b => b.Id == id);
         if (booking == null) return NotFoundResponse<GetRecurringBookingDto>("Requested booking doesn’t exist");
+
+        string oldSummary = booking.Summary;
+
         Console.WriteLine("wp_Id = " + booking.Workplace.Id);
         Workplace? workplace = await _context.Workplaces
             .Include(w => w.Bookings)
@@ -278,6 +289,8 @@ public class BookingService : IBookingService
         if (!OnlyCheck)
         {
             await _context.SaveChangesAsync();
+            _email.SendEmailTo(booking.User.Email,
+            $"Hello {booking.User.FirstName}\nYou changed your booking from\nSummary:\n{oldSummary.DelBoldTags()}\nto\nSummary:\n{booking.Summary.DelBoldTags()}");
         }
 
         response.Data = booking.Adapt<GetRecurringBookingDto>();
@@ -294,6 +307,11 @@ public class BookingService : IBookingService
         Booking? userBooking = await _context.Bookings.Include(b => b.User).FirstOrDefaultAsync(b => b.Id == guidIds[0]);
         if (userBooking == null) return NotFoundResponse<GetBookingDto[]>("Requested booking with id " + guidIds[0] + " doesn’t exist");
 
+        string userEmail = userBooking.User.Email;
+        string userName = userBooking.User.FirstName;
+        string textEmail = "You canceled your booking";
+        textEmail += guidIds.Length > 1 ? "s:" : ":";
+        textEmail += $"\nSummary:\n{ userBooking.Summary.DelBoldTags()}\n";
         _context.Bookings.Remove(userBooking);
 
         for (int i = 1; i < guidIds.Length; i++)
@@ -302,13 +320,12 @@ public class BookingService : IBookingService
             Booking? booking = await _context.Bookings.FirstOrDefaultAsync(b => b.Id == id);
             if (booking == null) return NotFoundResponse<GetBookingDto[]>("Requested booking with id " + id + " doesn’t exist");
 
+            textEmail += $"\nSummary:\n{ booking.Summary.DelBoldTags()}\n";
             _context.Bookings.Remove(booking);
         }
         await _context.SaveChangesAsync();
 
-        //send email
-        //string summary = $"Booking with ids:{ids} were deleted.";
-        //EmailService.SendEmailTo(userBooking.User.Email, $"Hello {userBooking.User.FirstName}\nSummary:{summary}");
+        _email.SendEmailTo(userEmail,  $"Hello {userName}\n" + textEmail);
 
         return await GetAllBookings();
     }

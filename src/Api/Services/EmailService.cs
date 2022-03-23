@@ -24,7 +24,7 @@ namespace Exadel.OfficeBooking.Api.Services
 
             MailMessage mail = new MailMessage("Team3InfoBot@gmail.com", receiver);
             mail.Subject = "Booking info";
-            mail.Body = "Your Booking was succesfull" + "\n" + body;
+            mail.Body = body;
 
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
             client.EnableSsl = true;

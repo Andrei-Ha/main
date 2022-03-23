@@ -84,6 +84,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     _state.IsParkingPlace = true;
                     addParking = _parking;
                     addParking.IsBooked = true;
+                    _state.ParkingPlace = _parking.PlaceNumber.ToString();
                     await _httpClient.PutWebApiModel<ParkingPlaceGetDto, ParkingPlaceSetDto>($"parkingPlace/put/{_parking.Id}", addParking, _state.User.Token);
                     _state.TextMessage = $"Parking place # {_parking.PlaceNumber} booked. Would you like to specify workplace parameters?";
                     _state.Propositions = new() { "Yes, I have special preferences", "No, I can take any available workplace" };
