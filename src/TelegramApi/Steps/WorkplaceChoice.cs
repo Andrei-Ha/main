@@ -1,4 +1,5 @@
-﻿using Exadel.OfficeBooking.TelegramApi.DTO.OfficeDto;
+﻿using Exadel.OfficeBooking.TelegramApi.DTO.MapDto;
+using Exadel.OfficeBooking.TelegramApi.DTO.OfficeDto;
 using Exadel.OfficeBooking.TelegramApi.DTO.WorkplaceDto;
 using Exadel.OfficeBooking.TelegramApi.StateMachine;
 using Mapster;
@@ -45,10 +46,22 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             .OrderBy(m => m.Name)
                             .ToDictionary(k => $"{k.Name}:{k.Id}", v => $"{ v.GetNameWithAttributes()}");
                         dictionary.Add("Back:true", "<< Back");
-                        _state.CallbackMessageId = await _bot.SendInlineKbList(update, "Select the workplace:", dictionary);
+                        dictionary.Add("BackToFloor:true", "<< back to floor selection");
+                        if (dictionary.Count < 3)
+                        {
+                            dictionary.Remove("Back:true");
+                            dictionary.Add("GoToDates:true", " << go to change dates");
+                            dictionary.Add("Finish:true", "[finish my booking]");
+                            _state.CallbackMessageId = await _bot.SendInlineKbList(update, "There are no free workplaces on this floor for your dates, sorry", dictionary);
+                        }
+                        else
+                        {
+                            _state.CallbackMessageId = await _bot.SendInlineKbList(update, "Select the workplace:", dictionary);
+                        }
                     }
                     else
                     {
+                        // !!! unreachable code !!!
                         // this map don't contain any workplaces
                         // Go to choose floor!!!
                         _state.TextMessage = "This floor don't contain any workplaces. Bye!";
@@ -72,9 +85,10 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 if (Guid.TryParse(data[1], out Guid result))
                 {
                     _state.WorkplaceId = result;
-                    _state.WorkplaceName = data[0];
+                    var httpResponseWorkplace = await _http.GetWebApiModel<WorkplaceGetDto>($"workplace/{result}", _state.User.Token);
+                    _state.WorkplaceName = httpResponseWorkplace?.Model != null ? httpResponseWorkplace.Model.GetNameWithAttributes() : data[0];
                     _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
-                    _state.TextMessage = $"You have selected workplace: <b>{data[0]}</b>.\n";
+                    _state.TextMessage = $"You have selected workplace: <b>{_state.WorkplaceName}</b>.\n";
 
                     _state.TextMessage += "\n" + _state.Summary() + "\nConfirm the booking?";
                     if (_state.EditTypeEnum != EditTypeEnum.None)
@@ -122,7 +136,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             }
                         case "HasHeadset":
                             {
-                                _state.TextMessage = "Would you like to choose the exact workplace?";
+                                //_state.TextMessage = "Would you like to choose the exact workplace?";
                                 _state.HasHeadset = result2;
                                 await _bot.EditInlineKbList(update, GetList());
                                 break;
@@ -130,13 +144,51 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         // << Back
                         case "Back":
                             {
+                                _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
                                 _state.IsNextToWindow = false;
                                 _state.HasPC = false;
                                 _state.HasMonitor = false;
                                 _state.HasKeyboard = false;
                                 _state.HasMouse = false;
                                 _state.HasHeadset = false;
+                                break;
+                            }
+                        case "BackToFloor":
+                            {
                                 _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
+                                _state.TextMessage = "Would you like to choose the exact floor?";
+                                _state.Propositions = new()
+                                {
+                                    "yes, I want to choose the exact floor",
+                                    "no, I want to select floor attributes"
+                                };
+                                _state.NextStep = nameof(FloorChoice);
+                                _state.IsKitchenPresent = false;
+                                _state.IsMeetingRoomPresent = false;
+                                break;
+                            }
+                        case "GoToDates":
+                            {
+                                _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
+                                _state.TextMessage += "Select booking type:";
+                                _state.Propositions = new() { "One day", "Continuous", "Recurring" };
+                                _state.NextStep = nameof(DatesChoice);
+                                // Initial data
+                                _state.InitRecurrencePattern();
+                                _state.IsNextToWindow = false;
+                                _state.HasPC = false;
+                                _state.HasMonitor = false;
+                                _state.HasKeyboard = false;
+                                _state.HasMouse = false;
+                                _state.HasHeadset = false;
+                                _state.IsKitchenPresent = false;
+                                _state.IsMeetingRoomPresent = false;
+                                break;
+                            }
+                        case "Finish":
+                            {
+                                _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
+                                _state.SetByeAndFinish();
                                 break;
                             }
                         // OK
@@ -155,9 +207,17 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 workplaceFilterDto.IsOnlyFirstFree = true;
                                 Console.WriteLine($"workplace?{workplaceFilterDto.GetQueryString()}");
                                 var httpResponse = await _http.GetWebApiModel<IEnumerable<WorkplaceGetDto>>($"workplace?{workplaceFilterDto.GetQueryString()}");
-                                if (httpResponse?.Model != null/* && httpResponse?.Model.Count() != 0*/)
+                                if (httpResponse != null && httpResponse.Model != null && httpResponse?.Model.Count() != 0)
                                 {
-                                    var workplace = httpResponse.Model.FirstOrDefault();
+                                    var workplace = httpResponse?.Model.FirstOrDefault();
+                                    var httpResponseMap = await _http.GetWebApiModel<MapGetDto>(
+                                    $"map/{workplace?.MapId}", _state.User.Token);
+
+                                    if (httpResponseMap?.Model != null)
+                                    {
+                                        _state.MapId = httpResponseMap.Model.Id;
+                                        _state.FloorName = httpResponseMap.Model.GetNameWithAttributes();
+                                    }
                                     _state.WorkplaceId = workplace != null ? workplace.Id : default;
                                     _state.WorkplaceName = workplace != null ? workplace.GetNameWithAttributes() : string.Empty;
                                     _state.TextMessage += $"We have chosen the <b>{(workplace != null ? workplace.GetNameWithAttributes() : default)}</b> workplace for you\n";
@@ -167,10 +227,23 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 }
                                 else
                                 {
-                                    _state.TextMessage += $"No workplaces with given attributes!";
-                                    _state.TextMessage = "Would you like to choose the exact workplace?";
-                                    _state.Propositions = new() { "yes", "no" };
+                                    _state.TextMessage += $"No workplaces with given attributes!\n";
+                                    _state.TextMessage += "To end the dialogue and exit - send me <b>/Finish</b>\n";
+                                    _state.TextMessage += "or try again\n";
+                                    _state.TextMessage += "Would you like to choose the exact workplace?";
+                                    _state.Propositions = new() 
+                                    {
+                                        "yes, I like to choose the exact workplace",
+                                        "no, any workplace with attributes" 
+                                    };
                                     _state.NextStep = nameof(WorkplaceChoice);
+                                    // Initial attributes
+                                    _state.IsNextToWindow = false;
+                                    _state.HasPC = false;
+                                    _state.HasMonitor = false;
+                                    _state.HasKeyboard = false;
+                                    _state.HasMouse = false;
+                                    _state.HasHeadset = false;
                                 }
 
                                 break;
@@ -240,6 +313,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 
             dictionary.Add("OK:true", "[ OK ]");
             dictionary.Add("Back:true", "<< Back");
+            dictionary.Add("BackToFloor:true", "<< back to floor selection");
             return dictionary;
         }
         // window 🪟,PC 💻, Monitor 🖥, keyboard  ⌨️, mouse 🖰 🐭, headset 🎧, kitchen 🍽, meeting room 🚪
