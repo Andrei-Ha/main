@@ -36,6 +36,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 if (_state.EditTypeEnum == EditTypeEnum.None)
                 {
                     string result = "A new booking has been created.\nAll details have been sent to you by email.\nBye!";
+                    string
                     if (_state.IsRecurring())
                     {
                         var response = await _httpClient.PostWebApiModel<ServiceResponse<GetRecurringBookingDto>, AddRecurringBookingDto>(

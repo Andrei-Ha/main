@@ -187,11 +187,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 
                             if (success)
                             {
-                                _state.TextMessage = _state.Summary() + "\nConfirm the booking?";
-                                if (_state.EditTypeEnum != EditTypeEnum.DatesChange)
-                                {
-                                    _state.TextMessage += "\nThis is edited booking(from DatesChoise).";
-                                }
+                                _state.TextMessage = _state.Summary();
+                                _state.TextMessage += _state.EditTypeEnum != EditTypeEnum.None ? "\nConfirm booking change?" : "\nConfirm the booking?";
                                 _state.Propositions = new() { "confirm", "cancel" };
                                 _state.NextStep = nameof(ConfirmBooking);
                             }

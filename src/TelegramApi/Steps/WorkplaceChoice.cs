@@ -90,11 +90,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     _state.CallbackMessageId = await _bot.DeleteInlineKeyboard(update);
                     _state.TextMessage = $"You have selected workplace: <b>{_state.WorkplaceName}</b>.\n";
 
-                    _state.TextMessage += "\n" + _state.Summary() + "\nConfirm the booking?";
-                    if (_state.EditTypeEnum != EditTypeEnum.None)
-                    {
-                        _state.TextMessage += "\nThis is edited booking(from WorkplaceChoise).";
-                    }
+                    _state.TextMessage += "\n" + _state.Summary();
+                    _state.TextMessage += _state.EditTypeEnum != EditTypeEnum.None ? "\nConfirm booking change?" : "\nConfirm the booking?";
                     _state.Propositions = new() { "confirm", "cancel" };
                     _state.NextStep = nameof(ConfirmBooking);
 
@@ -221,7 +218,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                     _state.WorkplaceId = workplace != null ? workplace.Id : default;
                                     _state.WorkplaceName = workplace != null ? workplace.GetNameWithAttributes() : string.Empty;
                                     _state.TextMessage += $"We have chosen the <b>{(workplace != null ? workplace.GetNameWithAttributes() : default)}</b> workplace for you\n";
-                                    _state.TextMessage += "\n" + _state.Summary() + "\nConfirm the booking?";
+                                    _state.TextMessage += "\n" + _state.Summary();
+                                    _state.TextMessage += _state.EditTypeEnum != EditTypeEnum.None ? "\nConfirm booking change?" : "\nConfirm the booking?";
                                     _state.Propositions = new() { "confirm", "cancel" };
                                     _state.NextStep = nameof(ConfirmBooking);
                                 }
