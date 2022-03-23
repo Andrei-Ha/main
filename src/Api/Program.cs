@@ -15,9 +15,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Configuration.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddEnvironmentVariables();
 var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
@@ -69,7 +68,6 @@ TypeAdapterConfig<Booking, GetBookingDto>.NewConfig()
     .Map(dest => dest.OfficeName, src => $"{src.Workplace.Map.Office.Name} {src.Workplace.Map.Office.Address}" )
     .Map(dest => dest.ParkingPlaceNumber, src => src.ParkingPlace.PlaceNumber);
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -84,5 +82,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+    await scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.MigrateAsync();
 
 app.Run();
