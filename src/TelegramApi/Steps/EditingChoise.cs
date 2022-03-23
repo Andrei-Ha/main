@@ -46,7 +46,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             else if (text == _state.Propositions[1])
             {
                 _state.EditTypeEnum = EditTypeEnum.WorkplaceChange;
-                _state.IsSpecifyWorkplace = true;
+                _state.IsOnlyFirstFree = false;
                 _state.TextMessage = "Would you like to choose the exact floor?";
                 _state.Propositions = new()
                 {

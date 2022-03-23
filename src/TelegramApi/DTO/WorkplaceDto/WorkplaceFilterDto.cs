@@ -54,9 +54,11 @@ namespace Exadel.OfficeBooking.TelegramApi.DTO.WorkplaceDto
             StringBuilder stringBuilder = new();
             stringBuilder.Append(Name != null ? $"{nameof(Name)}={Name}&" : string.Empty);
             stringBuilder.Append(OfficeId != null ? $"{nameof(OfficeId)}={OfficeId}&" : string.Empty);
-            stringBuilder.Append(MapId != null ? $"{nameof(MapId)}={MapId}&" : string.Empty);
-            stringBuilder.Append(Type != null ? $"{nameof(Type)}={(int)Type}&" : string.Empty);
 
+            if(MapId != Guid.Empty)
+                stringBuilder.Append(MapId != null ? $"{nameof(MapId)}={MapId}&" : string.Empty);
+
+            stringBuilder.Append(Type != null ? $"{nameof(Type)}={(int)Type}&" : string.Empty);
             stringBuilder.Append(IsNextToWindow == true ? $"{nameof(IsNextToWindow)}=true&" : string.Empty);
             stringBuilder.Append(HasPC == true ? $"{nameof(HasPC)}=true&" : string.Empty);
             stringBuilder.Append(HasMonitor == true ? $"{nameof(HasMonitor)}=true&" : string.Empty);
