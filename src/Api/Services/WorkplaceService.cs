@@ -81,6 +81,7 @@ namespace Exadel.OfficeBooking.Api.Services
                         //check if workplace is available at the StartDate
                         if (_bookingService.IsWorkplaceAvailableForOneDayBooking(workplace, (DateTime)filterModel.StartDate))
                             return new WorkplaceGetDto[] { workplace.Adapt<WorkplaceGetDto>() };
+                        return Array.Empty<WorkplaceGetDto>();
                     }
                 }
                 else
@@ -104,6 +105,7 @@ namespace Exadel.OfficeBooking.Api.Services
                         //check if workplace is available at given dates
                         if (_bookingService.IsWorkplaceAvailableForRecurringBooking(workplace, recurringDates))
                             return new WorkplaceGetDto[] { workplace.Adapt<WorkplaceGetDto>() };
+                        return Array.Empty<WorkplaceGetDto>();
                     }
                 }
                 else

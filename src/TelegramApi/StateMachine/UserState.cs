@@ -49,6 +49,8 @@ namespace Exadel.OfficeBooking.TelegramApi
         public RecurringFrequency Frequency { get; set; } = 0;
 
         public bool IsParkingPlace { get; set; } = false;
+
+        public string ParkingPlace { get; set; } = string.Empty;
         
         public bool IsOnlyFirstFree { get; set; } = false;
 
@@ -167,12 +169,15 @@ namespace Exadel.OfficeBooking.TelegramApi
             sb.Append(AddTextToCalendar(true));
             if (IsParkingPlace) 
             {
-                sb.AppendLine($"Parking place <b>added</b>"); 
+                sb.AppendLine($"Parking place: {ParkingPlace.Bold()}"); 
             }
+
+            sb.AppendLine($"<i>booking creation time: {DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")}</i>");
             if (IsBookingForOther(out string RealBookerName))
             {
                 sb.AppendLine($"Booking made by: <b>{RealBookerName}</b>");
             }
+
             return sb.ToString();
         }
 

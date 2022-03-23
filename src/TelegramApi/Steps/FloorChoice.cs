@@ -41,7 +41,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     {
                         var dictionary = httpResponse.Model
                             .OrderBy(m => m.FloorNumber)
-                            .ToDictionary(k => $"{k.GetNameWithAttributes()}:{k.Id}", v => $"{ v.GetNameWithAttributes() }");
+                            .ToDictionary(k => $"{k.GetNameWithAttributes()}:{k.Id}", v => $"{ v.GetNameWithAttributes(isForButton: true) }");
                         dictionary.Add("Back:true", "<< Back");
                         _state.CallbackMessageId = await _bot.SendInlineKbList(update, "Select the floor:", dictionary);
                     }

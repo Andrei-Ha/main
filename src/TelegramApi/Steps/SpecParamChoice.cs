@@ -48,11 +48,12 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             {
                 _state.IsOnlyFirstFree = true;
 
+                Console.WriteLine(_state.Adapt<WorkplaceFilterDto>().GetQueryString());
                 var httpResponseWorkplace = await _httpClient.GetWebApiModel<WorkplaceGetDto[]>(
                     $"workplace?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}",
                     _state.User.Token);
 
-                if (httpResponseWorkplace?.Model != null)
+                if (httpResponseWorkplace?.Model != null && httpResponseWorkplace?.Model.Length != 0)
                 {
                     var httpResponseMap = await _httpClient.GetWebApiModel<MapGetDto>(
                     $"map/{httpResponseWorkplace.Model[0].MapId}",
@@ -66,16 +67,20 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     
                     _state.WorkplaceId = httpResponseWorkplace.Model[0].Id;
                     _state.WorkplaceName = httpResponseWorkplace.Model[0].GetNameWithAttributes();
-
+                    _state.TextMessage = _state.Summary();
+                    _state.TextMessage += _state.EditTypeEnum != EditTypeEnum.None ? "\nConfirm booking change?" : "\nConfirm the booking?";
+                    _state.Propositions = new() { "confirm", "cancel" };
+                    _state.NextStep = nameof(ConfirmBooking);
                 }
-
-                _state.TextMessage = _state.Summary() + "\nConfirm the booking?";
-                if (_state.EditTypeEnum != EditTypeEnum.None)
+                else
                 {
-                    _state.TextMessage += "\nThis is edited booking(from SpecParamChoise).";
+                    _state.TextMessage = "There are no available workplaces for the dates you requested.\n";
+                    _state.TextMessage += "To end the dialogue and exit - send me <b>/Finish</b>\n";
+                    _state.TextMessage += "or try again\n";
+                    _state.TextMessage += "Select booking type:";
+                    _state.Propositions = new() { "One day", "Continuous", "Recurring" };
+                    _state.NextStep = nameof(DatesChoice);
                 }
-                _state.Propositions = new() { "confirm", "cancel" };
-                _state.NextStep = nameof(ConfirmBooking);
             }
             return _state;
         }

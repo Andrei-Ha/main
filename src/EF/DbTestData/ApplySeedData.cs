@@ -23,9 +23,13 @@ namespace Exadel.OfficeBooking.EF.DbTestData
             Guid mapTk1 = Guid.NewGuid();
 
             Guid min = Guid.NewGuid();
+            Guid min2 = Guid.NewGuid();
+
             Guid mapMin3 = Guid.NewGuid();
             Guid mapMin4 = Guid.NewGuid();
             Guid mapMin5 = Guid.NewGuid();
+            Guid mapMin6 = Guid.NewGuid();
+            Guid mapMin21 = Guid.NewGuid();
 
             Guid ode = Guid.NewGuid();
             Guid mapOde = Guid.NewGuid();
@@ -54,11 +58,21 @@ namespace Exadel.OfficeBooking.EF.DbTestData
             Office minsk = new Office
             {
                 Id = min,
-                Country = "Belrus",
+                Country = "Belarus",
                 City = "Minsk",
                 IsFreeParkingAvailable = true,
                 Address = "Naturalistov str # 3",
                 Name = "N3"
+            };
+
+            Office minsk2 = new Office
+            {
+                Id = min2,
+                Country = "Belarus",
+                City = "Minsk",
+                IsFreeParkingAvailable = false,
+                Address = "Solnechnaya str # 59",
+                Name = "S59"
             };
 
             Office odessa = new Office
@@ -71,7 +85,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 Name = "YV15"
             };
 
-            modelBuilder.Entity<Office>().HasData(tbilisi, tashkent, minsk, odessa);
+            modelBuilder.Entity<Office>().HasData(tbilisi, tashkent, minsk, minsk2, odessa);
 
             modelBuilder.Entity<Map>().HasData(
 
@@ -147,6 +161,24 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     IsMeetingRoomPresent = false,
 
                     OfficeId = min
+                },
+                new
+                {
+                    FloorNumber = 6,
+                    Id = mapMin6,
+                    IsKitchenPresent = false,
+                    IsMeetingRoomPresent = true,
+
+                    OfficeId = min
+                },
+                new
+                {
+                    FloorNumber = 1,
+                    Id = mapMin21,
+                    IsKitchenPresent = false,
+                    IsMeetingRoomPresent = true,
+
+                    OfficeId = min2
                 },
                 new
                 {
@@ -294,16 +326,16 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasMouse = false,
                     HasPC = true,
                     Id = Guid.NewGuid(),
-                    IsNextToWindow = false,
+                    IsNextToWindow = true,
                     Name = "301",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
                 },
                 new
                 {
-                    HasHeadset = false,
-                    HasKeyboard = true,
-                    HasMonitor = true,
+                    HasHeadset = true,
+                    HasKeyboard = false,
+                    HasMonitor = false,
                     HasMouse = false,
                     HasPC = true,
                     Id = Guid.NewGuid(),
@@ -314,11 +346,11 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 },
                 new
                 {
-                    HasHeadset = false,
+                    HasHeadset = true,
                     HasKeyboard = true,
                     HasMonitor = true,
                     HasMouse = false,
-                    HasPC = true,
+                    HasPC = false,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
                     Name = "303",
@@ -328,12 +360,12 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 new
                 {
                     HasHeadset = false,
-                    HasKeyboard = true,
+                    HasKeyboard = false,
                     HasMonitor = true,
                     HasMouse = false,
-                    HasPC = true,
+                    HasPC = false,
                     Id = Guid.NewGuid(),
-                    IsNextToWindow = false,
+                    IsNextToWindow = true,
                     Name = "304",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
@@ -341,13 +373,39 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 new
                 {
                     HasHeadset = true,
-                    HasKeyboard = true,
+                    HasKeyboard = false,
                     HasMonitor = true,
                     HasMouse = true,
-                    HasPC = true,
+                    HasPC = false,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = false,
                     Name = "305",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin3
+                },
+                new
+                {
+                    HasHeadset = false,
+                    HasKeyboard = false,
+                    HasMonitor = false,
+                    HasMouse = false,
+                    HasPC = false,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = false,
+                    Name = "306",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin3
+                },
+                new
+                {
+                    HasHeadset = false,
+                    HasKeyboard = false,
+                    HasMonitor = false,
+                    HasMouse = false,
+                    HasPC = false,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = false,
+                    Name = "307",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin3
                 },
@@ -367,7 +425,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 new
                 {
                     HasHeadset = true,
-                    HasKeyboard = true,
+                    HasKeyboard = false,
                     HasMonitor = true,
                     HasMouse = false,
                     HasPC = false,
@@ -381,7 +439,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 {
                     HasHeadset = false,
                     HasKeyboard = true,
-                    HasMonitor = true,
+                    HasMonitor = false,
                     HasMouse = false,
                     HasPC = true,
                     Id = Guid.NewGuid(),
@@ -405,9 +463,35 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 },
                 new
                 {
-                    HasHeadset = false,
+                    HasHeadset = true,
                     HasKeyboard = true,
                     HasMonitor = true,
+                    HasMouse = true,
+                    HasPC = false,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = true,
+                    Name = "404",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin4
+                },
+                new
+                {
+                    HasHeadset = true,
+                    HasKeyboard = false,
+                    HasMonitor = false,
+                    HasMouse = false,
+                    HasPC = true,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = false,
+                    Name = "405",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin4
+                },
+                new
+                {
+                    HasHeadset = false,
+                    HasKeyboard = true,
+                    HasMonitor = false,
                     HasMouse = false,
                     HasPC = true,
                     Id = Guid.NewGuid(),
@@ -422,12 +506,64 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                     HasKeyboard = true,
                     HasMonitor = true,
                     HasMouse = true,
-                    HasPC = true,
+                    HasPC = false,
                     Id = Guid.NewGuid(),
                     IsNextToWindow = true,
                     Name = "502",
                     Type = WorkplaceTypes.Regular,
                     MapId = mapMin5
+                },
+                               new
+                {
+                    HasHeadset = false,
+                    HasKeyboard = true,
+                    HasMonitor = true,
+                    HasMouse = true,
+                    HasPC = false,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = false,
+                    Name = "601",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin6
+                },
+                new
+                {
+                    HasHeadset = false,
+                    HasKeyboard = false,
+                    HasMonitor = false,
+                    HasMouse = false,
+                    HasPC = false,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = false,
+                    Name = "602",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin6
+                },
+                new
+                {
+                    HasHeadset = true,
+                    HasKeyboard = true,
+                    HasMonitor = false,
+                    HasMouse = false,
+                    HasPC = true,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = true,
+                    Name = "603",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin6
+                },
+                new
+                {
+                    HasHeadset = true,
+                    HasKeyboard = false,
+                    HasMonitor = false,
+                    HasMouse = true,
+                    HasPC = false,
+                    Id = Guid.NewGuid(),
+                    IsNextToWindow = true,
+                    Name = "101",
+                    Type = WorkplaceTypes.Regular,
+                    MapId = mapMin21
                 },
                 new
                 {
@@ -480,7 +616,7 @@ namespace Exadel.OfficeBooking.EF.DbTestData
                 new User
                 {
                     Id = Guid.NewGuid(),
-                    FirstName = "Липтон - чай",
+                    FirstName = "Polina",
                     LastName = "",
                     Email = "apfpo2001@gmail.com",
                     EmploymentStart = DateTime.Now,
