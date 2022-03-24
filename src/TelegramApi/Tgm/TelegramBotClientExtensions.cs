@@ -17,6 +17,23 @@ namespace Exadel.OfficeBooking.TelegramApi
 {
     public static class TelegramBotClientExtensions
     {
+        public static async Task SendOnlyBookingList(this TelegramBotClient bot, Update update, string text, Dictionary<string, string> dictionary)
+        {
+            _ = await Send(text);
+            for (int i = 0; i < dictionary.Count; i++)
+            {
+                string textBook = dictionary.ElementAt(i).Value;
+                textBook = string.Join(Environment.NewLine, textBook.Split(Environment.NewLine)[2..]);
+                _ = await Send($"{(i + 1).ToString().Bold()}.{Environment.NewLine}" + textBook);
+            }
+
+            async Task<Message> Send(string textMessage)
+            {
+                return await bot.SendTextMessageAsync(chatId: update.Message.Chat.Id,
+                                                      text: textMessage,
+                                                      parseMode: ParseMode.Html);
+            }
+        }
         public static async Task<BookViewResponse> SendBookingList(this TelegramBotClient bot, Update update, string text, Dictionary<string, string> dictionary)
         {
             _ = await Send(text);
@@ -25,8 +42,8 @@ namespace Exadel.OfficeBooking.TelegramApi
             {
                 string textBook = dictionary.ElementAt(i).Value;
                 string bookingId = dictionary.ElementAt(i).Key;
-                textBook = string.Join("\r\n", textBook.Split("\r\n")[2..]);
-                Message message = await Send($"{(i + 1).ToString().Bold()}.\r\n" + textBook, InlineKbMarkups.CreateEditRow(bookingId, false));
+                textBook = string.Join(Environment.NewLine, textBook.Split(Environment.NewLine)[2..]);
+                Message message = await Send($"{(i + 1).ToString().Bold()}.{Environment.NewLine}" + textBook, InlineKbMarkups.CreateEditRow(bookingId, false));
                 bookViews.Add(new BookView { MessageId = message.MessageId, BookingId = bookingId, IsChecked = false});
             }
 
