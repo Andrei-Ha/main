@@ -74,12 +74,20 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 }
                 else
                 {
-                    _state.TextMessage = "There are no available workplaces for the dates you requested.\n";
-                    _state.TextMessage += "To end the dialogue and exit - send me <b>/Finish</b>\n";
-                    _state.TextMessage += "or try again\n";
-                    _state.TextMessage += "Select booking type:";
-                    _state.Propositions = new() { "One day", "Continuous", "Recurring" };
-                    _state.NextStep = nameof(DatesChoice);
+                    if (_state.EditTypeEnum == EditTypeEnum.OfficeChange)
+                    {
+                        _state.SetByeAndFinish();
+                        _state.TextMessage = "The office you requested has no available workplaces for your dates, sorry.\n" + _state.TextMessage; ;
+                    }
+                    else
+                    {
+                        _state.TextMessage = "There are no available workplaces for the dates you requested.\n";
+                        _state.TextMessage += "To end the dialogue and exit - send me <b>/Finish</b>\n";
+                        _state.TextMessage += "or try again\n";
+                        _state.TextMessage += "Select booking type:";
+                        _state.Propositions = new() { "One day", "Continuous", "Recurring" };
+                        _state.NextStep = nameof(DatesChoice);
+                    }
                 }
             }
             return _state;
