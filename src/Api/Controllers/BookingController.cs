@@ -103,7 +103,7 @@ public class BookingController : ControllerBase
     }
 
     [HttpDelete("delete/{ids}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteBooking(string ids)
     {
         var response = await _bookingService.DeleteBooking(ids);
