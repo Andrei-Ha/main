@@ -58,9 +58,9 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     _state.CallbackMessageId = await _bot.SendInlineKbList(update, "Select floor attributes:", GetList());
 
                 }
-                return _state;
             }
-            else // if Update.Type == CallbackQuery
+            // if Update.Type == CallbackQuery
+            else if (_state.CallbackMessageId == update.CallbackQuery.Message.MessageId)
             {
                 string[] data = update.CallbackQuery.Data.Split(':');
 
@@ -147,8 +147,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             }
                     }
                 }// End if CallbackQuery received from "floor with attributes"                
-                return _state;
             }
+            return _state;
         }
         
         private Dictionary<string, string> GetList()

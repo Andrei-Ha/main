@@ -82,7 +82,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     }
                 }
             }
-            else // if Update.Type == CallbackQuery
+            // if Update.Type == CallbackQuery
+            else if (update?.CallbackQuery?.Message?.MessageId == _state.CallbackMessageId || _state.BookViews.Select(b => b.MessageId).Contains(update.CallbackQuery.Message.MessageId))
             {
                 //await _bot.EchoCallbackQuery(update);
                 string[] data = update.CallbackQuery.Data.Split(':');

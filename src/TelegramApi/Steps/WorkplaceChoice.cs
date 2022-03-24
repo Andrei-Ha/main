@@ -75,7 +75,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     _state.CallbackMessageId = await _bot.SendInlineKbList(update, "Specify workplace attributes, confirm selection:", GetList());
 
                 }
-                return _state;
             }
             else // if Update.Type == CallbackQuery
             {
@@ -248,8 +247,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                             }
                     }
                 }// End if CallbackQuery received from "workplace with attributes"                
-                return _state;
             }
+            return _state;
         }
 
         private Dictionary<string, string> GetList()

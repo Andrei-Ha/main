@@ -59,8 +59,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     }
 
                 }
-
-                return _state;
             }
             // If  update.Type == UpdateType.CallbackQuery
             else
@@ -84,9 +82,9 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         _state.Propositions = new() { "Book a workplace", "Nothing", "Change or Cancel a booking" };
                         _state.NextStep = nameof(ActionChoice);
                     }
-                }
-                return _state;
+                };
             }
+            return _state;
         }
     }
 }
