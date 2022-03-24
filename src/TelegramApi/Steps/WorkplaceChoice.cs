@@ -39,7 +39,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 if (text == _state.Propositions[0])
                 {
                     Console.WriteLine($"workplace?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}");
-                    var httpResponse = await _http.GetWebApiModel<IEnumerable<WorkplaceGetDto>>($"workplace?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}");
+                    var httpResponse = await _http.GetWebApiModel<IEnumerable<WorkplaceGetDto>>($"workplace?{_state.Adapt<WorkplaceFilterDto>().GetQueryString()}", _state.User.Token);
                     if (httpResponse?.Model != null)
                     {
                         var dictionary = httpResponse.Model
@@ -202,7 +202,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 WorkplaceFilterDto workplaceFilterDto = _state.Adapt<WorkplaceFilterDto>();
                                 workplaceFilterDto.IsOnlyFirstFree = true;
                                 Console.WriteLine($"workplace?{workplaceFilterDto.GetQueryString()}");
-                                var httpResponse = await _http.GetWebApiModel<IEnumerable<WorkplaceGetDto>>($"workplace?{workplaceFilterDto.GetQueryString()}");
+                                var httpResponse = await _http.GetWebApiModel<IEnumerable<WorkplaceGetDto>>($"workplace?{workplaceFilterDto.GetQueryString()}", _state.User.Token);
                                 if (httpResponse != null && httpResponse.Model != null && httpResponse?.Model.Count() != 0)
                                 {
                                     var workplace = httpResponse?.Model.FirstOrDefault();
