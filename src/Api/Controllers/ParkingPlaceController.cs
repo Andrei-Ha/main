@@ -12,7 +12,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
     [ApiController]
     [Route("api/[Controller]")]
     [Authorize]
-    [AllowAnonymous]
+    
     public class ParkingPlaceController : ControllerBase
     {
         private readonly IParkingPlaceService _parkingPlaceService;
