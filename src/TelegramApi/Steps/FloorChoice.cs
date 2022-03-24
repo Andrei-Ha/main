@@ -36,7 +36,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 if (text == _state.Propositions[0])
                 {
                     Console.WriteLine($"map?{_state.Adapt<MapFilterDto>().GetQueryString()}");
-                    var httpResponse = await _http.GetWebApiModel<IEnumerable<MapGetDto>>($"map?{_state.Adapt<MapFilterDto>().GetQueryString()}");
+                    var httpResponse = await _http.GetWebApiModel<IEnumerable<MapGetDto>>($"map?{_state.Adapt<MapFilterDto>().GetQueryString()}", _state.User.Token);
                     if (httpResponse?.Model != null)
                     {
                         var dictionary = httpResponse.Model
@@ -114,7 +114,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                                 _state.TextMessage += _state.IsKitchenPresent ? $"{dictionary.ElementAt(0).Value}\n" : "";
                                 _state.TextMessage += _state.IsMeetingRoomPresent ? $"{dictionary.ElementAt(1).Value}\n" : "";
 
-                                var httpResponse = await _http.GetWebApiModel<IEnumerable<MapGetDto>>($"map?{_state.Adapt<MapFilterDto>().GetQueryString()}");
+                                var httpResponse = await _http.GetWebApiModel<IEnumerable<MapGetDto>>($"map?{_state.Adapt<MapFilterDto>().GetQueryString()}", _state.User.Token);
                                 if (httpResponse?.Model != null)
                                 {
                                     var floor = httpResponse.Model

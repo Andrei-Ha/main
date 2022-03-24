@@ -48,7 +48,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                 // If the choice is "For other employee"
                 else if (text == _state.Propositions[1])
                 {
-                    var httpResponse = await _http.GetWebApiModel<IEnumerable<LoginUserDto>>("login");
+                    var httpResponse = await _http.GetWebApiModel<IEnumerable<LoginUserDto>>("login", _state.User.Token);
                     if (httpResponse?.Model != null)
                     {
                         var dictionary = httpResponse.Model
@@ -65,7 +65,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
             {
                 if (_state.CallbackMessageId == update.CallbackQuery.Message.MessageId)
                 {
-                    var httpResponse = await _http.GetWebApiModel<LoginUserDto>($"login/{update.CallbackQuery.Data}");
+                    var httpResponse = await _http.GetWebApiModel<LoginUserDto>($"login/{update.CallbackQuery.Data}", _state.User.Token);
                     System.Console.WriteLine($"login/{update.CallbackQuery.Data}");
                     var loginUserDto = httpResponse?.Model;
                     if (loginUserDto != null)
