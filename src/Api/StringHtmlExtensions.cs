@@ -1,4 +1,4 @@
-﻿namespace Exadel.OfficeBooking.TelegramApi
+﻿namespace Exadel.OfficeBooking.Api
 {
     public static class StringHtmlExtensions
     {

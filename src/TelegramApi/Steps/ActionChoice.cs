@@ -58,8 +58,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                     _state.SetByeAndFinish();
                 }
 
-                // Change or Cancel a booking
-                else if (_state.Propositions.Count == 3 && text == _state.Propositions[2])
+                // Change or Cancel a booking OR show my booking
+                else if (_state.Propositions.Count == 4 && (text == _state.Propositions[2] || text == _state.Propositions[3]))
                 {
                     var httpResponse = await _httpClient.GetWebApiModel<ServiceResponse<GetBookingDto[]>>("booking", _state.User.Token);
                     if (httpResponse == null || httpResponse.Model == null)
@@ -76,13 +76,22 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         var dictionary = bookings
                             .OrderBy(b => b.OfficeName).ThenBy(b => b.StartDate)
                             .ToDictionary(k => $"{k.Id}", v => $"{v.Summary}");
-                        var bookViewResponse = await _bot.SendBookingList(update, "Select the booking:", dictionary);
-                        _state.BookViews = bookViewResponse.BookViews;
-                        _state.CallbackMessageId = bookViewResponse.BackMessageId;
+                        if (text == _state.Propositions[2])
+                        {
+                            var bookViewResponse = await _bot.SendBookingList(update, "Select the booking:", dictionary);
+                            _state.BookViews = bookViewResponse.BookViews;
+                            _state.CallbackMessageId = bookViewResponse.BackMessageId;
+                        }
+                        else
+                        {
+                            await _bot.SendOnlyBookingList(update, "Your bookings:", dictionary);
+                            _state.TextMessage = "Is there anything else you want to do?";
+                        }
                     }
                 }
             }
-            else // if Update.Type == CallbackQuery
+            // if Update.Type == CallbackQuery
+            else if (update?.CallbackQuery?.Message?.MessageId == _state.CallbackMessageId || _state.BookViews.Select(b => b.MessageId).Contains(update.CallbackQuery.Message.MessageId))
             {
                 //await _bot.EchoCallbackQuery(update);
                 string[] data = update.CallbackQuery.Data.Split(':');
@@ -199,7 +208,7 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
                         {
                             var listId = _state.BookViews.Select(b => b.MessageId).OrderByDescending(o => o).ToList();
                             _state.BookViews = new();
-                            _state.CallbackMessageId = await _bot.DeleteBookinList(update, listId, _state.CallbackMessageId, true);
+                            _state.CallbackMessageId = await _bot.DeleteBookinList(update, listId, _state.CallbackMessageId, false);
                             _state.TextMessage = "What else would you like to do?";
                             break;
                         }

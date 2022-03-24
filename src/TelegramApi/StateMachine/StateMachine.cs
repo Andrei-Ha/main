@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace Exadel.OfficeBooking.TelegramApi.StateMachine
 {
@@ -26,9 +27,17 @@ namespace Exadel.OfficeBooking.TelegramApi.StateMachine
 
         public async Task<Result> Process(Update update)
         {
-            var curStep = GetCurrentStep();
-            curStep.SetFsmState(_state);
-            _state = await curStep.Execute(update);
+            if (update.Type == UpdateType.Message && update.Message.Text.ToLower() == "/finish")
+            {
+                _state.SetByeAndFinish();
+                _state.CallbackMessageId = 0;
+            }
+            else
+            {
+                var curStep = GetCurrentStep();
+                curStep.SetFsmState(_state);
+                _state = await curStep.Execute(update);
+            }
             if (_state.NextStep != "Finish")
             {
                 await SaveState();

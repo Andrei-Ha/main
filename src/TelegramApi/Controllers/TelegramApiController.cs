@@ -32,7 +32,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
         public async Task<IActionResult> Update([FromBody] Update update)
         {
             long chatId;
-            bool isMessage = false;
             string commandText = string.Empty;
             switch (update.Type)
             {
@@ -48,7 +47,6 @@ namespace Exadel.OfficeBooking.TelegramApi.Controllers
                             return Ok();
                         }
 
-                        isMessage = true;
                         chatId = update.Message.Chat.Id;
                         await _bot.SendChatActionAsync(chatId, ChatAction.Typing);
                         break;

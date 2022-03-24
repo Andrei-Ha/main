@@ -10,7 +10,7 @@ namespace Exadel.OfficeBooking.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    [AllowAnonymous]
+    
     public class MapController : ControllerBase
     {
         private readonly IMapService _mapService;

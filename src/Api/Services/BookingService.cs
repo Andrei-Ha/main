@@ -10,7 +10,6 @@ using Exadel.OfficeBooking.Domain.Bookings;
 using Exadel.OfficeBooking.Domain.OfficePlan;
 using Exadel.OfficeBooking.Domain.Person;
 using Exadel.OfficeBooking.EF;
-using Exadel.OfficeBooking.TelegramApi;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 
