@@ -106,8 +106,8 @@ namespace Exadel.OfficeBooking.TelegramApi.Steps
 
                     case Constants.ChangeTo:
                     {
-                        if (DateTime.TryParse(key[1], out DateTime newDate))
-                        {
+                        if (DateTime.TryParseExact(key[1], "dd'.'MM'.'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime newDate))
+                            {
                             _state.CalendarDate = newDate;
                         }
                         break;
